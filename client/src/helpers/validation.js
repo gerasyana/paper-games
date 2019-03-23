@@ -1,4 +1,5 @@
-const EMAIL_PATTERN = /^([a-zA-Z0-9_\\.\\-])+\\@(([a-zA-Z0-9\\-])+\.)+([a-zA-Z0-9]{2,4})+$/i;
+// eslint-disable-next-line no-useless-escape
+const EMAIL_PATTERN = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/i;
 
 export const validateInput = (value, rules) => {
     let isValid = true;

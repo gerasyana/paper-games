@@ -18,21 +18,21 @@ class SignUp extends React.Component {
                     id: 'email',
                     type: 'email',
                     label: 'Email',
-                    value: null,
+                    value: '',
                     placeholder: 'Enter email'
                 },
                 username: {
                     id: 'username',
                     type: 'text',
                     label: 'Username',
-                    value: null,
+                    value: '',
                     placeholder: 'Enter username'
                 },
                 password: {
                     id: 'password',
                     type: 'password',
                     label: 'Password',
-                    value: null,
+                    value: '',
                     placeholder: 'Enter password'
                 }
             },
@@ -57,7 +57,6 @@ class SignUp extends React.Component {
     }
 
     setControlValue = (event, key) => {
-        debugger;
         const value = event.target.value;
         const validationResults = validateInput(value, this.state.validation[key]);
         const control = {
@@ -103,11 +102,20 @@ class SignUp extends React.Component {
             />)
         });
 
+        let errorMessage = null;
+        if (this.props.error) {
+            errorMessage = (
+                <div class="alert alert-dismissible alert-secondary">
+                    <strong>{this.props.error}</strong>
+              </div>
+            );
+        }
 
         let form = (
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-5">
+                        {errorMessage}
                         {formElemets}
                         <div>
                             <Button
@@ -137,7 +145,8 @@ class SignUp extends React.Component {
 const mapStateToProps = (state) => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        loading: state.auth.loading
+        loading: state.auth.loading,
+        error: state.auth.error
     }
 }
 

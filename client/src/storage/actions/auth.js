@@ -26,9 +26,10 @@ export function loginSuccess(user) {
     }
 }
 
-export function loginFailed() {
+export function loginFailed(error) {
     return {
-        type: actionTypes.LOGIN_FAILED
+        type: actionTypes.LOGIN_FAILED,
+        error
     }
 }
 
@@ -64,9 +65,10 @@ export function signUpSuccess(user) {
     }
 }
 
-export function signUpFailed() {
+export function signUpFailed(error) {
     return {
-        type: actionTypes.SIGNUP_FAILED
+        type: actionTypes.SIGNUP_FAILED,
+        error
     }
 }
 

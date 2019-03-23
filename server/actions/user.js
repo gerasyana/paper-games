@@ -15,10 +15,10 @@ getUserById = (userId) => {
 signUp = (data) => {
     const { email, password, username } = data;
 
-    return User.findOne({ $or: [{ email }, { username }] })
+    return User.findOne({ username })
         .then(user => {
             if (user) {
-                return { error: `User with the same email or username already exists` };
+                return { error: 'Account with the username already exists' };
             }
 
             const newUser = {

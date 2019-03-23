@@ -38,7 +38,7 @@ export function* loginSaga(action) {
   const response = yield userRouters.login(action.credentials);
 
   if (response.data.error) {
-    yield put(actions.loginFailed());
+    yield put(actions.loginFailed(response.data.error));
   } else {
     const { expirationDate } = response.data.tokenDetails;
     const expiresIn = yield getExpirationTime(expirationDate);
@@ -53,7 +53,7 @@ export function* signUpSaga(action) {
   const response = yield userRouters.signUp(action.user);
 
   if (response.data.error) {
-    yield put(actions.signUpFailed());
+    yield put(actions.signUpFailed(response.data.error));
   } else {
     const { expirationDate } = response.data.tokenDetails;
     const expiresIn = yield getExpirationTime(expirationDate);

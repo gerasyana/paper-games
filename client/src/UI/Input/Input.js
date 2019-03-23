@@ -6,6 +6,7 @@ const input = (props) => {
             <label htmlFor={props.id}>{props.label}</label>
             <input
                 type={props.type}
+                defaultValue={props.value}
                 autoComplete='off'
                 className="form-control"
                 id={props.id}
@@ -27,6 +28,7 @@ const input = (props) => {
                 <label htmlFor={props.id}>{props.label}</label>
                 <input
                     autoComplete='off'
+                    defaultValue={props.value}
                     type={props.type}
                     className={inputClasses.join(' ')}
                     id={props.id}

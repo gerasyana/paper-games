@@ -18,14 +18,14 @@ class Login extends React.Component {
                     id: 'username',
                     type: 'username',
                     label: 'Username',
-                    errorMessage: null,
+                    errorMessage: '',
                     placeholder: 'Username'
                 },
                 password: {
                     id: 'password',
                     type: 'password',
                     label: 'Password',
-                    errorMessage: null,
+                    errorMessage: '',
                     placeholder: 'Enter password'
                 }
             },
@@ -94,10 +94,20 @@ class Login extends React.Component {
             />)
         });
 
+        let errorMessage = null;
+        if (this.props.error) {
+            errorMessage = (
+                <div class="alert alert-dismissible alert-secondary">
+                    <strong>{this.props.error}</strong>
+              </div>
+            );
+        }
+
         let form = (
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-5">
+                        {errorMessage}
                         {formInputs}
                         <div>
                             <Button
@@ -133,7 +143,8 @@ class Login extends React.Component {
 const mapStateToProps = (state) => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        loading: state.auth.loading
+        loading: state.auth.loading,
+        error: state.auth.error
     }
 }
 
