@@ -3,6 +3,7 @@ import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
 import Input from '../../../UI/Input/Input';
+import Button from '../../../UI/Button/Button';
 import Spinner from '../../../UI/Spinner/Spinner';
 import * as actions from '../../../storage/actions/actions'
 import { validateInput } from '../../../helpers/validation';
@@ -95,7 +96,11 @@ class SignUp extends React.Component {
         const formElemets = [];
         Object.keys(this.state.controls).forEach(key => {
             const input = this.state.controls[key];
-            formElemets.push(<Input key={key} {...input} onChange={(event) => this.setControlValue(event, key)} />)
+            formElemets.push(<Input
+                key={key}
+                {...input}
+                onChange={(event) => this.setControlValue(event, key)}
+            />)
         });
 
 
@@ -105,7 +110,13 @@ class SignUp extends React.Component {
                     <div className="col-5">
                         {formElemets}
                         <div>
-                            <button type="submit" className='btn btn-primary' onClick={this.signUp} disabled={!this.state.buttonEnabled}>Sign Up</button>
+                            <Button
+                                type="submit"
+                                className='btn btn-primary'
+                                onClick={this.signUp}
+                                disabled={!this.state.buttonEnabled}>
+                                Sign Up
+                            </Button>
                         </div>
                     </div>
                 </div>

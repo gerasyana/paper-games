@@ -3,6 +3,7 @@ import { Redirect, withRouter } from 'react-router';
 import { connect } from 'react-redux'
 
 import Input from '../../../UI/Input/Input';
+import Button from '../../../UI/Button/Button';
 import Spinner from '../../../UI/Spinner/Spinner';
 import * as actions from '../../../storage/actions/actions'
 import { validateInput } from '../../../helpers/validation';
@@ -86,7 +87,11 @@ class Login extends React.Component {
         const formInputs = [];
         Object.keys(this.state.controls).forEach(key => {
             const input = this.state.controls[key];
-            formInputs.push(<Input key={key} {...input} onChange={(event) => this.setControlValue(event, key)} />)
+            formInputs.push(<Input
+                key={key}
+                {...input}
+                onChange={(event) => this.setControlValue(event, key)}
+            />)
         });
 
         let form = (
@@ -95,8 +100,19 @@ class Login extends React.Component {
                     <div className="col-5">
                         {formInputs}
                         <div>
-                            <button type="submit" className='btn btn-primary mr-4' disabled={!this.state.loginButtonEnabled} onClick={this.login} >Login</button>
-                            <button type="button" className='btn btn-primary' onClick={this.goToSignUp}>Sign Up</button>
+                            <Button
+                                type="submit"
+                                className='btn btn-primary mr-4'
+                                disabled={!this.state.loginButtonEnabled}
+                                onClick={this.login} >
+                                Login
+                            </Button>
+                            <Button
+                                type="button"
+                                className='btn btn-primary'
+                                onClick={this.goToSignUp}>
+                                Sign Up
+                            </Button>
                         </div>
                     </div>
                 </div>
