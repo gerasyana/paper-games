@@ -6,7 +6,9 @@ const { USER_MODEL } = require('../constants/modelNames');
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        minlength: 5,
+        maxlength: 15
     },
     email: {
         type: String,
@@ -15,7 +17,9 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength: 5,
+        maxlength: 20
     }
 });
 

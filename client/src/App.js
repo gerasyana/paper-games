@@ -2,6 +2,7 @@ import React, { Component, Suspense } from 'react';
 import { Route, Switch } from 'react-router';
 import { connect } from 'react-redux';
 
+import Spinner from './UI/Spinner/Spinner';
 import Layout from './hoc/Layout/Layout';
 import Games from './containers/Games/Games';
 import * as actions from './storage/actions/actions';
@@ -19,7 +20,7 @@ class App extends Component {
   render() {
     return (
       <Layout>
-        <Suspense fallback={<p>Loading</p>}>
+        <Suspense fallback={<Spinner/>}>
           <Switch>
             <Route path='/login' exact render={() => <Login {...this.props} />} />
             <Route path="/logout" render={() => <Logout {...this.props} />} />

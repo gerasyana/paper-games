@@ -1,10 +1,11 @@
 import React from 'react';
-import { Redirect  } from 'react-router';
+import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
 import Input from '../../../UI/Input/Input';
 import Spinner from '../../../UI/Spinner/Spinner';
 import * as actions from '../../../storage/actions/actions'
+import { validateInput } from '../../../helpers/validation';
 
 class SignUp extends React.Component {
 
@@ -33,19 +34,52 @@ class SignUp extends React.Component {
                     value: null,
                     placeholder: 'Enter password'
                 }
-            }
+            },
+            validation: {
+                username: {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 15
+                },
+                password: {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 20
+                },
+                email: {
+                    required: true,
+                    isEmail: true
+                }
+            },
+            buttonEnabled: false
         }
     }
 
     setControlValue = (event, key) => {
-        const element = event.target;
-        const control = { ...this.state.controls[key] }
-        control.value = element.value;
-        const controlsUpdated = {
+        debugger;
+        const value = event.target.value;
+        const validationResults = validateInput(value, this.state.validation[key]);
+        const control = {
+            ...this.state.controls[key],
+            ...validationResults,
+            value,
+        }
+        const controls = {
             ...this.state.controls,
             [key]: control
-        };
-        this.setState({ controls: controlsUpdated });
+        }
+        this.setState({
+            controls,
+            buttonEnabled: this.isButtonEnabled(controls)
+        });
+    }
+
+    isButtonEnabled = (controls) => {
+        const validControls = Object.keys(controls).filter(key => {
+            const control = controls[key];
+            return Object.hasOwnProperty.call(control, 'isValid') && control.isValid
+        });
+        return Object.keys(controls).length === validControls.length;
     }
 
     signUp = () => {
@@ -71,7 +105,7 @@ class SignUp extends React.Component {
                     <div className="col-5">
                         {formElemets}
                         <div>
-                            <button type="submit" className='btn btn-primary' onClick={this.signUp}>Sign Up</button>
+                            <button type="submit" className='btn btn-primary' onClick={this.signUp} disabled={!this.state.buttonEnabled}>Sign Up</button>
                         </div>
                     </div>
                 </div>
@@ -85,14 +119,14 @@ class SignUp extends React.Component {
         if (this.props.loading) {
             form = <Spinner />
         }
-        return form; 
+        return form;
     }
 }
 
 const mapStateToProps = (state) => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        loading : state.auth.loading
+        loading: state.auth.loading
     }
 }
 

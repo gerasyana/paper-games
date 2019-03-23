@@ -18,7 +18,7 @@ module.exports = app => {
         return login(req.body).then(data => res.json(data));
     });
 
-    app.post('/api/logout', (req, res) => {
+    app.post('/api/user/logout', (req, res) => {
         return res.send(200);
     })
 }

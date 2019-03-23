@@ -1,4 +1,4 @@
-const EMAIL_PATTERN = /[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const EMAIL_PATTERN = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/i;
 
 export const validateInput = (value, rules) => {
     let isValid = true;
@@ -17,14 +17,14 @@ export const validateInput = (value, rules) => {
     if (rules.minLength) {
         isValid = value.length >= rules.minLength && isValid;
         if (!isValid) {
-            return { message: `Must contain at least ${rules.minLength} character`, isValid }
+            return { message: `Field must contain at least ${rules.minLength} character`, isValid }
         }
     }
 
     if (rules.maxLength) {
         isValid = value.length <= rules.maxLength && isValid;
         if (!isValid) {
-            return { message: `Must contain no more than ${rules.minLength} characters`, isValid }
+            return { message: `Field must contain no more than ${rules.maxLength} characters`, isValid }
         }
     }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect , withRouter} from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import { connect } from 'react-redux'
 
 import Input from '../../../UI/Input/Input';
@@ -17,33 +17,57 @@ class Login extends React.Component {
                     id: 'username',
                     type: 'username',
                     label: 'Username',
-                    value: null,
-                    isValid : true,
-                    errorMessage : null,
+                    errorMessage: null,
                     placeholder: 'Username'
                 },
                 password: {
                     id: 'password',
                     type: 'password',
                     label: 'Password',
-                    value: null,
-                    isValid : true,
-                    errorMessage : null,
+                    errorMessage: null,
                     placeholder: 'Enter password'
                 }
-            }
+            },
+            validation: {
+                username: {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 15
+                },
+                password: {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 20
+                }
+            },
+            loginButtonEnabled: false
         }
     }
 
     setControlValue = (event, key) => {
-        const element = event.target;
-        const control = { ...this.state.controls[key] }
-        control.value = element.value;
-        const controlsUpdated = {
+        const value = event.target.value;
+        const validationResults = validateInput(value, this.state.validation[key]);
+        const control = {
+            ...this.state.controls[key],
+            ...validationResults,
+            value,
+        }
+        const controls = {
             ...this.state.controls,
             [key]: control
-        };
-        this.setState({ controls: controlsUpdated });
+        }
+        this.setState({
+            controls,
+            loginButtonEnabled: this.isButtonEnabled(controls)
+        });
+    }
+
+    isButtonEnabled = (controls) => {
+        const validControls = Object.keys(controls).filter(key => {
+            const control = controls[key];
+            return Object.hasOwnProperty.call(control, 'isValid') && control.isValid
+        });
+        return Object.keys(controls).length === validControls.length;
     }
 
     login = () => {
@@ -71,7 +95,7 @@ class Login extends React.Component {
                     <div className="col-5">
                         {formInputs}
                         <div>
-                            <button type="submit" className='btn btn-primary mr-4' onClick={this.login}>Login</button>
+                            <button type="submit" className='btn btn-primary mr-4' disabled={!this.state.loginButtonEnabled} onClick={this.login} >Login</button>
                             <button type="button" className='btn btn-primary' onClick={this.goToSignUp}>Sign Up</button>
                         </div>
                     </div>
