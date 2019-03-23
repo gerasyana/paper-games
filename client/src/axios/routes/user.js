@@ -11,7 +11,3 @@ export function login(data) {
 export function signUp(data) {
     return axios.post('/user/signup', data);
 }
-
-export function logout() {
-    return axios.post('/user/logout');
-}

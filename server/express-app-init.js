@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const redis = require('redis');
 const fs = require('fs');
 const path = require('path');
 const keys = require('./configs/keys');

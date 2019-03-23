@@ -1,6 +1,5 @@
 const jwt = require('../helpers/jwt');
 const { authenticate } = require('../middlewares/authenticate');
-const { logout } = require('../middlewares/authenticate');
 const { signUp, login, getUserById } = require('../actions/user');
 
 module.exports = app => {
@@ -17,8 +16,4 @@ module.exports = app => {
     app.post('/api/user/login', (req, res) => {
         return login(req.body).then(data => res.json(data));
     });
-
-    app.post('/api/user/logout', (req, res) => {
-        return res.send(200);
-    })
 }

@@ -12,28 +12,38 @@ const navigationItems = (props) => {
         }
     ];
 
-
-    let navItems = (
+    let navItemsRight = (
         <Aux>
-            <NavigationItem type="dropdown" dropdownItems={dropdownItems} label="Games" />
             <NavigationItem type="link" link='/login' label="Login" />
         </Aux>
     )
 
+    let navItemsLeft = (
+        <Aux>
+            <NavigationItem type="link" dropdownItems={dropdownItems} label="Rooms" />
+            <NavigationItem type="dropdown" dropdownItems={dropdownItems} label="Games" />
+        </Aux>
+    )
+
     if (props.isAuthenticated) {
-        navItems = (
+        navItemsRight = (
             <Aux>
-                <NavigationItem type="dropdown" dropdownItems={dropdownItems} label="Games" />
-                <NavigationItem type="link" link='/' label={props.user.username} />;
+                <NavigationItem type="text" label='0 scores' />;
+                <NavigationItem type="text" label={props.user.username} />;
                 <NavigationItem type="link" link='/logout' label="Logout" />
             </Aux>
         )
     }
 
     return (
-        <ul className="nav navbar-nav navbar-nav ml-auto">
-            {navItems}
-        </ul>
-    )
+        <Aux>
+            <ul className="nav navbar-nav navbar-nav">
+                {navItemsLeft}
+            </ul>
+            <ul className="nav navbar-nav navbar-nav ml-auto">
+                {navItemsRight}
+            </ul>
+        </Aux>
+    );
 }
 export default navigationItems;

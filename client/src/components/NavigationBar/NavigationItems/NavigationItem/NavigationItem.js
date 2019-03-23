@@ -14,6 +14,14 @@ const navigationItem = (props) => {
         );
     }
 
+    if (props.type === 'text') {
+        navItem = (
+            <li className="nav-item">
+                <span className="nav-link">{props.label}</span>
+            </li>
+        );
+    }
+
     if (props.type === 'dropdown') {
         let dropdownItems;
 

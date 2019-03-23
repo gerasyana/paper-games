@@ -5,7 +5,6 @@ import * as userRouters from '../../axios/routes/user';
 import * as keys from '../../constants/localStorageKeys';
 
 export function* logoutSaga(action) {
-  yield userRouters.logout();
   yield localStorage.removeItem(keys.TOKEN_KEY);
   yield localStorage.removeItem(keys.EXPIRATION_DATE_KEY);
   yield put(actions.logoutSuccess());
