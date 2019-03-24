@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const keys = require('./configs/keys');
@@ -16,7 +17,7 @@ initMongoose = () => {
 }
 
 initRoutes = app => {
-    if (['production', 'ci'].includes(PORT)) {
+    if (process.env.NODE_ENV === 'production') {
         app.use(express.static(path.join(__dirname, 'client/build')));
         app.get('/', function (req, res) {
             res.sendFile(path.join(__dirname, 'client/build/index.html'));

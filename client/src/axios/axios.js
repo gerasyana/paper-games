@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import * as keys from '../constants/localStorageKeys';
 
-const baseURL = process.env.SERVER_URL || 'http://localhost:5000';
+const baseURL = process.env.NODE_ENV === 'production' ? window.location.origin : 'http://localhost:5000';
 
 const instance = axios.create({
     baseURL: `${baseURL}/api`,
@@ -20,7 +20,7 @@ const instance = axios.create({
 instance.interceptors.request.use(function (config) {
     const token = localStorage.getItem(keys.TOKEN_KEY);
     if (token) {
-        config.headers['x-auth'] = token;     
+        config.headers['x-auth'] = token;
     }
     return config;
 });
