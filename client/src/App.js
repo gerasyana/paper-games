@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Switch } from 'react-router';
+import { Route, Switch, Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
 import Spinner from './UI/Spinner/Spinner';
@@ -25,7 +25,8 @@ class App extends Component {
             <Route path='/login' exact render={() => <Login {...this.props} />} />
             <Route path="/logout" render={() => <Logout {...this.props} />} />
             <Route path='/signup' exact render={() => <SignUp {...this.props} />} />
-            <Route path={['/', '/games']} component={Games} />
+            <Route path='/games' component={Games} />
+            <Redirect from='/' to='/games' />
           </Switch>
         </Suspense>
       </Layout>
