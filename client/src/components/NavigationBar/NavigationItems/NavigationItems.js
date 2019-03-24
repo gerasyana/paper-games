@@ -28,8 +28,8 @@ const navigationItems = (props) => {
     if (props.isAuthenticated) {
         navItemsRight = (
             <Aux>
-                <NavigationItem type="text" label='0 scores' />;
-                <NavigationItem type="text" label={props.user.username} />;
+                <NavigationItem type="text" label='0 scores' />
+                <NavigationItem type="text" label={props.user.username} />
                 <NavigationItem type="link" link='/logout' label="Logout" />
             </Aux>
         )
