@@ -1,26 +1,31 @@
 const jwt = require('jsonwebtoken');
+const { addTokenToWhitelist , isTokenValid} = require('./redis');
 const keys = require('../configs/keys');
+
+const EXPIRES_IN_SECONDS = 2 * 60 * 60;
+const EXPIRES_IN = '2h';
 
 generateJWT = (user) => {
     const today = new Date();
     const expirationDate = new Date();
     expirationDate.setHours(today.getHours() + 2);
-    
-    const token =  jwt.sign({
+
+    const options = {
         email: user.email,
         id: user._id,
-        expiresIn : expirationDate
-    }, keys.JWT_SECRET);
-    return { token , expirationDate }
+        expirationDate: expirationDate
+    };
+    const token = jwt.sign(options, keys.JWT_SECRET, { expiresIn: EXPIRES_IN });
+    addTokenToWhitelist(token,EXPIRES_IN_SECONDS);
+
+    return { token, expirationDate }
 }
 
-verifyJWT = (token) => {
-    return new Promise((resolve, reject) => jwt.verify(token, keys.JWT_SECRET, (err, decoded) => {
-        if (err || !decoded) {
-            reject(err);
-        }
-        resolve(token);
-    }));
+validJWT = (token, callback) => {
+    const decoded = jwt.verify(token, keys.JWT_SECRET);
+    return isTokenValid(token, (error, valid) => {
+        return callback(decoded && !!valid)
+    });
 }
 
 getDecodedJWT = (token) => {
@@ -29,6 +34,6 @@ getDecodedJWT = (token) => {
 
 module.exports = {
     generateJWT,
-    verifyJWT,
+    validJWT,
     getDecodedJWT
 }
