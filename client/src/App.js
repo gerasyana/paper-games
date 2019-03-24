@@ -20,7 +20,7 @@ class App extends Component {
   render() {
     return (
       <Layout>
-        <Suspense fallback={<Spinner/>}>
+        <Suspense fallback={<Spinner />}>
           <Switch>
             <Route path='/login' exact render={() => <Login {...this.props} />} />
             <Route path="/logout" render={() => <Logout {...this.props} />} />

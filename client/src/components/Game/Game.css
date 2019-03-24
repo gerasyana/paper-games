@@ -1,0 +1,46 @@
+  @media screen and (max-width: 600px){
+    .img-container .img-content {
+        height: 50px;
+    }
+
+    .img-content h4 {
+        font-size: 12px;
+    }
+  }
+  
+  .img-container {
+    position: relative;
+    z-index: 10;
+    margin: 0;
+    background: #fff;
+    border: 1px solid black;
+    border-radius : 20px;
+    box-shadow: 10px 10px 5px rgb(165, 164, 164, 0.69);
+  }
+
+  .img-container:hover {
+      cursor: pointer;
+  }
+  
+  .img-container img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    border-radius : 20px;
+    }
+  
+  .img-container .img-content {
+    background: rgba(0, 0, 0, 0.4); 
+    width: 100%;
+    margin: 0;
+    padding: 10px 10px;
+    bottom: 0;
+    position: absolute;
+    text-align: center;
+    border-radius : 0 0 20px 20px;
+  }
+
+  .img-content h4 {
+      color : #f8f9fa
+  }
