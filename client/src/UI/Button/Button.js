@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 const button = (props) => {
     return (
-        <button {...props}> 
+        <button {...props}>
             {props.children}
         </button>
     );
 }
 
-export default button;
+export default memo(button);

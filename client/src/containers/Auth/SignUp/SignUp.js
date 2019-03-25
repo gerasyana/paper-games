@@ -56,14 +56,15 @@ class SignUp extends React.Component {
         }
     }
 
-    setControlValue = (event, key) => {
+    setControlValue = (event) => {
+        const key = event.target.id;
         const value = event.target.value;
         const validationResults = validateInput(value, this.state.validation[key]);
         const control = {
             ...this.state.controls[key],
             ...validationResults,
-            value,
-        }
+            value
+        };
         const controls = {
             ...this.state.controls,
             [key]: control
@@ -95,11 +96,7 @@ class SignUp extends React.Component {
         const formElemets = [];
         Object.keys(this.state.controls).forEach(key => {
             const input = this.state.controls[key];
-            formElemets.push(<Input
-                key={key}
-                {...input}
-                onChange={(event) => this.setControlValue(event, key)}
-            />)
+            formElemets.push(<Input key={key}{...input} onChange={this.setControlValue} />)
         });
 
         let errorMessage = null;
@@ -107,7 +104,7 @@ class SignUp extends React.Component {
             errorMessage = (
                 <div class="alert alert-dismissible alert-secondary">
                     <strong>{this.props.error}</strong>
-              </div>
+                </div>
             );
         }
 

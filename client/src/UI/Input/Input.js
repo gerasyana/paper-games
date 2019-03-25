@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {memo} from 'react';
 
 const input = (props) => {
     let input = (
@@ -41,4 +41,4 @@ const input = (props) => {
     return input;
 }
 
-export default input;
+export default memo(input);

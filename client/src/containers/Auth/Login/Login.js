@@ -15,17 +15,17 @@ class Login extends React.Component {
         this.state = {
             controls: {
                 username: {
-                    id: 'username',
-                    type: 'username',
+                    type: 'text',
                     label: 'Username',
-                    errorMessage: '',
+                    errorMessage: '',  
+                    value: '',
                     placeholder: 'Username'
                 },
                 password: {
-                    id: 'password',
                     type: 'password',
                     label: 'Password',
                     errorMessage: '',
+                    value: '',
                     placeholder: 'Enter password'
                 }
             },
@@ -45,14 +45,15 @@ class Login extends React.Component {
         }
     }
 
-    setControlValue = (event, key) => {
+    setControlValue = (event) => {
+        const key = event.target.id;
         const value = event.target.value;
         const validationResults = validateInput(value, this.state.validation[key]);
         const control = {
             ...this.state.controls[key],
             ...validationResults,
-            value,
-        }
+            value
+        };
         const controls = {
             ...this.state.controls,
             [key]: control
@@ -87,11 +88,7 @@ class Login extends React.Component {
         const formInputs = [];
         Object.keys(this.state.controls).forEach(key => {
             const input = this.state.controls[key];
-            formInputs.push(<Input
-                key={key}
-                {...input}
-                onChange={(event) => this.setControlValue(event, key)}
-            />)
+            formInputs.push(<Input key={key} id={key} {...input} onChange={this.setControlValue} />)
         });
 
         let errorMessage = null;
@@ -99,7 +96,7 @@ class Login extends React.Component {
             errorMessage = (
                 <div class="alert alert-dismissible alert-secondary">
                     <strong>{this.props.error}</strong>
-              </div>
+                </div>
             );
         }
 
