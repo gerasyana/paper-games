@@ -49,7 +49,7 @@ class Games extends Component {
             <Switch>
                 <Route path={`${this.props.match.url}/tick-tack-toe`} component={TickTackToe} />
                 <Route path={`${this.props.match.url}`} exact>
-                    <div className='container'>
+                    <div className='container mt-5'>
                         <div className='row justify-content-around'>
                             {games}
                         </div>

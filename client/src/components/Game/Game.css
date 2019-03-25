@@ -1,14 +1,14 @@
   @media screen and (max-width: 600px){
-    .img-container .img-content {
+    .imgContainer .imgContent {
         height: 50px;
     }
 
-    .img-content h4 {
+    .imgContent h4 {
         font-size: 12px;
     }
   }
   
-  .img-container {
+  .imgContainer {
     position: relative;
     z-index: 10;
     margin: 0;
@@ -18,11 +18,11 @@
     box-shadow: 10px 10px 5px rgb(165, 164, 164, 0.69);
   }
 
-  .img-container:hover {
+  .imgContainer:hover {
       cursor: pointer;
   }
   
-  .img-container img {
+  .imgContainer img {
     display: block;
     max-width: 100%;
     height: auto;
@@ -30,7 +30,7 @@
     border-radius : 20px;
     }
   
-  .img-container .img-content {
+  .imgContainer .imgContent {
     background: rgba(0, 0, 0, 0.4); 
     width: 100%;
     margin: 0;
@@ -41,6 +41,6 @@
     border-radius : 0 0 20px 20px;
   }
 
-  .img-content h4 {
+  .imgContent h4 {
       color : #f8f9fa
   }

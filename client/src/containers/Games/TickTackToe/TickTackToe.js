@@ -12,7 +12,7 @@ class TickTackToe extends Component {
 
     render() {
         return (
-            <div class='container'>
+            <div className='container'>
                 <div className='row justify-content-center'>
                     <div id='gamePanel' className='col-10'>
                         <table id='game'>

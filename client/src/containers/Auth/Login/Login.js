@@ -94,14 +94,14 @@ class Login extends React.Component {
         let errorMessage = null;
         if (this.props.error) {
             errorMessage = (
-                <div class="alert alert-dismissible alert-secondary">
+                <div className="alert alert-dismissible alert-secondary">
                     <strong>{this.props.error}</strong>
                 </div>
             );
         }
 
         let form = (
-            <div className="container">
+            <div className="container mt-5">
                 <div className="row justify-content-center">
                     <div className="col-5">
                         {errorMessage}

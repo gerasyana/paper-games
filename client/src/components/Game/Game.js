@@ -1,11 +1,12 @@
 import React from 'react';
-import './Game.css';
+
+import classes from './Game.css';
 
 const game = (props) => {
     return (
-        <div className='img-container' onClick={props.gameSelected}>
+        <div className={classes.imgContainer} onClick={props.gameSelected}>
             <img src={props.src} alt={props.name} />
-            <div className='img-content'>
+            <div className={classes.imgContent}>
                 <h4>{props.name}</h4>
             </div>
         </div>
