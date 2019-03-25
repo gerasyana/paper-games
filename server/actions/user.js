@@ -9,7 +9,11 @@ getUserById = (userId) => {
     return User.findById(userId).then(user => {
         const { email, username } = user;
         return { email, username }
-    });
+    }).catch(err => {
+        console.log(err);
+        //TODO log error
+        return { error: 'User not found' }
+    })
 }
 
 signUp = (data) => {
@@ -32,7 +36,16 @@ signUp = (data) => {
                     tokenDetails,
                     user: { email, username }
                 }
-            })
+            }).catch(err => {
+                console.log(error);
+                //TODO : log error
+                return { error: 'Error while creating new account. Please try again' }
+            });
+        })
+        .catch(err => {
+            console.log(error);
+            //TODO : log error
+            return { error: 'Error while creating new account. Please try again' }
         });
 }
 
@@ -52,7 +65,11 @@ login = (data) => {
                 tokenDetails,
                 user: { password, username }
             }
-        })
+        }).catch(err => {
+            console.log(err);
+            //TODO : log error
+            return { error: 'Error while creating new account. Please try again' }
+        });
 }
 
 module.exports = {

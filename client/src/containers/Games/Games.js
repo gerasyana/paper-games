@@ -22,8 +22,7 @@ class Games extends Component {
                     src: battleshipImg,
                     link: `${this.props.match.url}/battleship`
                 }
-            },
-            selectedGameUrl: ''
+            }
         }
     }
 
@@ -32,7 +31,6 @@ class Games extends Component {
     }
 
     render() {
-        const params = this.props.location.pathname.split('/');
         const games = [];
 
         Object.keys(this.state.games).forEach(key => {
@@ -47,22 +45,16 @@ class Games extends Component {
             ));
         });
 
-        let gamesList = (
-            <div className='row justify-content-around'>
-                {games}
-            </div>
-        );
-        
-        if (params.length > 2) {
-            gamesList = (
-                <Switch>
-                    <Route path={`${this.props.match.url}/tick-tack-toe`} component={TickTackToe} />
-                </Switch>);
-        }
-
         return (
             <div className='container'>
-                {gamesList}
+                <Switch>
+                    <Route path={`${this.props.match.url}/tick-tack-toe`} component={TickTackToe} />
+                    <Route path={`${this.props.match.url}`} exact>
+                        <div className='row justify-content-around'>
+                            {games}
+                        </div>
+                    </Route>
+                </Switch>
             </div>
         )
     }
