@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import './Layout.css';
 
-import Aux from '../Aux/Aux';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
 class Layout extends Component {
     render() {
-        return (<Aux>
-            <NavigationBar {...this.props} />
-            {this.props.children}
-        </Aux>)
+        return (
+        <div id='app-container'>
+            <div id='header'>
+                <NavigationBar {...this.props} />
+            </div>
+            <div id='body'>
+                {this.props.children}
+            </div>
+        </div>)
     }
 }
 

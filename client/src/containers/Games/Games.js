@@ -46,16 +46,16 @@ class Games extends Component {
         });
 
         return (
-            <div className='container'>
-                <Switch>
-                    <Route path={`${this.props.match.url}/tick-tack-toe`} component={TickTackToe} />
-                    <Route path={`${this.props.match.url}`} exact>
+            <Switch>
+                <Route path={`${this.props.match.url}/tick-tack-toe`} component={TickTackToe} />
+                <Route path={`${this.props.match.url}`} exact>
+                    <div className='container'>
                         <div className='row justify-content-around'>
                             {games}
                         </div>
-                    </Route>
-                </Switch>
-            </div>
+                    </div>
+                </Route>
+            </Switch>
         )
     }
 }
