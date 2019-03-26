@@ -10,7 +10,7 @@ class TickTackToe extends Component {
 
     componentDidMount() {
         if (!this.props.isAuthenticated) {
-            this.props.setRedirectUrl(this.props.location.pathname);
+            this.props.setLoginRedirectUrl(this.props.location.pathname);
         }
     }
 
@@ -67,7 +67,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToState = (dispatch) => {
     return {
-        setRedirectUrl: (url) => dispatch(actions.setRedirectUrl(url))
+        setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url))
     }
 }
 

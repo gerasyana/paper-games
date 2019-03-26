@@ -45,7 +45,7 @@ const reducer = (state = initialState, action) => {
                 user: null
             };
         }
-        case actionTypes.SET_REDIRECT_URL: {
+        case actionTypes.SET_AUTH_REDIRECT_URL: {
             return {
                 ...state,
                 redirectUrl: action.redirectUrl

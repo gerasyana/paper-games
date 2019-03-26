@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 
 import GameLogo from '../../components/Games/GameLogo/GameLogo';
-import games from '../../constants/games';
 import Button from '../../UI/Button/Button';
+import games from '../../constants/games';
+import * as actions from '../../storage/actions/actions';
 
 class Game extends Component {
 
@@ -20,6 +22,17 @@ class Game extends Component {
         }
     }
 
+    createRoom = () => {
+        if (this.props.isAuthenitcated) {
+            this.props.setLoginRedirectUrl(this.props.location.pathname);
+            this.props.history.push('/login');
+        }
+    }
+
+    joinRoom = () => {
+
+
+    }
     render() {
         let gameDetails = null;
 
@@ -42,7 +55,7 @@ class Game extends Component {
                                 <Button
                                     type="submit"
                                     className='btn btn-primary mr-4'
-                                    onClick={this.login} >
+                                    onClick={this.createRoom} >
                                     Create a new Game
                             </Button>
                                 <Button
@@ -61,4 +74,20 @@ class Game extends Component {
     }
 }
 
-export default Game;
+const mapStateToProps = (state) => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+        loading: state.auth.loading,
+        error: state.auth.error,
+        redirectUrl: state.auth.redirectUrl
+    }
+}
+
+const mapDispatchToState = (dispatch) => {
+    return {
+        setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url))
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToState)(Game);

@@ -11,5 +11,5 @@ export {
     signUpFailed,
     logout,
     logoutSuccess,
-    setRedirectUrl
+    setLoginRedirectUrl
 } from './auth'

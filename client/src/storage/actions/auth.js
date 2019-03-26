@@ -79,9 +79,9 @@ export const setAuthTimeout = (expirationTime) => {
     }
 }
 
-export const setRedirectUrl = (redirectUrl) => {
+export const setLoginRedirectUrl = (redirectUrl) => {
     return {
-        type: actionTypes.SET_REDIRECT_URL,
+        type: actionTypes.SET_AUTH_REDIRECT_URL,
         redirectUrl
     }
 }
