@@ -16,21 +16,17 @@ class App extends Component {
 
   componentDidMount() {
     this.props.checkAuthentication();
-    // this.props.setRedirectUrl(window.location.pathname);
   }
 
   render() {
-    console.log('render app. Path ' + this.props.location.pathname);
-    console.log(this.props.isAuthenticated);
-
-
     return (
       <Layout>
         <Suspense fallback={<Spinner />}>
           <Switch>
             <Route path='/login' exact render={() => <Login {...this.props} />} />
+            <Route path='/signup' exact render={() => <SignUp {...this.props} />} />
             <Route path="/logout" exact render={() => <Logout {...this.props} />} />
-            {<Route path='/games/tick-tack-toe' component={TickTackToe} />}
+            <Route path='/games/tick-tack-toe' component={TickTackToe} />
             <Route path='/' exact component={Home} />
             <Redirect to='/' />
           </Switch>
@@ -48,8 +44,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToState = (dispatch) => {
   return {
-    checkAuthentication: () => dispatch(actions.checkAuthentication()),
-    setRedirectUrl: (url) => dispatch(actions.setRedirectUrl(url))
+    checkAuthentication: () => dispatch(actions.checkAuthentication())
   }
 }
 
