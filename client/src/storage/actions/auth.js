@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 export function checkAuthentication() {
     return {
-        type : actionTypes.CHECK_AUTHENTICATION
+        type: actionTypes.CHECK_AUTHENTICATION
     }
 }
 
@@ -35,13 +35,13 @@ export function loginFailed(error) {
 
 export function logout() {
     return {
-        type : actionTypes.INIT_LOGOUT
+        type: actionTypes.INIT_LOGOUT
     }
 }
 
 export function logoutSuccess() {
     return {
-        type : actionTypes.LOGOUT_SUCCESS
+        type: actionTypes.LOGOUT_SUCCESS
     }
 }
 
@@ -75,6 +75,13 @@ export function signUpFailed(error) {
 export const setAuthTimeout = (expirationTime) => {
     return {
         type: actionTypes.AUTH_SET_TIMEOUT,
-        expirationTime 
+        expirationTime
+    }
+}
+
+export const setRedirectUrl = (redirectUrl) => {
+    return {
+        type: actionTypes.SET_REDIRECT_URL,
+        redirectUrl
     }
 }

@@ -1,6 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
+    redirectUrl: '/',
     user: null,
     isAuthenticated: false,
     loading: false,
@@ -42,6 +43,12 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 isAuthenticated: false,
                 user: null
+            };
+        }
+        case actionTypes.SET_REDIRECT_URL: {
+            return {
+                ...state,
+                redirectUrl: action.redirectUrl
             };
         }
         default:

@@ -9,6 +9,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-require('./express-app-init')(app);
+require('./scripts/mongoose');
+require('./scripts/routes')(app);
+require('./scripts/sockets')(app);
 
 app.listen(PORT, () => console.log(`Server start running on ${PORT}`));

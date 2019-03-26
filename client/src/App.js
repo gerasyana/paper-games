@@ -1,10 +1,11 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Switch, Redirect } from 'react-router';
+import { Route, Switch, Redirect, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import Spinner from './UI/Spinner/Spinner';
 import Layout from './hoc/Layout/Layout';
-import Games from './containers/Games/Games';
+import Home from './containers/Home/Home';
+import TickTackToe from './containers/TickTackToe/TickTackToe';
 import * as actions from './storage/actions/actions';
 
 const Login = React.lazy(() => import('./containers/Auth/Login/Login'));
@@ -15,18 +16,23 @@ class App extends Component {
 
   componentDidMount() {
     this.props.checkAuthentication();
+    // this.props.setRedirectUrl(window.location.pathname);
   }
 
   render() {
+    console.log('render app. Path ' + this.props.location.pathname);
+    console.log(this.props.isAuthenticated);
+
+
     return (
       <Layout>
         <Suspense fallback={<Spinner />}>
           <Switch>
-            <Route path='/games' component={Games} />
             <Route path='/login' exact render={() => <Login {...this.props} />} />
             <Route path="/logout" exact render={() => <Logout {...this.props} />} />
-            <Route path='/signup' exact render={() => <SignUp {...this.props} />} />
-            <Redirect from='/' to='/games' />
+            {<Route path='/games/tick-tack-toe' component={TickTackToe} />}
+            <Route path='/' exact component={Home} />
+            <Redirect to='/' />
           </Switch>
         </Suspense>
       </Layout>
@@ -34,10 +40,17 @@ class App extends Component {
   }
 }
 
-const mapDispatchToState = (dispatch) => {
+const mapStateToProps = (state) => {
   return {
-    checkAuthentication: () => dispatch(actions.checkAuthentication())
+    isAuthenticated: state.auth.isAuthenticated
   }
 }
 
-export default connect(null, mapDispatchToState)(App);
+const mapDispatchToState = (dispatch) => {
+  return {
+    checkAuthentication: () => dispatch(actions.checkAuthentication()),
+    setRedirectUrl: (url) => dispatch(actions.setRedirectUrl(url))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToState)(withRouter(App));

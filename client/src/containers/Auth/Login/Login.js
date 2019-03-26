@@ -17,7 +17,7 @@ class Login extends React.Component {
                 username: {
                     type: 'text',
                     label: 'Username',
-                    errorMessage: '',  
+                    errorMessage: '',
                     value: '',
                     placeholder: 'Username'
                 },
@@ -127,7 +127,7 @@ class Login extends React.Component {
         );
 
         if (this.props.isAuthenticated) {
-            form = <Redirect to='/' />
+            form = <Redirect to={this.props.redirectUrl} />
         }
 
         if (this.props.loading) {
@@ -141,7 +141,8 @@ const mapStateToProps = (state) => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
         loading: state.auth.loading,
-        error: state.auth.error
+        error: state.auth.error,
+        redirectUrl: state.auth.redirectUrl
     }
 }
 

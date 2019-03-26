@@ -6,7 +6,7 @@ import * as actions from '../../../storage/actions/actions'
 
 class Login extends React.Component {
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.logout();
     }
 
