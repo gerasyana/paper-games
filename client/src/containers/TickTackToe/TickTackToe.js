@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import Aux from '../../hoc/Aux/Aux';
 import classes from './TickTackToe.css';
 import * as actions from '../../storage/actions/actions';
 
-class TickTackToe extends Component {
+class TickTackToe extends PureComponent {
 
     componentDidMount() {
         if (!this.props.isAuthenticated) {
