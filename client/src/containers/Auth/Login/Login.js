@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Redirect, withRouter } from 'react-router';
 import { connect } from 'react-redux'
 
@@ -109,14 +109,14 @@ class Login extends Component {
                         <div>
                             <Button
                                 type="submit"
-                                className='btn btn-primary mr-4'
+                                className='btn btn-primary mr-4 mb-4'
                                 disabled={!this.state.loginButtonEnabled}
                                 onClick={this.login} >
                                 Login
                             </Button>
                             <Button
                                 type="button"
-                                className='btn btn-primary'
+                                className='btn btn-primary mb-4'
                                 onClick={this.goToSignUp}>
                                 Sign Up
                             </Button>

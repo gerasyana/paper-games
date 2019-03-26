@@ -23,16 +23,19 @@ class Game extends Component {
     }
 
     createRoom = () => {
-        if (this.props.isAuthenitcated) {
+        if (!this.props.isAuthenitcated) {
             this.props.setLoginRedirectUrl(this.props.location.pathname);
             this.props.history.push('/login');
         }
     }
 
     joinRoom = () => {
-
-
+        if (!this.props.isAuthenitcated) {
+            this.props.setLoginRedirectUrl(this.props.location.pathname);
+            this.props.history.push('/login');
+        }
     }
+
     render() {
         let gameDetails = null;
 
@@ -54,14 +57,14 @@ class Game extends Component {
                             <div>
                                 <Button
                                     type="submit"
-                                    className='btn btn-primary mr-4'
+                                    className='btn btn-primary mr-4 mb-4'
                                     onClick={this.createRoom} >
                                     Create a new Game
                             </Button>
                                 <Button
                                     type="button"
-                                    className='btn btn-primary'
-                                    onClick={this.goToSignUp}>
+                                    className='btn btn-primary mb-4'
+                                    onClick={this.joinRoom}>
                                     Join an existing game
                             </Button>
                             </div>
