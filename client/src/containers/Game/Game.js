@@ -27,12 +27,12 @@ class Game extends Component {
             const rules = this.state.game.rules.map((rule, index) => <li key={index}>{rule}</li>);
 
             gameDetails = (
-                <div className="container">
-                    <div className='row justify-content-around'>
-                        <div className='col-4'>
+                <div className="container body-container">
+                    <div className='row justify-content-center'>
+                        <div className='col-3 offset-md-1'>
                             <GameLogo name={this.state.game.name} src={this.state.game.src} />
                         </div>
-                        <div className='col-6'>
+                        <div className='col-5 offset-md-1'>
                             <h1>{this.state.game.name}</h1>
                             <h3>How To Play</h3>
                             <ol>

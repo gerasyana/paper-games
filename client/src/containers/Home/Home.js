@@ -13,11 +13,10 @@ class Home extends Component {
 
     render() {
         return (
-
             <Switch>
                 <Route path='/game/:id' exact component={Game} />
                 <Route path='/' exact>
-                    <div className="container">
+                    <div className="body-container container">
                         <div className='row justify-content-around'>
                             <Games games={games} gameSelected={this.openGameDetails} />
                         </div>

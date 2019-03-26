@@ -109,9 +109,9 @@ class SignUp extends Component {
         }
 
         let form = (
-            <div className="container mt-5">
+            <div className="body-container container">
                 <div className="row justify-content-center">
-                    <div className="col-5">
+                    <div className="col-4">
                         {errorMessage}
                         {formElemets}
                         <div>

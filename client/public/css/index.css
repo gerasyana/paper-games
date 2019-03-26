@@ -2,3 +2,7 @@ html, body {
   height: 100%;
   font-family: sans-serif
 }
+
+div.body-container {
+  padding-top : 80px
+}
