@@ -1,54 +1,29 @@
 import React, { Component } from 'react';
+import { Switch, Route } from 'react-router';
 
-import Game from '../../components/Game/Game';
-import battleshipImg from '../../assets/battleship.png';
-import tickTackToeImg from '../../assets/tick-tack-toe.jpg';
+import Game from '../Game/Game';
+import Games from '../../components/Games/Games';
+import games from '../../constants/games';
 
 class Home extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            games: {
-                'tickTackToe': {
-                    name: 'Tic-Tac-Toe',
-                    src: tickTackToeImg,
-                    link: '/games/tick-tack-toe'
-                },
-                'battleship': {
-                    name: 'Battleship',
-                    src: battleshipImg,
-                    link: '/games/battleship'
-                }
-            }
-        }
-    }
-
-    openGame = (event, url) => {
-        this.props.history.push(url);
+    openGameDetails = (id) => {
+        this.props.history.push(`/game/${id}`);
     }
 
     render() {
-        const games = [];
-
-        Object.keys(this.state.games).forEach(key => {
-            const game = this.state.games[key];
-            games.push((
-                <div key={key} className='col-4'>
-                    <Game
-                        name={game.name}
-                        src={game.src}
-                        gameSelected={(event) => this.openGame(event, game.link)} />
-                </div>
-            ));
-        });
-
         return (
-            <div className='container mt-5'>
-                <div className='row justify-content-around'>
-                    {games}
-                </div>
-            </div>
+
+            <Switch>
+                <Route path='/game/:id' exact component={Game} />
+                <Route path='/' exact>
+                    <div className="container">
+                        <div className='row justify-content-around'>
+                            <Games games={games} gameSelected={this.openGameDetails} />
+                        </div>
+                    </div>
+                </Route>
+            </Switch>
         )
     }
 }

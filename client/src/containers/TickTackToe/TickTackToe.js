@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
 import Aux from '../../hoc/Aux/Aux';
@@ -10,13 +11,15 @@ class TickTackToe extends Component {
     componentDidMount() {
         if (!this.props.isAuthenticated) {
             this.props.setRedirectUrl(this.props.location.pathname);
-            this.props.history.push('/login');
         }
     }
 
     render() {
+        const redirect = !this.props.isAuthenticated ? <Redirect to='/login' /> : null;
+
         return (
             <Aux>
+                {redirect}
                 <div className={classes.gameBoard}>
                     <div className="row">
                         <div className={'col-3 ' + classes.player}>
@@ -64,9 +67,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToState = (dispatch) => {
     return {
-      setRedirectUrl: (url) => dispatch(actions.setRedirectUrl(url))
+        setRedirectUrl: (url) => dispatch(actions.setRedirectUrl(url))
     }
-  }
+}
 
-  
 export default connect(mapStateToProps, mapDispatchToState)(TickTackToe);

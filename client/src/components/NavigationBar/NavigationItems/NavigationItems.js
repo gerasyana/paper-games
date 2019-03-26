@@ -8,7 +8,7 @@ const navigationItems = (props) => {
         {
             key: 'tic-tack-toe',
             label: 'Tic Tack Toe',
-            link: '/games/tick-tack-toe'
+            link: '/game/tick-tack-toe'
         }
     ];
 
@@ -20,7 +20,7 @@ const navigationItems = (props) => {
 
     let navItemsLeft = (
         <Aux>
-            <NavigationItem type="link" link='/' dropdownItems={dropdownItems} label="Rooms" />
+            <NavigationItem type="link" link='/' dropdownItems={dropdownItems} label="Home" />
             <NavigationItem type="dropdown" dropdownItems={dropdownItems} label="Games" />
         </Aux>
     )
