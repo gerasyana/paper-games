@@ -1,4 +1,4 @@
-const { removeTokenFromWhitelist } = require('../helpers/redis');
+const { removeTokenFromWhitelist } = require('../services/redis');
 const keys = require('../configs/keys');
 
 module.exports.logout = (req, res, next) => {

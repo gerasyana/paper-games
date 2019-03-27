@@ -1,7 +1,7 @@
-const jwt = require('../helpers/jwt');
 const { authenticate } = require('../middlewares/authenticate');
 const { logout } = require('../middlewares/logout');
-const { signUp, login, getUserById } = require('../actions/user');
+const { signUp, login, getUserById } = require('../services/user');
+const jwt = require('../services/jwt');
 
 module.exports = app => {
 

@@ -1,4 +1,4 @@
-const jwt = require('../helpers/jwt');
+const jwt = require('../services/jwt');
 const keys = require('../configs/keys');
 
 module.exports.authenticate = (req, res, next) => {

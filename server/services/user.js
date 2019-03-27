@@ -1,11 +1,10 @@
 
 const mongoose = require('mongoose');
-const jwt = require('../helpers/jwt');
+const jwt = require('./jwt');
 const { USER_MODEL } = require('../constants/modelNames');
-
 const User = mongoose.model(USER_MODEL);
 
-getUserById = (userId) => {
+const getUserById = (userId) => {
     return User.findById(userId).then(user => {
         const { email, username } = user;
         return { email, username }
@@ -16,7 +15,7 @@ getUserById = (userId) => {
     })
 }
 
-signUp = (data) => {
+const signUp = (data) => {
     const { email, password, username } = data;
 
     return User.findOne({ username })
@@ -49,7 +48,7 @@ signUp = (data) => {
         });
 }
 
-login = (data) => {
+const login = (data) => {
     const { username, password } = data;
 
     return User.findOne({ username })
@@ -72,8 +71,9 @@ login = (data) => {
         });
 }
 
+
 module.exports = {
-    getUserById,
     login,
-    signUp
+    signUp,
+    getUserById
 };
