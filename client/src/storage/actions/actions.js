@@ -13,3 +13,11 @@ export {
     logoutSuccess,
     setLoginRedirectUrl
 } from './auth'
+
+export {
+    joinRoom,
+    createRoom,
+    connectUser,
+    disconnectUser,
+    userConnected
+} from './room'

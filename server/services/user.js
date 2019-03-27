@@ -33,7 +33,7 @@ const signUp = (data) => {
                 const tokenDetails = jwt.generateJWT(user);
                 return {
                     tokenDetails,
-                    user: { email, username }
+                    user: { email, username, id: user._id }
                 }
             }).catch(err => {
                 console.log(error);
@@ -62,7 +62,7 @@ const login = (data) => {
             const tokenDetails = jwt.generateJWT(user);
             return {
                 tokenDetails,
-                user: { password, username }
+                user: { password, username, id: user._id }
             }
         }).catch(err => {
             console.log(err);

@@ -6,7 +6,6 @@ import Button from '../../UI/Button/Button';
 import Modal from '../../UI/Modal/Modal';
 import games from '../../constants/games';
 import * as actions from '../../storage/actions/actions';
-import * as sockets from '../../sockets/rooms';
 
 class Game extends Component {
 
@@ -24,16 +23,16 @@ class Game extends Component {
         }
     }
 
-    createRoom = () => {
+    createGame = () => {
         if (!this.props.isAuthenticated) {
             this.props.setLoginRedirectUrl(this.props.location.pathname);
             this.props.history.push('/login');
         } else {
-            sockets.createRoom({name : 'test'});
+           this.props.createRoom({room : 'test'});
         }
     }
 
-    joinRoom = () => {
+    joinGame = () => {
         if (!this.props.isAuthenticated) {
             this.props.setLoginRedirectUrl(this.props.location.pathname);
             this.props.history.push('/login');
@@ -62,13 +61,13 @@ class Game extends Component {
                                 <Button
                                     type="submit"
                                     className='btn btn-primary mr-4 mb-4'
-                                    onClick={this.createRoom} >
+                                    onClick={this.createGame} >
                                     Create a new Game
                             </Button>
                                 <Button
                                     type="button"
                                     className='btn btn-primary mb-4'
-                                    onClick={this.joinRoom}>
+                                    onClick={this.joinGame}>
                                     Join an existing game
                             </Button>
                             </div>
@@ -89,7 +88,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToState = (dispatch) => {
     return {
-        setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url))
+        setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url)),
+        createRoom : (data) => dispatch(actions.createRoom(data))
     }
 }
 

@@ -8,14 +8,13 @@ export function* logoutSaga(action) {
   yield localStorage.removeItem(keys.TOKEN_KEY);
   yield localStorage.removeItem(keys.EXPIRATION_DATE_KEY);
   yield put(actions.logoutSuccess());
+  yield put(actions.disconnectUser());
 }
 
 export function* checkAuthenticationSaga(action) {
   const token = yield localStorage.getItem(keys.TOKEN_KEY);
 
-  if (!token) {
-    yield put(actions.logout());
-  } else {
+  if (token) {
     const expirationDate = yield new Date(localStorage.getItem(keys.EXPIRATION_DATE_KEY));
 
     if (expirationDate <= new Date()) {
@@ -24,9 +23,12 @@ export function* checkAuthenticationSaga(action) {
       const response = yield userRouters.getUser();
 
       if (response.data) {
-        const expiresIn = yield (expirationDate.getTime() - new Date().getTime());
         yield put(actions.loginSuccess(response.data));
+
+        const expiresIn = yield (expirationDate.getTime() - new Date().getTime());
         yield put(actions.setAuthTimeout(expiresIn));
+
+        yield put(actions.connectUser());
       }
     }
   }
@@ -39,11 +41,14 @@ export function* loginSaga(action) {
   if (response.data.error) {
     yield put(actions.loginFailed(response.data.error));
   } else {
+    yield put(actions.loginSuccess(response.data.user));
+
     const { expirationDate } = response.data.tokenDetails;
     const expiresIn = yield getExpirationTime(expirationDate);
-    yield put(actions.loginSuccess(response.data.user));
     yield setLocalStorage(response.data.tokenDetails);
     yield put(actions.setAuthTimeout(expiresIn));
+
+    yield put(actions.connectUser());
   }
 }
 
@@ -54,11 +59,14 @@ export function* signUpSaga(action) {
   if (response.data.error) {
     yield put(actions.signUpFailed(response.data.error));
   } else {
+    yield put(actions.signUpSuccess(response.data.user));
+
     const { expirationDate } = response.data.tokenDetails;
     const expiresIn = yield getExpirationTime(expirationDate);
-    yield put(actions.signUpSuccess(response.data.user));
     yield setLocalStorage(response.data.tokenDetails);
     yield put(actions.setAuthTimeout(expiresIn));
+
+    yield put(actions.connectUser());
   }
 }
 
