@@ -4,9 +4,9 @@ const path = require('path');
 
 module.exports = app => {
     if (process.env.NODE_ENV === 'production') {
-        app.use(express.static(path.join(__dirname, '../client/build')));
+        app.use(express.static(path.join(__dirname, '../../client/build')));
         app.get('/', function (req, res) {
-            res.sendFile(path.join(__dirname, '../client/build/index.html'));
+            res.sendFile(path.join(__dirname, '../../client/build/index.html'));
         });
     } else {
         app.get('/', (req, res) => {
@@ -14,6 +14,6 @@ module.exports = app => {
         })
     }
 
-    const fileNames = fs.readdirSync(path.resolve(__dirname, './routes'));
-    fileNames.forEach(fileName => require(`./routes/${fileName}`)(app));
+    const fileNames = fs.readdirSync(path.resolve(__dirname, '../routes'));
+    fileNames.forEach(fileName => require(`../routes/${fileName}`)(app));
 } 
