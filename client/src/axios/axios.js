@@ -1,14 +1,13 @@
 import axios from 'axios';
 
 import * as keys from '../constants/localStorageKeys';
-
-const baseURL = process.env.NODE_ENV === 'production' ? window.location.origin : 'http://localhost:5000';
+import { SERVER_URL } from '../constants/configs';
 
 const instance = axios.create({
-    baseURL: `${baseURL}/api`,
+    baseURL: `${SERVER_URL}/api`,
     headers: {
         common: {
-            'Access-Control-Allow-Origin': baseURL,
+            'Access-Control-Allow-Origin': SERVER_URL,
             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
         },
         post: {

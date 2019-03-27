@@ -3,8 +3,10 @@ import { connect } from 'react-redux'
 
 import GameLogo from '../../components/Games/GameLogo/GameLogo';
 import Button from '../../UI/Button/Button';
+import Modal from '../../UI/Modal/Modal';
 import games from '../../constants/games';
 import * as actions from '../../storage/actions/actions';
+import * as sockets from '../../sockets/rooms';
 
 class Game extends Component {
 
@@ -23,14 +25,16 @@ class Game extends Component {
     }
 
     createRoom = () => {
-        if (!this.props.isAuthenitcated) {
+        if (!this.props.isAuthenticated) {
             this.props.setLoginRedirectUrl(this.props.location.pathname);
             this.props.history.push('/login');
+        } else {
+            sockets.createRoom({name : 'test'});
         }
     }
 
     joinRoom = () => {
-        if (!this.props.isAuthenitcated) {
+        if (!this.props.isAuthenticated) {
             this.props.setLoginRedirectUrl(this.props.location.pathname);
             this.props.history.push('/login');
         }
@@ -79,10 +83,7 @@ class Game extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        isAuthenticated: state.auth.isAuthenticated,
-        loading: state.auth.loading,
-        error: state.auth.error,
-        redirectUrl: state.auth.redirectUrl
+        isAuthenticated: state.auth.isAuthenticated
     }
 }
 
@@ -91,6 +92,5 @@ const mapDispatchToState = (dispatch) => {
         setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url))
     }
 }
-
 
 export default connect(mapStateToProps, mapDispatchToState)(Game);
