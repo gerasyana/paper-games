@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Switch, Route } from 'react-router';
 
 import Game from '../Game/Game';
 import Games from '../../components/Games/Games';
 import games from '../../constants/games';
 
-class Home extends Component {
+class Home extends PureComponent {
 
     openGameDetails = (id) => {
         this.props.history.push(`/game/${id}`);

@@ -28,6 +28,5 @@ UserSchema.statics.hashPassword = (password) => {
 UserSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 }
-
 mongoose.model(USER_MODEL, UserSchema);
 

@@ -1,14 +1,16 @@
 import { put, delay } from 'redux-saga/effects'
 
+import client from '../../socket.io/client';
 import * as actions from '../actions/actions';
 import * as userRouters from '../../axios/routes/user';
 import * as keys from '../../constants/localStorageKeys';
 
 export function* logoutSaga(action) {
+  yield userRouters.logout();
   yield localStorage.removeItem(keys.TOKEN_KEY);
   yield localStorage.removeItem(keys.EXPIRATION_DATE_KEY);
   yield put(actions.logoutSuccess());
-  yield put(actions.disconnectUser());
+  yield client.disconnectUser();
 }
 
 export function* checkAuthenticationSaga(action) {
@@ -21,14 +23,14 @@ export function* checkAuthenticationSaga(action) {
       yield put(actions.logout());
     } else {
       const response = yield userRouters.getUser();
-
+   
       if (response.data) {
         yield put(actions.loginSuccess(response.data));
 
         const expiresIn = yield (expirationDate.getTime() - new Date().getTime());
         yield put(actions.setAuthTimeout(expiresIn));
 
-        yield put(actions.connectUser());
+        yield client.connectUser();
       }
     }
   }
@@ -42,31 +44,21 @@ export function* loginSaga(action) {
     yield put(actions.loginFailed(response.data.error));
   } else {
     yield put(actions.loginSuccess(response.data.user));
-
-    const { expirationDate } = response.data.tokenDetails;
-    const expiresIn = yield getExpirationTime(expirationDate);
     yield setLocalStorage(response.data.tokenDetails);
-    yield put(actions.setAuthTimeout(expiresIn));
-
-    yield put(actions.connectUser());
+    yield client.connectUser();
   }
 }
 
 export function* signUpSaga(action) {
   yield put(actions.signUpStart());
   const response = yield userRouters.signUp(action.user);
-
+ 
   if (response.data.error) {
     yield put(actions.signUpFailed(response.data.error));
   } else {
     yield put(actions.signUpSuccess(response.data.user));
-
-    const { expirationDate } = response.data.tokenDetails;
-    const expiresIn = yield getExpirationTime(expirationDate);
     yield setLocalStorage(response.data.tokenDetails);
-    yield put(actions.setAuthTimeout(expiresIn));
-
-    yield put(actions.connectUser());
+    yield client.connectUser();
   }
 }
 
@@ -76,8 +68,11 @@ export function* setAuthTimeoutSaga(action) {
 }
 
 function setLocalStorage(tokenDetails) {
+  const { expirationDate } = tokenDetails;
+  const expiresIn = getExpirationTime(expirationDate);
   localStorage.setItem(keys.TOKEN_KEY, tokenDetails.token);
   localStorage.setItem(keys.EXPIRATION_DATE_KEY, tokenDetails.expirationDate);
+  put(actions.setAuthTimeout(expiresIn));
 }
 
 function getExpirationTime(date) {

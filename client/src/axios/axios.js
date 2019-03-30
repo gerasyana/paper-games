@@ -16,8 +16,9 @@ const instance = axios.create({
     }
 });
 
-instance.interceptors.request.use(function (config) {
+instance.interceptors.request.use((config) => {
     const token = localStorage.getItem(keys.TOKEN_KEY);
+ 
     if (token) {
         config.headers['x-auth'] = token;
     }

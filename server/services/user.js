@@ -1,79 +1,66 @@
 
 const mongoose = require('mongoose');
-const jwt = require('./jwt');
+const jwtService = require('./jwt');
 const { USER_MODEL } = require('../constants/modelNames');
+
 const User = mongoose.model(USER_MODEL);
 
-const getUserById = (userId) => {
-    return User.findById(userId).then(user => {
+class UserService {
+
+    async getUserById(id) {
+        const user = await User.findById(id);
+
+        if (!user) {
+            return { error: 'User not found' };
+        }
+
         const { email, username } = user;
-        return { email, username }
-    }).catch(err => {
-        console.log(err);
-        //TODO log error
-        return { error: 'User not found' }
-    })
-}
+        return { email, username, id }
+    }
 
-const signUp = (data) => {
-    const { email, password, username } = data;
+    async signUp(data) {
+        const { email, password, username } = data;
+        let user = await User.findOne({ username });
 
-    return User.findOne({ username })
-        .then(user => {
-            if (user) {
-                return { error: 'Account with the username already exists' };
-            }
+        if (user) {
+            return { error: 'Account with the username already exists' };
+        }
 
-            const newUser = {
-                email,
-                username,
-                password: User.hashPassword(password)
-            };
-            return User.create(newUser).then(user => {
-                const tokenDetails = jwt.generateJWT(user);
-                return {
-                    tokenDetails,
-                    user: { email, username, id: user._id }
-                }
-            }).catch(err => {
-                console.log(error);
-                //TODO : log error
-                return { error: 'Error while creating new account. Please try again' }
-            });
-        })
-        .catch(err => {
-            console.log(error);
-            //TODO : log error
-            return { error: 'Error while creating new account. Please try again' }
+        user = await User.create({
+            email,
+            username,
+            password: User.hashPassword(password)
         });
+
+        if (!user) {
+            return { error: 'Error while signing up . Please try again' }
+        }
+        return getUserDetails(user);
+    }
+
+    async login(data) {
+        const { username, password } = data;
+        const user = await User.findOne({ username });
+
+        if (!user) {
+            return { error: `User not found` };
+        } else if (!user.validPassword(password)) {
+            return { error: "Invalid password" };
+        }
+        return getUserDetails(user);
+    }
 }
 
-const login = (data) => {
-    const { username, password } = data;
-
-    return User.findOne({ username })
-        .then(user => {
-            if (!user) {
-                return { error: `User not found` };
-            } else if (!user.validPassword(password)) {
-                return { error: "Invalid password" };
-            }
-
-            const tokenDetails = jwt.generateJWT(user);
-            return {
-                tokenDetails,
-                user: { password, username, id: user._id }
-            }
-        }).catch(err => {
-            console.log(err);
-            //TODO : log error
-            return { error: 'Error while creating new account. Please try again' }
-        });
+const getUserDetails = (user) => {
+    const tokenDetails = jwtService.generateAndSaveJWT(user);
+    return {
+        tokenDetails,
+        user: {
+            email: user.email,
+            username: user.username,
+            id: user._id
+        }
+    }
 }
 
-
-module.exports = {
-    login,
-    signUp,
-    getUserById
-};
+module.exports = new UserService();

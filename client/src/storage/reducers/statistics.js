@@ -1,18 +1,23 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    socket: null,
-    userId: null
+    rooms: [],
+    usersOnline: 0
 }
 
 const reducers = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.USER_CONNECTED: {
+        case actionTypes.SET_SITE_STATISTICS: {
             return {
                 ...state,
-                socket: action.socket,
-                userId: action.userId
-            };
+                ...action.data
+            }
+        }
+        case actionTypes.UPDATE_ROOMS: {
+            return {
+                ...state,
+                rooms: action.rooms
+            }
         }
         default:
             return state;

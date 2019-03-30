@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux'
 
 import * as actions from '../../../storage/actions/actions'
 
-class Login extends React.Component {
+class Login extends PureComponent {
 
     componentDidMount() {
         this.props.logout();

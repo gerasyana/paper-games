@@ -1,18 +1,19 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 
 import GameLogo from '../../components/Games/GameLogo/GameLogo';
 import Button from '../../UI/Button/Button';
-import Modal from '../../UI/Modal/Modal';
+import NewRoom from './NewRoom/NewRoom';
 import games from '../../constants/games';
 import * as actions from '../../storage/actions/actions';
 
-class Game extends Component {
+class Game extends PureComponent {
 
     constructor(props) {
         super(props);
         this.state = {
-            game: null
+            game: null,
+            showNewRoomModal: false
         }
     }
 
@@ -28,7 +29,9 @@ class Game extends Component {
             this.props.setLoginRedirectUrl(this.props.location.pathname);
             this.props.history.push('/login');
         } else {
-           this.props.createRoom({room : 'test'});
+            this.setState({
+                showNewRoomModal: true
+            });
         }
     }
 
@@ -41,12 +44,18 @@ class Game extends Component {
 
     render() {
         let gameDetails = null;
+        let modal = null;
+
+        if (this.state.showNewRoomModal) {
+            modal = <NewRoom modalId='newRoomModal'/>
+        }
 
         if (this.state.game) {
             const rules = this.state.game.rules.map((rule, index) => <li key={index}>{rule}</li>);
 
             gameDetails = (
                 <div className="container body-container">
+                    {modal}
                     <div className='row justify-content-center'>
                         <div className='col-3 offset-md-1'>
                             <GameLogo name={this.state.game.name} src={this.state.game.src} />
@@ -61,9 +70,11 @@ class Game extends Component {
                                 <Button
                                     type="submit"
                                     className='btn btn-primary mr-4 mb-4'
+                                    data-toggle="modal"
+                                    data-target="#newRoomModal"
                                     onClick={this.createGame} >
                                     Create a new Game
-                            </Button>
+                                </Button>
                                 <Button
                                     type="button"
                                     className='btn btn-primary mb-4'
@@ -88,8 +99,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToState = (dispatch) => {
     return {
-        setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url)),
-        createRoom : (data) => dispatch(actions.createRoom(data))
+        setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url))
     }
 }
 

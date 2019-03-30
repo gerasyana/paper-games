@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Redirect, withRouter } from 'react-router';
 import { connect } from 'react-redux'
 
@@ -8,7 +8,7 @@ import Spinner from '../../../UI/Spinner/Spinner';
 import * as actions from '../../../storage/actions/actions'
 import { validateInput } from '../../../helpers/validation';
 
-class Login extends Component {
+class Login extends PureComponent {
 
     constructor(props) {
         super(props);
@@ -17,14 +17,12 @@ class Login extends Component {
                 username: {
                     type: 'text',
                     label: 'Username',
-                    errorMessage: '',
                     value: '',
-                    placeholder: 'Username'
+                    placeholder: 'Enter username'
                 },
                 password: {
                     type: 'password',
                     label: 'Password',
-                    errorMessage: '',
                     value: '',
                     placeholder: 'Enter password'
                 }

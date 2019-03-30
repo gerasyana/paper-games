@@ -17,7 +17,6 @@ export {
 export {
     joinRoom,
     createRoom,
-    connectUser,
-    disconnectUser,
-    userConnected
-} from './room'
+    updateRooms,
+    setSiteStatistics
+} from './statistics'

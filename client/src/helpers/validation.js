@@ -11,28 +11,28 @@ export const validateInput = (value, rules) => {
     if (rules.required) {
         isValid = value.trim() !== '' && isValid;
         if (!isValid) {
-            return { message : 'Field is required', isValid }
+            return { errorMessage : 'Field is required', isValid }
         }
     }
 
     if (rules.minLength) {
         isValid = value.length >= rules.minLength && isValid;
         if (!isValid) {
-            return { message: `Field must contain at least ${rules.minLength} character`, isValid }
+            return { errorMessage: `Field must contain at least ${rules.minLength} character`, isValid }
         }
     }
 
     if (rules.maxLength) {
         isValid = value.length <= rules.maxLength && isValid;
         if (!isValid) {
-            return { message: `Field must contain no more than ${rules.maxLength} characters`, isValid }
+            return { errorMessage: `Field must contain no more than ${rules.maxLength} characters`, isValid }
         }
     }
 
     if (rules.isEmail) {
         isValid = EMAIL_PATTERN.test(value) && isValid;
         if (!isValid) {
-            return { message: 'Email is invalid', isValid }
+            return { errorMessage: 'Email is invalid', isValid }
         }
     }
     return { isValid };

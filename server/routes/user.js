@@ -1,21 +1,24 @@
 const { authenticate } = require('../middlewares/authenticate');
 const { logout } = require('../middlewares/logout');
-const { signUp, login, getUserById } = require('../services/user');
-const jwt = require('../services/jwt');
+const { getDecodedJWT } = require('../services/jwt');
+const userService = require('../services/user');
 
 module.exports = app => {
 
-    app.get('/api/user', authenticate, (req, res) => {
-        const tokenParsed = jwt.getDecodedJWT(req.token);
-        return getUserById(tokenParsed.id).then(data => res.json(data));
+    app.get('/api/user', authenticate, async (req, res) => {
+        const tokenParsed = getDecodedJWT(req.token);
+        const data = await userService.getUserById(tokenParsed.id)
+        return res.json(data);
     });
 
-    app.post('/api/user/signup', (req, res) => {
-        return signUp(req.body).then(data => res.json(data));
+    app.post('/api/user/signup', async (req, res) => {
+        const data = await userService.signUp(req.body);
+        return res.json(data);
     });
 
-    app.post('/api/user/login', (req, res) => {
-        return login(req.body).then(data => res.json(data));
+    app.post('/api/user/login', async (req, res) => {
+        const data = await userService.login(req.body);
+        return res.json(data);
     });
 
     app.post('/api/user/logout', logout, (req, res) => {

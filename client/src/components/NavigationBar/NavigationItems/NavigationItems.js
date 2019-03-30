@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import Aux from '../../../hoc/Aux/Aux';
 import NavigationItem from './NavigationItem/NavigationItem';
@@ -28,13 +28,15 @@ const navigationItems = (props) => {
     if (props.isAuthenticated) {
         navItemsRight = (
             <Aux>
+                <NavigationItem type="text" label={`${props.rooms} rooms `} />
+                <NavigationItem type="text" label={`${props.usersOnline} users `} />
                 <NavigationItem type="text" label='0 scores' />
                 <NavigationItem type="text" label={props.user.username} />
                 <NavigationItem type="link" link='/logout' label="Logout" />
             </Aux>
         )
     }
-
+    
     return (
         <Aux>
             <ul className="nav navbar-nav navbar-nav">
@@ -46,4 +48,4 @@ const navigationItems = (props) => {
         </Aux>
     );
 }
-export default navigationItems;
+export default memo(navigationItems);

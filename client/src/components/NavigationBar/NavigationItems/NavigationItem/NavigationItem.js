@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import { NavLink } from 'react-router-dom';
 
 const navigationItem = (props) => {
@@ -47,4 +47,4 @@ const navigationItem = (props) => {
     return navItem;
 }
 
-export default navigationItem;
+export default memo(navigationItem);

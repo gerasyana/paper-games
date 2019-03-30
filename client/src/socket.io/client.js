@@ -1,6 +1,8 @@
 import io from 'socket.io-client';
 
 import { SERVER_URL } from '../constants/configs';
+import store from '../storage/store';
+import * as actions from '../storage/actions/actions';
 
 class SocketClient {
 
@@ -14,24 +16,26 @@ class SocketClient {
 
     connectUser() {
         this.client = io.connect(SERVER_URL);
-
-        this.client.on('roomCreated', (data) => {
-            console.log('new room Created ', data);
+        
+        this.client.on('userConnected', (data) => {
+            store.dispatch(actions.setSiteStatistics(data));
         })
 
-        this.client.on('roomClosed', (data) => {
-            console.log('room Closed ', data);
+        this.client.on('userDisconnected', (data) => {
+            store.dispatch(actions.setSiteStatistics(data));
+        })
+        
+        this.client.on('roomCreated', (data) => {
+            store.dispatch(actions.updateRooms(data));
         });
 
-        this.client.on('join', (data) => {
-            console.log('join to room', data);
+        this.client.on('roomClosed', (data) => {
+            store.dispatch(actions.updateRooms(data));
         });
     }
 
     disconnectUser() {
-        if (this.client) {
-            this.client.disconnect();
-        }
+        this.client.disconnect();
     }
 }
 

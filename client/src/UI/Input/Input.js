@@ -21,7 +21,7 @@ const input = (props) => {
 
         let message = null;
         if (!props.isValid) {
-            message = <div className="invalid-feedback">{props.message}</div>;
+            message = <div className="invalid-feedback">{props.errorMessage}</div>;
         }
         input = (
             <div className="form-group">

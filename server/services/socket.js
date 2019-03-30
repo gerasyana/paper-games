@@ -1,21 +1,42 @@
+const { getOnlineUsersCount } = require('./redis');
 
-const initConnection = (io) => {
-    io.on('connection', (client) => {
-        console.log('New user connected! ' + client.id);
+class SocketClient {
 
-        client.on('createRoom', function (data) {
-            console.log(' createRoom ');
-            const room = `${data.room}-room`;
-            client.join(room);
-            client.emit('roomCreated', {name: data.name, room: 'room-'+rooms});
+    constructor(io) {
+        this.io = io;
+        this.rooms = [];
+    }
+
+    initConnection() {
+        this.io.on('connection', async (client) => {
+            const usersOnline = await this.getConnectionDetails();
+            this.io.sockets.emit('userConnected', usersOnline);
+
+            client.on('createRoom', (data) => {
+                const room = `room-${data.room}`;
+                client.join(room);
+                this.io.sockets.emit('roomCreated', { rooms: this.getRooms() });
+            });
+
+            client.on('disconnect', async () => {
+                const data = await this.getConnectionDetails();
+                this.io.sockets.emit('userDisconnected', data);
+            })
         });
+    }
 
-        client.on('disconnect', () => {
-            console.log('User disconnected ' + client.id);
-        })
-    });
+    async getConnectionDetails() {
+        const usersOnline = await getOnlineUsersCount();
+        return {
+            usersOnline,
+            rooms: this.getRooms()
+        }
+    }
+
+    getRooms() {
+        return Object.keys(this.io.nsps['/'].adapter.rooms)
+            .filter(room => room.indexOf('room') > -1);
+    }
 }
 
-module.exports = {
-    initConnection
-}
+module.exports = io => new SocketClient(io);

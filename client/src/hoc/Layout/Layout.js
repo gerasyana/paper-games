@@ -5,6 +5,13 @@ import classes from './Layout.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
 class Layout extends Component {
+
+    shouldComponentUpdate(nextProps, state) {
+        return this.props.isAuthenticated !== nextProps.isAuthenticated ||
+            this.props.usersOnline !== nextProps.usersOnline ||
+            this.props.rooms !== nextProps.rooms;
+    }
+
     render() {
         return (
             <div className={classes.appContainer}>
@@ -22,7 +29,9 @@ class Layout extends Component {
 const mapStateToProps = (state) => {
     return {
         user: state.auth.user,
-        isAuthenticated: state.auth.isAuthenticated
+        isAuthenticated: state.auth.isAuthenticated,
+        usersOnline: state.statistics.usersOnline,
+        rooms: state.statistics.rooms.length
     }
 }
 
