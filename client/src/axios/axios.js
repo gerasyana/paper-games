@@ -16,13 +16,13 @@ const instance = axios.create({
     }
 });
 
-instance.interceptors.request.use((config) => {
+instance.interceptors.request.use((req) => {
     const token = localStorage.getItem(keys.TOKEN_KEY);
  
     if (token) {
-        config.headers['x-auth'] = token;
+        req.headers['x-auth'] = token;
     }
-    return config;
+    return req;
 });
 
 export default instance;
