@@ -7,8 +7,7 @@ import * as keys from '../../constants/localStorageKeys';
 
 export function* logoutSaga(action) {
   yield userRouters.logout();
-  yield localStorage.removeItem(keys.TOKEN_KEY);
-  yield localStorage.removeItem(keys.EXPIRATION_DATE_KEY);
+  yield removeLocalStorage();
   yield put(actions.logoutSuccess());
   yield client.disconnectUser();
 }
@@ -23,8 +22,8 @@ export function* checkAuthenticationSaga(action) {
       yield put(actions.logout());
     } else {
       const response = yield userRouters.getUser();
-   
-      if (response.data) {
+
+      if (response.status === 200 && response.data) {
         yield put(actions.loginSuccess(response.data));
 
         const expiresIn = yield (expirationDate.getTime() - new Date().getTime());
@@ -40,7 +39,7 @@ export function* loginSaga(action) {
   yield put(actions.loginStart());
   const response = yield userRouters.login(action.credentials);
 
-  if (response.data.error) {
+  if (response.data.error || response.status !== 200) {
     yield put(actions.loginFailed(response.data.error));
   } else {
     yield put(actions.loginSuccess(response.data.user));
@@ -52,8 +51,8 @@ export function* loginSaga(action) {
 export function* signUpSaga(action) {
   yield put(actions.signUpStart());
   const response = yield userRouters.signUp(action.user);
- 
-  if (response.data.error) {
+
+  if (response.data.error || response.status !== 200) {
     yield put(actions.signUpFailed(response.data.error));
   } else {
     yield put(actions.signUpSuccess(response.data.user));
@@ -73,6 +72,11 @@ function setLocalStorage(tokenDetails) {
   localStorage.setItem(keys.TOKEN_KEY, tokenDetails.token);
   localStorage.setItem(keys.EXPIRATION_DATE_KEY, tokenDetails.expirationDate);
   put(actions.setAuthTimeout(expiresIn));
+}
+
+function removeLocalStorage() {
+  localStorage.removeItem(keys.TOKEN_KEY);
+  localStorage.removeItem(keys.EXPIRATION_DATE_KEY);
 }
 
 function getExpirationTime(date) {

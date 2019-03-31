@@ -15,7 +15,9 @@ const store = createStore(
         auth: authReducer,
         statistics: statisticsReducer
     }),
-    applyMiddleware(sagaMiddleware)
+    composeEnhancers(
+        applyMiddleware(sagaMiddleware)
+    )
 );
 
 sagaMiddleware.run(watchAuth);

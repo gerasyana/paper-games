@@ -7,7 +7,7 @@ module.exports = app => {
 
     app.get('/api/user', authenticate, async (req, res) => {
         const tokenParsed = getDecodedJWT(req.token);
-        const data = await userService.getUserById(tokenParsed.id)
+        const data = await userService.getUserById(tokenParsed.id);
         return res.json(data);
     });
 
@@ -22,6 +22,6 @@ module.exports = app => {
     });
 
     app.post('/api/user/logout', logout, (req, res) => {
-        return res.sendStatus(200);
+        return res.send(200);
     });
 }

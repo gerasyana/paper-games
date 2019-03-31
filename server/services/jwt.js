@@ -22,9 +22,13 @@ class JWTService {
     }
 
     async isValidJWT(token) {
-        const decoded = jwt.verify(token, keys.JWT_SECRET);
-        const isValid = await isTokenValid(token);
-        return decoded && !!isValid;
+        try {
+            const decoded = jwt.verify(token, keys.JWT_SECRET);
+            const isValid = await isTokenValid(token);
+            return decoded && !!isValid;
+        } catch (ex) {
+            return false;
+        }
     }
 
     getDecodedJWT(token) {

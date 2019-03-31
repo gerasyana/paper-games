@@ -16,7 +16,7 @@ class SocketClient {
 
     connectUser() {
         this.client = io.connect(SERVER_URL);
-        
+
         this.client.on('userConnected', (data) => {
             store.dispatch(actions.setSiteStatistics(data));
         })
@@ -24,7 +24,7 @@ class SocketClient {
         this.client.on('userDisconnected', (data) => {
             store.dispatch(actions.setSiteStatistics(data));
         })
-        
+
         this.client.on('roomCreated', (data) => {
             store.dispatch(actions.updateRooms(data));
         });
@@ -35,7 +35,9 @@ class SocketClient {
     }
 
     disconnectUser() {
-        this.client.disconnect();
+        if (this.client) {
+            this.client.disconnect();
+        }
     }
 }
 
