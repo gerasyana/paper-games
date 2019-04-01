@@ -1,4 +1,4 @@
-const { getOnlineUsersCount } = require('./redis');
+const redisService = require('./redis');
 
 class SocketClient {
 
@@ -26,7 +26,7 @@ class SocketClient {
     }
 
     async getConnectionDetails() {
-        const usersOnline = await getOnlineUsersCount();
+        const usersOnline = await redisService.getOnlineUsersCount();
         return {
             usersOnline,
             rooms: this.getRooms()

@@ -5,6 +5,7 @@ const TOKENS_WHITELIST_KEY = 'validTokens';
 const TOKENS_WHITELIST_EX = 2 * 60 * 60;
 const USERS_ONLINE_KEY = 'usersOnline';
 const USERS_ONLINE_EX = 2 * 60 * 60;
+const USER_ROOMS_KEY = 'userRooms';
 
 class RedisService {
 
