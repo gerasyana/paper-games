@@ -13,8 +13,7 @@ class SocketClient {
             this.io.sockets.emit('userConnected', ioDetails);
 
             client.on('createRoom', async (data) => {
-                const room = `room-${data.room}`;
-                client.join(room);
+                client.join(data.room);
                 await redisService.saveUserRoom(data);
                 this.io.sockets.emit('roomCreated', { rooms: this.getRooms()});
             });
@@ -41,7 +40,7 @@ class SocketClient {
 
     getRooms() {
         return Object.keys(this.io.nsps['/'].adapter.rooms)
-            .filter(room => room.indexOf('room') > -1);
+            .filter(room => room.indexOf('room-') > -1);
     }
 }
 

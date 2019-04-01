@@ -14,7 +14,7 @@ class Home extends PureComponent {
     render() {
         return (
             <Switch>
-                <Route path='/game/:id' exact component={Game} />
+                <Route path='/game/:id/' component={Game} />
                 <Route path='/' exact>
                     <div className="body-container container">
                         <div className='row justify-content-around'>

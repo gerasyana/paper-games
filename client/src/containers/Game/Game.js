@@ -1,11 +1,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
+import { Route, Switch } from 'react-router';
 
 import GameLogo from '../../components/Games/GameLogo/GameLogo';
 import Button from '../../UI/Button/Button';
-import NewRoom from './NewRoom/NewRoom';
+import NewRoom from '../NewRoom/NewRoom';
 import games from '../../constants/games';
 import * as actions from '../../storage/actions/actions';
+
+import TickTackToe from './TickTackToe/TickTackToe';
 
 class Game extends PureComponent {
 
@@ -14,7 +17,8 @@ class Game extends PureComponent {
         this.state = {
             game: null,
             gameId: null,
-            showNewRoomModal: false
+            showNewRoomModal: false,
+            room: null,
         }
     }
 
@@ -31,7 +35,7 @@ class Game extends PureComponent {
 
     createGame = () => {
         if (!this.props.isAuthenticated) {
-            this.props.setLoginRedirectUrl(this.props.location.pathname);
+            this.props.setLoginRedirectUrl(this.props.match.url);
             this.props.history.push('/login');
         } else {
             this.setState({
@@ -41,10 +45,17 @@ class Game extends PureComponent {
     }
 
     joinGame = () => {
-        if (!this.props.isAuthenticated) {
-            this.props.setLoginRedirectUrl(this.props.location.pathname);
-            this.props.history.push('/login');
-        }
+
+    }
+
+    startGame = (room) => {
+        this.setState({
+            showNewRoomModal: false,
+            room
+        });
+        let path = `${this.props.match.url}/${room}`;
+        path = path.replace('//', '/');
+        this.props.history.push(path);
     }
 
     render() {
@@ -52,7 +63,7 @@ class Game extends PureComponent {
         let modal = null;
 
         if (this.state.showNewRoomModal) {
-            modal = <NewRoom modalId='newRoomModal' gameId={this.state.gameId} />
+            modal = <NewRoom modalId='newRoomModal' gameId={this.state.gameId} roomCreated={this.startGame} />
         }
 
         if (this.state.game) {
@@ -62,7 +73,7 @@ class Game extends PureComponent {
                 <div className="container body-container">
                     {modal}
                     <div className='row justify-content-center'>
-                        <div className='col-3 offset-md-1'>
+                        <div className='col-4'>
                             <GameLogo name={this.state.game.name} src={this.state.game.src} />
                         </div>
                         <div className='col-5 offset-md-1'>
@@ -92,7 +103,15 @@ class Game extends PureComponent {
                 </div>
             );
         }
-        return gameDetails;
+        
+        return (
+            <Switch>
+                <Route path={`${this.props.match.path}:room`} exact component={TickTackToe} />;
+                <Route path={`${this.props.match.path}`} exact >
+                    {gameDetails}
+                </Route>
+            </Switch>
+        );
     }
 }
 

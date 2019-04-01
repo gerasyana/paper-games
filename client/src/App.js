@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import Spinner from './UI/Spinner/Spinner';
 import Layout from './hoc/Layout/Layout';
 import Home from './containers/Home/Home';
-import TickTackToe from './containers/TickTackToe/TickTackToe';
 import * as actions from './storage/actions/actions';
 
 const Login = React.lazy(() => import('./containers/Auth/Login/Login'));
@@ -26,7 +25,6 @@ class App extends Component {
             <Route path='/login' exact render={() => <Login {...this.props} />} />
             <Route path='/signup' exact render={() => <SignUp {...this.props} />} />
             <Route path="/logout" exact render={() => <Logout {...this.props} />} />
-            <Route path="/tick-tack-toe" exact component={TickTackToe} />
             <Route path='/' component={Home} />
             <Redirect to='/' />
           </Switch>

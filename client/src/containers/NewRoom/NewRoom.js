@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 
-import Modal from '../../../UI/Modal/Modal';
-import Input from '../../../UI/Input/Input';
-import Button from '../../../UI/Button/Button';
-import { validateInput } from '../../../helpers/validation';
-import * as actions from '../../../storage/actions/actions';
+import Modal from '../../UI/Modal/Modal';
+import Input from '../../UI/Input/Input';
+import Button from '../../UI/Button/Button';
+import { validateInput } from '../../helpers/validation';
+import * as actions from '../../storage/actions/actions';
 
 class NewRoom extends Component {
 
@@ -43,9 +43,9 @@ class NewRoom extends Component {
     }
 
     createRoom = () => {
-        const room = this.state.roomControl.value;
+        const room = `room-${this.state.roomControl.value}`;
 
-        if (this.props.rooms.includes(`room-${room}`)) {
+        if (this.props.rooms.includes(room)) {
             this.setState({
                 roomControl: {
                     ...this.state.roomControl,
@@ -56,24 +56,35 @@ class NewRoom extends Component {
         } else {
             this.props.createRoom({
                 room,
-                userId : this.props.userId,
+                userId: this.props.userId,
                 gameId: this.props.gameId
             });
+            this.closeModal();
+            this.props.roomCreated(room);
         }
     }
 
     render() {
         return (
-            <Modal title="New Room" id={this.props.modalId}>
+            <Modal title="New Room" id={this.props.modalId} closeModal={click => this.closeModal = click}>
                 <Input {...this.state.roomControl} onChange={this.setControlValue} />
-                <Button
-                    type="button"
-                    className='btn btn-primary'
-                    disabled={!this.state.roomControl.value}
-                    onClick={this.createRoom}>
-                    Create room
-                </Button>
-            </Modal>
+                <div id="footer">
+                    <Button
+                        type="button"
+                        className='btn btn-primary mr-4'
+                        disabled={!this.state.roomControl.value}
+                        onClick={this.createRoom}>
+                        Create room
+                    </Button>
+                    <Button
+                        id="closeBtn"
+                        type="button"
+                        className="btn btn-secondary"
+                        data-dismiss="modal">
+                        Close
+                    </Button>
+                </div>
+            </Modal >
         );
     }
 }
@@ -81,7 +92,7 @@ class NewRoom extends Component {
 const mapStateToProps = (state) => {
     return {
         rooms: state.statistics.rooms,
-        userId : state.auth.user.id
+        userId: state.auth.user.id
     }
 }
 

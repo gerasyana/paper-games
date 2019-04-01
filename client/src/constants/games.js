@@ -1,4 +1,3 @@
-
 import battleshipImgSrc from '../assets/battleship.png';
 import tickTackToeImgSrc from '../assets/tick-tack-toe.jpg';
 

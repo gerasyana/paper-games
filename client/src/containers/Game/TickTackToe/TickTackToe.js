@@ -1,12 +1,16 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
-import Aux from '../../hoc/Aux/Aux';
+import Aux from '../../../hoc/Aux/Aux';
 import classes from './TickTackToe.css';
-import * as actions from '../../storage/actions/actions';
+import * as actions from '../../../storage/actions/actions';
 
-class TickTackToe extends PureComponent {
+class TickTackToe extends Component {
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.isAuthenticated !== nextProps.isAuthenticated;
+    } 
 
     componentDidMount() {
         if (!this.props.isAuthenticated) {
@@ -16,7 +20,7 @@ class TickTackToe extends PureComponent {
 
     render() {
         const redirect = !this.props.isAuthenticated ? <Redirect to='/login' /> : null;
-
+       
         return (
             <Aux>
                 {redirect}
