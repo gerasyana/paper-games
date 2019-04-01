@@ -34,9 +34,9 @@ class SocketClient {
         });
     }
 
-    disconnectUser() {
+    disconnectUser(userId) {
         if (this.client) {
-            this.client.disconnect();
+            this.client.emit('disconnectUser', { userId });
         }
     }
 }

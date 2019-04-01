@@ -13,14 +13,19 @@ class Game extends PureComponent {
         super(props);
         this.state = {
             game: null,
+            gameId: null,
             showNewRoomModal: false
         }
     }
 
     componentDidMount() {
         if (!this.state.game && this.props.match.params.id) {
-            const game = games[this.props.match.params.id];
-            this.setState({ game });
+            const gameId = this.props.match.params.id;
+            const game = games[gameId];
+            this.setState({
+                game,
+                gameId
+            });
         }
     }
 
@@ -47,7 +52,7 @@ class Game extends PureComponent {
         let modal = null;
 
         if (this.state.showNewRoomModal) {
-            modal = <NewRoom modalId='newRoomModal'/>
+            modal = <NewRoom modalId='newRoomModal' gameId={this.state.gameId} />
         }
 
         if (this.state.game) {

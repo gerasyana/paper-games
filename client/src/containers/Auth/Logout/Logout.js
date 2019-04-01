@@ -7,7 +7,7 @@ import * as actions from '../../../storage/actions/actions'
 class Login extends PureComponent {
 
     componentDidMount() {
-        this.props.logout();
+        this.props.logout(this.props.userId);
     }
 
     render() {
@@ -15,10 +15,16 @@ class Login extends PureComponent {
     }
 }
 
-const mapDispatchToState = (dispatch) => {
+const mapStateToProps = (state) => {
     return {
-        logout: () => dispatch(actions.logout())
+        userId: state.auth.user.id
     }
 }
 
-export default connect(null, mapDispatchToState)(Login);
+const mapDispatchToState = (dispatch) => {
+    return {
+        logout: (userId) => dispatch(actions.logout(userId))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToState)(Login);

@@ -9,7 +9,7 @@ export function* logoutSaga(action) {
   yield userRouters.logout();
   yield removeLocalStorage();
   yield put(actions.logoutSuccess());
-  yield client.disconnectUser();
+  yield client.disconnectUser(action.userId);
 }
 
 export function* checkAuthenticationSaga(action) {

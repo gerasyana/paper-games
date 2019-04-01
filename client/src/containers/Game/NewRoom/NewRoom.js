@@ -44,7 +44,7 @@ class NewRoom extends Component {
 
     createRoom = () => {
         const room = this.state.roomControl.value;
-        
+
         if (this.props.rooms.includes(`room-${room}`)) {
             this.setState({
                 roomControl: {
@@ -54,7 +54,11 @@ class NewRoom extends Component {
                 }
             })
         } else {
-            this.props.createRoom(room);
+            this.props.createRoom({
+                room,
+                userId : this.props.userId,
+                gameId: this.props.gameId
+            });
         }
     }
 
@@ -76,13 +80,14 @@ class NewRoom extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        rooms: state.statistics.rooms
+        rooms: state.statistics.rooms,
+        userId : state.auth.user.id
     }
 }
 
 const mapDispatchToState = (dispatch) => {
     return {
-        createRoom: (room) => dispatch(actions.createRoom(room))
+        createRoom: (data) => dispatch(actions.createRoom(data))
     }
 }
 

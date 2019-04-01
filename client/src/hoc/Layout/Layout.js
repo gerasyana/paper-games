@@ -14,14 +14,9 @@ class Layout extends Component {
     }
 
     setInterceptor = () => {
-        axios.interceptors.response.use(res => {
-            if (res.status === 2000 && this.state.message) {
-                this.setState({ message: null });
-            }
-            return res;
-        }, error => {
+        axios.interceptors.response.use(res => res, error => {
             if (error.response.status === 401) {
-               this.props.logout();
+                this.props.logout();
             }
             return Promise.resolve(error.response);
         });

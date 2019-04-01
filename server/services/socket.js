@@ -9,18 +9,24 @@ class SocketClient {
 
     initConnection() {
         this.io.on('connection', async (client) => {
-            const usersOnline = await this.getConnectionDetails();
-            this.io.sockets.emit('userConnected', usersOnline);
+            const ioDetails = await this.getConnectionDetails();
+            this.io.sockets.emit('userConnected', ioDetails);
 
-            client.on('createRoom', (data) => {
+            client.on('createRoom', async (data) => {
                 const room = `room-${data.room}`;
                 client.join(room);
-                this.io.sockets.emit('roomCreated', { rooms: this.getRooms() });
+                await redisService.saveUserRoom(data);
+                this.io.sockets.emit('roomCreated', { rooms: this.getRooms()});
             });
 
-            client.on('disconnect', async () => {
-                const data = await this.getConnectionDetails();
-                this.io.sockets.emit('userDisconnected', data);
+            client.on('disconnectUser', async (data) => {
+                await redisService.clearUserRooms(data.userId);
+                client.disconnect();
+            });
+
+            client.on('disconnect' , async() => {
+                const ioDetails = await this.getConnectionDetails();
+                this.io.sockets.emit('userDisconnected', ioDetails);
             })
         });
     }
