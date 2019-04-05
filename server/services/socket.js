@@ -1,5 +1,5 @@
 const redisService = require('./redis');
-const { getUserById, getUsersByIdsMap } = require('./user');
+const { getUsersByIdsMap } = require('./user');
 
 class SocketClient {
 
