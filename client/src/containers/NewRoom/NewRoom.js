@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 
@@ -6,6 +7,8 @@ import Input from '../../UI/Input/Input';
 import Button from '../../UI/Button/Button';
 import { validateInput } from '../../helpers/validation';
 import * as actions from '../../storage/actions/actions';
+
+const modalId = 'newRoomModal';
 
 class NewRoom extends Component {
 
@@ -43,9 +46,9 @@ class NewRoom extends Component {
     }
 
     createRoom = () => {
-        const room = `room-${this.state.roomControl.value}`;
+        let room = this.state.roomControl.value;
 
-        if (this.props.rooms.includes(room)) {
+        if (this.isRoomExists(room)) {
             this.setState({
                 roomControl: {
                     ...this.state.roomControl,
@@ -55,18 +58,25 @@ class NewRoom extends Component {
             })
         } else {
             this.props.createRoom({
-                room,
-                userId: this.props.userId,
-                gameId: this.props.gameId
+                room: {
+                    gameId: this.props.gameId,
+                    name: room
+                },
+                player1: this.props.player1
             });
-            this.closeModal();
+            $(`#${modalId}`).modal('hide');
             this.props.roomCreated(room);
         }
     }
 
+    isRoomExists = (roomName) => {
+        const rooms = this.props.rooms.map(room => room.name);
+        return rooms.includes(roomName);
+    }
+
     render() {
         return (
-            <Modal title="New Room" id={this.props.modalId} closeModal={click => this.closeModal = click}>
+            <Modal title="New Room" id={modalId} showCloseIcon>
                 <Input {...this.state.roomControl} onChange={this.setControlValue} />
                 <div id="footer">
                     <Button
@@ -84,7 +94,7 @@ class NewRoom extends Component {
                         Close
                     </Button>
                 </div>
-            </Modal >
+            </Modal>
         );
     }
 }
@@ -92,7 +102,7 @@ class NewRoom extends Component {
 const mapStateToProps = (state) => {
     return {
         rooms: state.statistics.rooms,
-        userId: state.auth.user.id
+        player1: state.auth.user
     }
 }
 

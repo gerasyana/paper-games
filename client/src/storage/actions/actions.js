@@ -15,8 +15,13 @@ export {
 } from './auth'
 
 export {
-    joinRoom,
-    createRoom,
     updateRooms,
     setSiteStatistics
 } from './statistics'
+
+export {
+    createRoom,
+    roomCreated,
+    joinRoom,
+    userJoined
+} from './game'

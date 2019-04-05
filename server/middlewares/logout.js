@@ -5,6 +5,6 @@ const { getDecodedJWT } = require('../services/jwt');
 module.exports.logout = (req, res, next) => {
     const token = req.headers[keys.AUTH_HEADER];
     const tokenDecoded = getDecodedJWT(token);
-    removeTokenFromWhitelist(token, tokenDecoded.id);
+    removeTokenFromWhitelist(token);
     next();
 }

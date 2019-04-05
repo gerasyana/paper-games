@@ -9,7 +9,7 @@ export function* logoutSaga(action) {
   yield userRouters.logout();
   yield removeLocalStorage();
   yield put(actions.logoutSuccess());
-  yield client.disconnectUser(action.userId);
+  yield client.disconnectUser();
 }
 
 export function* checkAuthenticationSaga(action) {
@@ -29,7 +29,7 @@ export function* checkAuthenticationSaga(action) {
         const expiresIn = yield (expirationDate.getTime() - new Date().getTime());
         yield put(actions.setAuthTimeout(expiresIn));
 
-        yield client.connectUser();
+        yield client.connectUser(response.data.id);
       }
     }
   }
@@ -44,7 +44,7 @@ export function* loginSaga(action) {
   } else {
     yield put(actions.loginSuccess(response.data.user));
     yield setLocalStorage(response.data.tokenDetails);
-    yield client.connectUser();
+    yield client.connectUser(response.data.user.id);
   }
 }
 
@@ -57,7 +57,7 @@ export function* signUpSaga(action) {
   } else {
     yield put(actions.signUpSuccess(response.data.user));
     yield setLocalStorage(response.data.tokenDetails);
-    yield client.connectUser();
+    yield client.connectUser(response.data.user.id);
   }
 }
 

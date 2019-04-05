@@ -45,7 +45,7 @@ class Game extends PureComponent {
     }
 
     joinGame = () => {
-
+        this.props.history.push('/rooms');
     }
 
     startGame = (room) => {
@@ -63,7 +63,7 @@ class Game extends PureComponent {
         let modal = null;
 
         if (this.state.showNewRoomModal) {
-            modal = <NewRoom modalId='newRoomModal' gameId={this.state.gameId} roomCreated={this.startGame} />
+            modal = <NewRoom gameId={this.state.gameId} roomCreated={this.startGame} />
         }
 
         if (this.state.game) {
@@ -89,7 +89,7 @@ class Game extends PureComponent {
                                     data-toggle="modal"
                                     data-target="#newRoomModal"
                                     onClick={this.createGame} >
-                                    Create a new Game
+                                    Create a new game
                                 </Button>
                                 <Button
                                     type="button"
@@ -103,7 +103,7 @@ class Game extends PureComponent {
                 </div>
             );
         }
-        
+
         return (
             <Switch>
                 <Route path={`${this.props.match.path}:room`} exact component={TickTackToe} />;

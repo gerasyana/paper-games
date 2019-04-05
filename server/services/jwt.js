@@ -17,7 +17,7 @@ class JWTService {
         };
 
         const token = jwt.sign(options, keys.JWT_SECRET, { expiresIn: EXPIRES_IN });
-        addTokenToWhitelist(token, user._id.toString());
+        addTokenToWhitelist(token);
         return { token, expirationDate }
     }
 

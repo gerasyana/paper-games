@@ -2,7 +2,7 @@ import { all, takeEvery } from 'redux-saga/effects';
 
 import * as actionTypes from '../actions/actionTypes';
 import * as authSagas from './auth';
-import * as statisticsSagas from './statistics';
+import * as gameSagas from './game';
 
 export function* watchAuth() {
     yield all([
@@ -14,9 +14,9 @@ export function* watchAuth() {
     ])
 }
 
-export function* watchStatistics() {
+export function* watchGame() {
     yield all([
-        takeEvery(actionTypes.JOIN_ROOM, statisticsSagas.joinRoomSaga),
-        takeEvery(actionTypes.CREATE_ROOM, statisticsSagas.createRoomSaga)
+        takeEvery(actionTypes.JOIN_ROOM, gameSagas.joinRoomSaga),
+        takeEvery(actionTypes.CREATE_ROOM, gameSagas.createRoomSaga)
     ])
 }

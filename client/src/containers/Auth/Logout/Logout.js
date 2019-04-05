@@ -7,17 +7,11 @@ import * as actions from '../../../storage/actions/actions'
 class Login extends PureComponent {
 
     componentDidMount() {
-        this.props.logout(this.props.userId);
+        this.props.logout();
     }
 
     render() {
         return <Redirect to="/" />;
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        userId: state.auth.user.id
     }
 }
 
@@ -27,4 +21,4 @@ const mapDispatchToState = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToState)(Login);
+export default connect(null, mapDispatchToState)(Login);

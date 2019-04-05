@@ -28,7 +28,7 @@ const navigationItems = (props) => {
     if (props.isAuthenticated) {
         navItemsRight = (
             <Aux>
-                <NavigationItem type="text" label={`${props.rooms} rooms `} />
+                <NavigationItem type="link" link='/rooms' label={`${props.rooms} rooms `} />
                 <NavigationItem type="text" label={`${props.usersOnline} users `} />
                 <NavigationItem type="text" label='0 scores' />
                 <NavigationItem type="text" label={props.user.username} />

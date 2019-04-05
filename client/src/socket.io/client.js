@@ -14,8 +14,10 @@ class SocketClient {
         this.client.emit('joinRoom', data);
     }
 
-    connectUser() {
+    connectUser(userId) {
         this.client = io.connect(SERVER_URL);
+
+        this.client.emit('setUserId', { userId });
 
         this.client.on('userConnected', (data) => {
             store.dispatch(actions.setSiteStatistics(data));
@@ -26,17 +28,21 @@ class SocketClient {
         })
 
         this.client.on('roomCreated', (data) => {
-            store.dispatch(actions.updateRooms(data));
+            store.dispatch(actions.roomCreated(data.room, data.player1));
         });
 
-        this.client.on('roomClosed', (data) => {
-            store.dispatch(actions.updateRooms(data));
+        this.client.on('roomsUpdated', (data) => {
+            store.dispatch(actions.updateRooms(data.rooms));
+        });
+
+        this.client.on('userJoined', (data) => {
+            store.dispatch(actions.userJoined(data));
         });
     }
 
-    disconnectUser(userId) {
+    disconnectUser() {
         if (this.client) {
-            this.client.emit('disconnectUser', { userId });
+            this.client.disconnect();
         }
     }
 }

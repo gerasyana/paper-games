@@ -33,10 +33,9 @@ export const loginFailed = (error) => {
     }
 }
 
-export const logout = (userId) => {
+export const logout = () => {
     return {
-        type: actionTypes.INIT_LOGOUT,
-        userId
+        type: actionTypes.INIT_LOGOUT
     }
 }
 

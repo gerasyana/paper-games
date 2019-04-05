@@ -1,23 +1,9 @@
 import * as actionTypes from './actionTypes';
 
-export const joinRoom = (data) => {
-    return {
-        type: actionTypes.JOIN_ROOM,
-        data
-    }
-}
-
-export const createRoom = (data) => {
-    return {
-        type: actionTypes.CREATE_ROOM,
-        data
-    }
-}
-
-export const updateRooms = (data) => {
+export const updateRooms = (rooms) => {
     return {
         type: actionTypes.UPDATE_ROOMS,
-        ...data
+        rooms
     }
 }
 

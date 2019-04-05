@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Switch, Route } from 'react-router';
 
 import Game from '../Game/Game';
+import Rooms from '../Rooms/Rooms';
 import Games from '../../components/Games/Games';
 import games from '../../constants/games';
 
@@ -14,6 +15,7 @@ class Home extends PureComponent {
     render() {
         return (
             <Switch>
+                <Route path='/rooms' component={Rooms} />
                 <Route path='/game/:id/' component={Game} />
                 <Route path='/' exact>
                     <div className="body-container container">

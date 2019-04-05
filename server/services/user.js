@@ -7,7 +7,7 @@ const User = mongoose.model(USER_MODEL);
 
 class UserService {
 
-    async getUserById(id) {
+    async getUserById(id) { //TODO : CACHE
         const user = await User.findById(id);
 
         if (!user) {
@@ -48,6 +48,10 @@ class UserService {
             return { error: "Invalid password" };
         }
         return getUserDetails(user);
+    }
+
+    async getUsersByIdsMap(ids) {
+        return await User.findByIdMap(ids);
     }
 }
 
