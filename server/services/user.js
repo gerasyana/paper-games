@@ -2,20 +2,19 @@
 const mongoose = require('mongoose');
 const jwtService = require('./jwt');
 const { USER_MODEL } = require('../constants/modelNames');
+const { USERS_HASH_KEY } = require('./redis');
 
 const User = mongoose.model(USER_MODEL);
 
 class UserService {
 
-    async getUserById(id) { //TODO : CACHE
+    async getUserById(id) {
         const user = await User.findById(id);
 
         if (!user) {
             return { error: 'User not found' };
         }
-
-        const { email, username } = user;
-        return { email, username, id }
+        return getUserWrapper(user);
     }
 
     async signUp(data) {
@@ -59,12 +58,16 @@ const getUserDetails = (user) => {
     const tokenDetails = jwtService.generateAndSaveJWT(user);
     return {
         tokenDetails,
-        user: {
-            email: user.email,
-            username: user.username,
-            id: user._id
-        }
+        user: getUserWrapper(user)
     }
 }
+
+const getUserWrapper = (user) => (
+    {
+        email: user.email,
+        username: user.username,
+        id: user._id
+    }
+)
 
 module.exports = new UserService();

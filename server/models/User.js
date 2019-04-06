@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const { users } = require('../services/redis');
 const { USER_MODEL } = require('../constants/modelNames');
+
+const exec = mongoose.Query.prototype.exec;
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -28,9 +31,9 @@ UserSchema.statics.findByIdMap = async function (ids) {
     });
     return items.reduce((obj, item) => {
         obj[item._id] = {
-            id : item._id,
-            username : item.username,
-            email : item.email
+            id: item._id,
+            username: item.username,
+            email: item.email
         };
         return obj;
     }, {});

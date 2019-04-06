@@ -1,4 +1,4 @@
-const redisService = require('./redis');
+const redis = require('./redis');
 const { getUsersByIdsMap } = require('./user');
 
 class SocketClient {
@@ -11,23 +11,27 @@ class SocketClient {
         this.io.on('connection', async (client) => {
 
             client.on('setUserId', async (data) => {
-                await redisService.saveUserConnection(client.id, data.userId);
-                const ioDetails = await this.getConnectionDetails();
-                this.io.sockets.emit('userConnected', ioDetails);
+                await redis.sockets.save(client.id, data.userId);
+                const usersOnline = await redis.sockets.getUsersOnlineCount();
+                this.io.sockets.emit('userConnected', { usersOnline });
             });
 
             client.on('disconnect', async () => {
-                await redisService.removeUserConnection(client.id);
-                //TODO: remove rooms info
-                const ioDetails = await this.getConnectionDetails();
-                this.io.sockets.emit('userDisconnected', ioDetails);
+                await redis.sockets.remove(client.id);
+
+                this.io.clients(async (err, clientIds) => {
+                    let rooms = Object.keys(this.io.nsps['/'].adapter.rooms).filter(room => !clientIds.includes(room));
+                    await redis.rooms.refresh(rooms);
+                    const ioDetails = await this.getConnectionDetails();
+                    this.io.sockets.emit('userDisconnected', ioDetails);
+                });
             });
 
             client.on('createRoom', async (data) => {
                 const { room } = data;
 
                 client.join(room.name);
-                await redisService.saveRoom(room);
+                await redis.rooms.save(room);
 
                 this.io.sockets.to(client.id).emit('roomCreated', data);
                 await this.notifyRoomsUpdate();
@@ -62,7 +66,7 @@ class SocketClient {
     }
 
     async getConnectionDetails() {
-        const usersOnline = await redisService.getOnlineUsersCount();
+        const usersOnline = await redis.sockets.getUsersOnlineCount();
         const rooms = await this.getRooms();
         return {
             usersOnline,
@@ -71,8 +75,8 @@ class SocketClient {
     }
 
     async getRooms() {
-        const rooms = await redisService.getRooms();
-        const clients = await redisService.getOnlineUsers();
+        const rooms = await redis.rooms.getAll();
+        const clients = await redis.sockets.getAll();
 
         if (!rooms || !clients) {
             return [];

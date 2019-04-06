@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { addTokenToWhitelist, isTokenValid } = require('./redis');
+const { tokens } = require('./redis');
 const keys = require('../configs/keys');
 
 const EXPIRES_IN = '2h';
@@ -17,14 +17,14 @@ class JWTService {
         };
 
         const token = jwt.sign(options, keys.JWT_SECRET, { expiresIn: EXPIRES_IN });
-        addTokenToWhitelist(token);
+        tokens.addToWhitelist(token);
         return { token, expirationDate }
     }
 
     async isValidJWT(token) {
         try {
             const decoded = jwt.verify(token, keys.JWT_SECRET);
-            const isValid = await isTokenValid(token);
+            const isValid = await tokens.isValid(token);
             return decoded && !!isValid;
         } catch (ex) {
             return false;
