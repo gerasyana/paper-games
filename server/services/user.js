@@ -2,14 +2,13 @@
 const mongoose = require('mongoose');
 const jwtService = require('./jwt');
 const { USER_MODEL } = require('../constants/modelNames');
-const { USERS_HASH_KEY } = require('./redis');
 
 const User = mongoose.model(USER_MODEL);
 
 class UserService {
 
     async getUserById(id) {
-        const user = await User.findById(id);
+        const user = await User.findById(id); 
 
         if (!user) {
             return { error: 'User not found' };
@@ -47,10 +46,6 @@ class UserService {
             return { error: "Invalid password" };
         }
         return getUserDetails(user);
-    }
-
-    async getUsersByIdsMap(ids) {
-        return await User.findByIdMap(ids);
     }
 }
 

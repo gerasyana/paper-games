@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import { SERVER_URL } from '../constants/configs';
 import store from '../storage/store';
 import * as actions from '../storage/actions/actions';
+import { debug } from 'util';
 
 class SocketClient {
 
@@ -38,6 +39,18 @@ class SocketClient {
         this.client.on('userJoined', (data) => {
             store.dispatch(actions.userJoined(data));
         });
+
+        this.client.on('userLeftGame', () => {
+            store.dispatch(actions.userLeftGame());
+        })
+
+        this.client.on('closeGame', () => {
+            store.dispatch(actions.closeGame());
+        })
+    }
+
+    leaveRoom(room) {
+        this.client.emit('leaveRoom', { room });
     }
 
     disconnectUser() {

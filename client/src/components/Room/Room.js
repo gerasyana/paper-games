@@ -11,7 +11,7 @@ const room = (props) => (
             <div className="card-body">
                 <h6 className="card-title">{props.users.map(user => user.username).join(',')}</h6>
                 {
-                    props.free ?
+                    props.users.length === 1 ?
                         <Button
                             type='button'
                             className="btn btn-primary"
@@ -23,6 +23,6 @@ const room = (props) => (
             </div>
         </div>
     </div>
-);
+)
 
 export default memo(room);

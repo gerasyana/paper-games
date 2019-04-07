@@ -23,3 +23,6 @@ export const JOIN_ROOM = 'JOIN_ROOM';
 export const CREATE_ROOM = 'CREATE_ROOM';
 export const ROOM_CREATED = 'ROOM_CREATED';
 export const USER_JOINED = 'USER_JOINED';
+export const LEAVE_ROOM = 'LEAVE_ROOM';
+export const CLOSE_GAME = 'CLOSE_GAME';
+export const USER_LEFT_GAME = 'USER_LEFT_GAME';

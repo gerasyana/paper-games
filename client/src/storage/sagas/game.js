@@ -7,3 +7,7 @@ export function* joinRoomSaga(action) {
 export function* createRoomSaga(action) {
     yield client.createRoom(action.data);
 }
+
+export function* leaveRoom(action) {
+    yield client.leaveRoom(action.room);
+}

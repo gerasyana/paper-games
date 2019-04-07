@@ -23,5 +23,8 @@ export {
     createRoom,
     roomCreated,
     joinRoom,
-    userJoined
+    userJoined,
+    closeGame,
+    leaveRoom,
+    userLeftGame
 } from './game'

@@ -17,6 +17,7 @@ export function* watchAuth() {
 export function* watchGame() {
     yield all([
         takeEvery(actionTypes.JOIN_ROOM, gameSagas.joinRoomSaga),
-        takeEvery(actionTypes.CREATE_ROOM, gameSagas.createRoomSaga)
+        takeEvery(actionTypes.CREATE_ROOM, gameSagas.createRoomSaga),
+        takeEvery(actionTypes.LEAVE_ROOM, gameSagas.leaveRoom)
     ])
 }

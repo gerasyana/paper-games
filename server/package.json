@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"redis-server\" \"node server.js\""
+    "start": "concurrently \"redis-server\" \"nodemon server.js\""
   },
   "author": "",
   "license": "ISC",

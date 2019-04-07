@@ -5,7 +5,9 @@ const initialState = {
     player2: null,
     gameId: null,
     name: null,
-    gameStart: false
+    gameStart: false,
+    gameFinished: false,
+    userLeftGame: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -23,6 +25,18 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 ...action.data,
                 gameStart: true
+            }
+        }
+        case actionTypes.CLOSE_GAME: {
+            return {
+                ...state,
+                gameFinished: true
+            }
+        }
+        case actionTypes.USER_LEFT_GAME: {
+            return {
+                ...state,
+                userLeftGame: true
             }
         }
         default:

@@ -1,5 +1,7 @@
 import React, { memo } from 'react';
 
+import classes from './Modal.css';
+
 const modal = props => {
     let closeIcon = (
         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
@@ -12,13 +14,17 @@ const modal = props => {
     }
 
     return (
-        <div className="modal fade" id={props.id} tabIndex="-1" role="dialog" aria-labelledby='modalTitle' aria-hidden="true" >
+        <div className={classes.modalCentered + ' modal fade'} id={props.id} tabIndex="-1" role="dialog" aria-labelledby='modalTitle' aria-hidden="true" >
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title" id='modalTitle'>{props.title}</h5>
-                        {closeIcon}
-                    </div>
+                    {
+                        props.title ?
+                            <div className="modal-header">
+                                <h5 className="modal-title" id='modalTitle'>{props.title}</h5>
+                                {closeIcon}
+                            </div>
+                            : null
+                    }
                     <div className="modal-body">
                         {props.children[0]}
                     </div>
