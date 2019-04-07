@@ -77,65 +77,7 @@ class TickTackToe extends Component {
             $(`#${waitingUserModalId}`).modal('hide');
         }
 
-        let game = (
-            <Aux>
-                <div className={classes.gameBoard}>
-                    <div className="row">
-                        <div className={'col-2 ' + classes.border}>  </div>
-                        <div className='col-8'>
-                            <div className='row justify-content-center' style={{ height: "85%" }}>
-                                <div className='col-6'>
-                                    <table className={'table ' + classes.game}>
-                                        <tbody>
-                                            <tr>
-                                                <td><button className="tile" id="button_00"></button></td>
-                                                <td><button className="tile" id="button_01"></button></td>
-                                                <td><button className="tile" id="button_02"></button></td>
-                                            </tr>
-                                            <tr>
-                                                <td><button className="tile" id="button_10"></button></td>
-                                                <td><button className="tile" id="button_11"></button></td>
-                                                <td><button className="tile" id="button_12"></button></td>
-                                            </tr>
-                                            <tr>
-                                                <td><button className="tile" id="button_20"></button></td>
-                                                <td><button className="tile" id="button_21"></button></td>
-                                                <td><button className="tile" id="button_22"></button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div className={'row text-center align-items-center ' + classes.playersPnl}>
-                                <div className='col-4'>
-                                    <h5>
-                                        {this.props.player1.username} X
-                                    </h5>
-                                </div>
-                                <div className='col-4'>
-                                    <h3>
-                                        {this.state.player1Score} : {this.state.player2Score}
-                                    </h3>
-                                    <Button
-                                        id="closeBtn"
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={this.leaveRoom}>
-                                        Leave Game
-                                    </Button>
-                                </div>
-                                <div className='col-4'>
-                                    <h5>
-                                        {this.props.player2.username} O
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={'col-2 ' + classes.border}></div>
-                    </div>
-                </div>
-            </Aux>
-        )
+        let game = null;
 
         if (!this.props.isAuthenticated) {
             game = <Redirect to='/login' />;
@@ -159,6 +101,67 @@ class TickTackToe extends Component {
                                </Button>
                         </div>
                     </Modal>
+                )
+            } else {
+
+                game = (
+                    <Aux>
+                        <div className={classes.gameBoard}>
+                            <div className="row">
+                                <div className={'col-2 ' + classes.border}>  </div>
+                                <div className='col-8'>
+                                    <div className='row justify-content-center' style={{ height: "85%" }}>
+                                        <div className='col-6'>
+                                            <table className={'table ' + classes.game}>
+                                                <tbody>
+                                                    <tr>
+                                                        <td id="button_00">X</td>
+                                                        <td id="button_01">0</td>
+                                                        <td id="button_02">X</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td id="button_10"></td>
+                                                        <td id="button_11"></td>
+                                                        <td id="button_12"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td id="button_20"></td>
+                                                        <td id="button_21"></td>
+                                                        <td id="button_22"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div className={'row text-center align-items-center ' + classes.playersPnl}>
+                                        <div className='col-4'>
+                                            <h5>
+                                                {this.props.player1.username} X
+                                            </h5>
+                                        </div>
+                                        <div className='col-4'>
+                                            <h3>
+                                                {this.state.player1Score} : {this.state.player2Score}
+                                            </h3>
+                                            <Button
+                                                id="closeBtn"
+                                                type="button"
+                                                className="btn btn-secondary"
+                                                onClick={this.leaveRoom}>
+                                                Leave Game
+                                            </Button>
+                                        </div>
+                                        <div className='col-4'>
+                                            <h5>
+                                                {this.props.player2.username} O
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={'col-2 ' + classes.border}></div>
+                            </div>
+                        </div>
+                    </Aux>
                 )
             }
 

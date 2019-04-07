@@ -26,5 +26,6 @@ export {
     userJoined,
     closeGame,
     leaveRoom,
+    initRoom,
     userLeftGame
 } from './game'

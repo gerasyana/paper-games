@@ -34,7 +34,7 @@ class Rooms extends Component {
             <Room key={room.name} {...room} join={this.joinRoom} />
         ))
 
-        if (this.props.gameStart) {
+        if (this.state.roomSelected) {
             rooms = <Redirect to={`game/${this.state.roomSelected.gameId}/${this.state.roomSelected.name}`} />
         }
 

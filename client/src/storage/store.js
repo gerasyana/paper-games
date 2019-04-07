@@ -15,7 +15,7 @@ const store = createStore(
     combineReducers({
         auth: authReducer,
         statistics: statisticsReducer,
-        game : gameReducer
+        game: gameReducer
     }),
     applyMiddleware(sagaMiddleware)
 );

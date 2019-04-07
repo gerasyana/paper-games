@@ -39,6 +39,12 @@ const reducer = (state = initialState, action) => {
                 userLeftGame: true
             }
         }
+        case actionTypes.INIT_ROOM : {
+            return {
+                ...state,
+                ...action.room
+            }
+        }
         default:
             return state;
     }

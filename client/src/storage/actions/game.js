@@ -14,6 +14,13 @@ export const createRoom = (data) => {
     }
 }
 
+export const initRoom = (room) => {
+    return {
+        type : actionTypes.INIT_ROOM,
+        room
+    }
+}
+
 export const roomCreated = (room, player1) => {
     return {
         type: actionTypes.ROOM_CREATED,

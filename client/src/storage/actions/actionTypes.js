@@ -21,6 +21,7 @@ export const UPDATE_ROOMS = 'UPDATE_ROOMS';
 
 export const JOIN_ROOM = 'JOIN_ROOM';
 export const CREATE_ROOM = 'CREATE_ROOM';
+export const INIT_ROOM = 'INIT_ROOM';
 export const ROOM_CREATED = 'ROOM_CREATED';
 export const USER_JOINED = 'USER_JOINED';
 export const LEAVE_ROOM = 'LEAVE_ROOM';
