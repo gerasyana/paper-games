@@ -6,3 +6,7 @@ html, body {
 div.body-container {
   padding-top : 80px
 }
+
+.no-cursor {
+  cursor: default;
+}

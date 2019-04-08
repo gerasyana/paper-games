@@ -14,7 +14,7 @@ const modal = props => {
     }
 
     return (
-        <div className={classes.modalCentered + ' modal fade'} id={props.id} tabIndex="-1" role="dialog" aria-labelledby='modalTitle' aria-hidden="true" >
+        <div className={classes.modalCentered + ' modal fade'} id={props.id} tabIndex="-1" role="dialog" aria-labelledby='modalTitle' data-backdrop="static" data-keyboard="false" aria-hidden="true" >
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     {

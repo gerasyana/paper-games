@@ -21,37 +21,22 @@
     bottom: 0px;
     height: 15%;
   }
-  
-  .game {
-    height: 90%;
-    margin-top: 5%;
-  }
-  
-  .game td {
-    width: 33.333%;
-    border: 6px solid #222;
-  }
-  
-  .game td {
-    border: 6px solid #222;
-    vertical-align: middle !important;
-    text-align: center;
-  }
 
-  .game td:first-of-type {
-    border-left-color: transparent;
-    border-top-color: transparent;
-  }
-  
-  .game td:nth-of-type(2) {
-    border-top-color: transparent;
-  }
-  
-  .game td:nth-of-type(3) {
-    border-right-color: transparent;
-    border-top-color: transparent;
-  }
-  
-  .game tr:nth-of-type(3) td {
-    border-bottom-color: transparent;
-  }
+.game {
+  margin: 0 auto;
+  max-width: 420px;
+  max-height: 420px;
+  width: 40vw;  
+  height: 40vw;
+  border-spacing: initial;
+}
+
+.game td {
+  width: 33%; 
+  height: 33%;
+  border: 3px solid black;
+}
+
+.game tr {
+  border: 3px solid black;
+}

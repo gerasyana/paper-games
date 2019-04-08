@@ -4,12 +4,25 @@ import Aux from '../../../hoc/Aux/Aux';
 import NavigationItem from './NavigationItem/NavigationItem';
 
 const navigationItems = (props) => {
-    const dropdownItems = [
+    const gamesDropdownItems = [
         {
             key: 'tic-tack-toe',
             label: 'Tic Tack Toe',
+            type: 'link',
             link: '/game/tick-tack-toe'
         }
+    ];
+
+    const usersItems = [
+        {
+            key: 'scored',
+            label: '0 scores'
+        },
+        {
+            key: 'logout',
+            label : 'Logout',
+            link: '/logout'
+        },
     ];
 
     let navItemsRight = (
@@ -20,8 +33,8 @@ const navigationItems = (props) => {
 
     let navItemsLeft = (
         <Aux>
-            <NavigationItem type="link" link='/' dropdownItems={dropdownItems} label="Home" />
-            <NavigationItem type="dropdown" dropdownItems={dropdownItems} label="Games" />
+            <NavigationItem type="link" link='/' label="Home" />
+            <NavigationItem type="dropdown" dropdownItems={gamesDropdownItems} label="Games" />
         </Aux>
     )
 
@@ -29,10 +42,8 @@ const navigationItems = (props) => {
         navItemsRight = (
             <Aux>
                 <NavigationItem type="link" link='/rooms' label={`${props.rooms} rooms `} />
-                <NavigationItem type="text" label={`${props.usersOnline} users `} />
-                <NavigationItem type="text" label='0 scores' />
-                <NavigationItem type="text" label={props.user.username} />
-                <NavigationItem type="link" link='/logout' label="Logout" />
+                <NavigationItem type="text" label={`${props.usersOnline} users online`} />
+                <NavigationItem type="dropdown" dropdownItems={usersItems}  label={props.user.username}  />
             </Aux>
         )
     }

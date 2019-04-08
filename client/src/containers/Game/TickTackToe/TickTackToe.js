@@ -7,6 +7,7 @@ import classes from './TickTackToe.css';
 import Modal from '../../../UI/Modal/Modal';
 import Spinner from '../../../UI/Spinner/Spinner';
 import Button from '../../../UI/Button/Button';
+import BoardSquare from '../../../components/TickTackToe/BoardSquare/BoardSquare';
 import * as actions from '../../../storage/actions/actions';
 import { ticktackToeKey } from '../../../constants/games';
 
@@ -18,16 +19,22 @@ class TickTackToe extends Component {
 
     constructor(props) {
         super(props);
+        const squares = [];
+        for (let i = 0; i < 9; i++) {
+            squares.push({ id: `cell${i}`, value: null });
+        }
         this.state = {
             player1Score: 0,
             player2Score: 0,
+            squares
         }
     }
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.isAuthenticated !== nextProps.isAuthenticated ||
             this.props.gameStart !== nextProps.gameStart ||
             this.props.gameFinished !== nextProps.gameFinished ||
-            this.props.userLeftGame !== nextProps.userLeftGame;
+            this.props.userLeftGame !== nextProps.userLeftGame ||
+            this.state.squares !== nextState.squares;
     }
 
     componentDidMount() {
@@ -61,14 +68,14 @@ class TickTackToe extends Component {
     }
 
     leaveRoom = () => {
-        if (this.props.userLeftGame) {
-            // eslint-disable-next-line no-undef
-            $(`#${userLeftModalId}`).modal('hide');
-            this.props.history.push(gameDetailsUrl);
-        } else {
-            this.props.leaveRoom(this.props.name);
-            this.props.history.push(gameDetailsUrl);
-        }
+        this.props.leaveRoom(this.props.name);
+        this.props.history.push(gameDetailsUrl);
+    }
+
+    closeRoom = () => {
+        // eslint-disable-next-line no-undef
+        $(`#${userLeftModalId}`).modal('hide');
+        this.props.history.push(gameDetailsUrl);
     }
 
     render() {
@@ -102,7 +109,37 @@ class TickTackToe extends Component {
                         </div>
                     </Modal>
                 )
+            } else if (this.props.userLeftGame) {
+                game = (
+                    <Modal id={userLeftModalId}>
+                        <div id='body'>
+                            <h5 className='text-center'>Player has left the game. Game is over</h5>
+                        </div>
+                        <div id='footer'>
+                            <Button
+                                id="closeBtn"
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={this.leaveRoom}>
+                                Close Game
+                              </Button>
+                        </div>
+                    </Modal>
+                )
             } else {
+                let boardRows = []
+
+                for (let i = 0; i < 3; i++) {
+                    const boardSquares = this.state.squares.slice(i * 3, (i + 1) * 3).map(square => (
+                        <BoardSquare key={square.id} {...square} />
+                    ));
+
+                    boardRows.push((
+                        <tr>
+                            {boardSquares}
+                        </tr>
+                    ))
+                }
 
                 game = (
                     <Aux>
@@ -110,33 +147,17 @@ class TickTackToe extends Component {
                             <div className="row">
                                 <div className={'col-2 ' + classes.border}>  </div>
                                 <div className='col-8'>
-                                    <div className='row justify-content-center' style={{ height: "85%" }}>
-                                        <div className='col-6'>
-                                            <table className={'table ' + classes.game}>
-                                                <tbody>
-                                                    <tr>
-                                                        <td id="button_00">X</td>
-                                                        <td id="button_01">0</td>
-                                                        <td id="button_02">X</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td id="button_10"></td>
-                                                        <td id="button_11"></td>
-                                                        <td id="button_12"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td id="button_20"></td>
-                                                        <td id="button_21"></td>
-                                                        <td id="button_22"></td>
-                                                    </tr>
-                                                </tbody>
+                                    <div className='row align-items-center justify-content-center' style={{ height: "85%" }}>
+                                        <div className='col-10'>
+                                            <table className={classes.game}>
+                                                {boardRows}
                                             </table>
                                         </div>
                                     </div>
                                     <div className={'row text-center align-items-center ' + classes.playersPnl}>
                                         <div className='col-4'>
                                             <h5>
-                                                {this.props.player1.username} X
+                                                {/*this.props.player1.username*/} X
                                             </h5>
                                         </div>
                                         <div className='col-4'>
@@ -149,11 +170,11 @@ class TickTackToe extends Component {
                                                 className="btn btn-secondary"
                                                 onClick={this.leaveRoom}>
                                                 Leave Game
-                                            </Button>
+                                                    </Button>
                                         </div>
                                         <div className='col-4'>
                                             <h5>
-                                                {this.props.player2.username} O
+                                                {/*this.props.player2.username*/} O
                                             </h5>
                                         </div>
                                     </div>
@@ -161,27 +182,7 @@ class TickTackToe extends Component {
                                 <div className={'col-2 ' + classes.border}></div>
                             </div>
                         </div>
-                    </Aux>
-                )
-            }
-
-            if (this.props.userLeftGame) {
-                game = (
-                    <Modal id={userLeftModalId}>
-                        <div id='body'>
-                            <h5 className='text-center'>Player has left the game. Game is over</h5>
-                        </div>
-                        <div id='footer'>
-                            <Button
-                                id="closeBtn"
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={this.leaveRoom}>
-                                Leave Game
-                              </Button>
-                        </div>
-                    </Modal>
-                )
+                    </Aux>)
             }
         }
         return game;
