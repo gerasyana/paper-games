@@ -41,9 +41,9 @@ export const closeGame = () => {
     }
 }
 
-export const userLeftGame = () => {
+export const playerLeftGame = () => {
     return {
-        type :  actionTypes.USER_LEFT_GAME
+        type :  actionTypes.PLAYER_LEFT_GAME
     }
 }
 

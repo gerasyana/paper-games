@@ -4,7 +4,7 @@ const initialState = {
     gameStart: false,
     waitForPlayer: false,
     gameFinished: false,
-    userLeftGame: false,
+    playerLeftGame: false,
     room: {
         player1: null,
         player2: null,
@@ -52,10 +52,10 @@ const reducer = (state = initialState, action) => {
                 gameFinished: true
             }
         }
-        case actionTypes.USER_LEFT_GAME: {
+        case actionTypes.PLAYER_LEFT_GAME: {
             return {
                 ...initialState,
-                userLeftGame: true
+                playerLeftGame: true
             }
         }
         case actionTypes.UPDATE_GAME_BOARD: {

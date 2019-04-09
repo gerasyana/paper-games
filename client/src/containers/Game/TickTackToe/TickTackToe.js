@@ -20,7 +20,7 @@ class TickTackToe extends Component {
         return this.props.isAuthenticated !== nextProps.isAuthenticated ||
             this.props.waitForPlayer !== nextProps.waitForPlayer ||
             this.props.gameFinished !== nextProps.gameFinished ||
-            this.props.userLeftGame !== nextProps.userLeftGame ||
+            this.props.playerLeftGame !== nextProps.playerLeftGame ||
             this.props.gameBoard.moves !== nextProps.gameBoard.moves;
     }
 
@@ -48,7 +48,7 @@ class TickTackToe extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.userLeftGame) {
+        if (this.props.playerLeftGame) {
             // eslint-disable-next-line no-undef
             $(`#${userLeftModalId}`).modal('show');
         }
@@ -71,7 +71,7 @@ class TickTackToe extends Component {
         this.props.playerMadeMove({ room: this.props.room.name, moves });
     }
 
-    getUserLeftModal = () => (
+    getPlayerLeftModal = () => (
         <Modal id={userLeftModalId}>
             <div id='body'>
                 <h5 className='text-center'>Player has left the game. Game is over</h5>
@@ -176,8 +176,8 @@ class TickTackToe extends Component {
                 $(`#${waitingUserModalId}`).modal('hide');
             }
 
-            if (this.props.userLeftGame) {
-                game = this.getUserLeftModal();
+            if (this.props.playerLeftGame) {
+                game = this.getPlayerLeftModal();
             } else if (this.props.waitForPlayer) {
                 game = this.getWaitingUserModal();
             } else {

@@ -26,7 +26,7 @@ export {
     player2Joined,
     closeGame,
     leaveRoom,
-    userLeftGame,
+    playerLeftGame,
     updateGameBoard,
     playerMadeMove
 } from './game'

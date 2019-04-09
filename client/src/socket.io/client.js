@@ -39,8 +39,8 @@ class SocketClient {
             store.dispatch(actions.player2Joined(player2));
         });
 
-        this.client.on('userLeftGame', () => {
-            store.dispatch(actions.userLeftGame());
+        this.client.on('playerLeftGame', () => {
+            store.dispatch(actions.playerLeftGame());
         });
 
         this.client.on('closeGame', () => {
