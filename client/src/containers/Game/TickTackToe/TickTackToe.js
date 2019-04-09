@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
-import Aux from '../../../hoc/Aux/Aux';
 import classes from './TickTackToe.css';
 import Modal from '../../../UI/Modal/Modal';
 import Spinner from '../../../UI/Spinner/Spinner';
 import Button from '../../../UI/Button/Button';
-import BoardSquare from '../../../components/TickTackToe/BoardSquare/BoardSquare';
+import BoardMove from '../../../components/TickTackToe/BoardMove/BoardMove';
 import * as actions from '../../../storage/actions/actions';
 import { ticktackToeKey } from '../../../constants/games';
 
@@ -17,31 +16,19 @@ const gameDetailsUrl = `/game/${ticktackToeKey}`;
 
 class TickTackToe extends Component {
 
-    constructor(props) {
-        super(props);
-        const squares = [];
-        for (let i = 0; i < 9; i++) {
-            squares.push({ id: `cell${i}`, value: null });
-        }
-        this.state = {
-            player1Score: 0,
-            player2Score: 0,
-            squares
-        }
-    }
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.isAuthenticated !== nextProps.isAuthenticated ||
-            this.props.gameStart !== nextProps.gameStart ||
+            this.props.waitForPlayer !== nextProps.waitForPlayer ||
             this.props.gameFinished !== nextProps.gameFinished ||
             this.props.userLeftGame !== nextProps.userLeftGame ||
-            this.state.squares !== nextState.squares;
+            this.props.gameBoard.moves !== nextProps.gameBoard.moves;
     }
 
     componentDidMount() {
         if (!this.props.isAuthenticated) {
             this.props.setLoginRedirectUrl(this.props.location.pathname);
         } else {
-            if (!this.props.gameStart) {
+            if (this.props.waitForPlayer) {
                 // eslint-disable-next-line no-undef
                 $(`#${waitingUserModalId}`).modal('show');
             }
@@ -68,8 +55,7 @@ class TickTackToe extends Component {
     }
 
     leaveRoom = () => {
-        this.props.leaveRoom(this.props.name);
-        this.props.history.push(gameDetailsUrl);
+        this.props.leaveRoom(this.props.room.name);
     }
 
     closeRoom = () => {
@@ -78,111 +64,124 @@ class TickTackToe extends Component {
         this.props.history.push(gameDetailsUrl);
     }
 
-    render() {
-        if (this.props.gameStart || this.props.gameFinished) {
-            // eslint-disable-next-line no-undef
-            $(`#${waitingUserModalId}`).modal('hide');
+    playerMadeMove = (event) => {
+        const key = event.target.id;
+        let moves = [...this.props.gameBoard.moves];
+        moves[key] = this.props.gameBoard.playerStep;
+        this.props.playerMadeMove({ room: this.props.room.name, moves });
+    }
+
+    getUserLeftModal = () => (
+        <Modal id={userLeftModalId}>
+            <div id='body'>
+                <h5 className='text-center'>Player has left the game. Game is over</h5>
+            </div>
+            <div id='footer'>
+                <Button
+                    id="closeBtn"
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={this.closeRoom}>
+                    Close Game
+                      </Button>
+            </div>
+        </Modal>
+    )
+
+    getWaitingUserModal = () => (
+        <Modal id={waitingUserModalId}>
+            <div id='body'>
+                <Spinner />
+                <h4 className='text-center'>Waiting for a player ....</h4>
+            </div>
+            <div id='footer'>
+                <Button
+                    id="closeBtn"
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={this.leaveRoom}>
+                    Leave Game
+        </Button>
+            </div>
+        </Modal>
+    )
+
+    getGameBoard = () => {
+        let boardRows = []
+
+        for (let i = 0; i < 3; i++) {
+            let boardMoves = [];
+
+            for (let index = i * 3; index < (i + 1) * 3; index++) {
+                const boardMove = this.props.gameBoard.moves[index];
+                boardMoves.push(<BoardMove key={index} id={index} value={boardMove} clicked={this.playerMadeMove} />)
+            }
+            boardRows.push((
+                <tr key={i * 2}>
+                    {boardMoves}
+                </tr>
+            ));
         }
 
+        return (
+            <div className={classes.gameBoard}>
+                <div className="row">
+                    <div className={'col-2 ' + classes.border}></div>
+                    <div className='col-8'>
+                        <div className='row align-items-center justify-content-center' style={{ height: "85%" }}>
+                            <div className={this.props.gameBoard.yourTurn ? 'col-10' : classes.noUserTurn + ' col-10'}>
+                                <table className={classes.game}>
+                                    {boardRows}
+                                </table>
+                            </div>
+                        </div>
+                        <div className={'row text-center align-items-center ' + classes.playersPnl}>
+                            <div className='col-4'>
+                                <h5>
+                                    {this.props.room.player1.username} X
+                                    </h5>
+                            </div>
+                            <div className='col-4'>
+                                <Button
+                                    id="closeBtn"
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={this.leaveRoom}>
+                                    Leave Game
+                                            </Button>
+                            </div>
+                            <div className='col-4'>
+                                <h5>
+                                    {this.props.room.player2.username} O
+                                    </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={'col-2 ' + classes.border}></div>
+                </div>
+            </div>)
+    }
+
+    render() {
         let game = null;
 
         if (!this.props.isAuthenticated) {
             game = <Redirect to='/login' />;
-        } else if (!this.props.gameId && !this.props.name) {
+        } else if (!this.props.room.name || this.props.gameFinished) {
             game = <Redirect to={gameDetailsUrl} />;
         } else {
-            if (!this.props.gameStart) {
-                game = (
-                    <Modal id={waitingUserModalId}>
-                        <div id='body'>
-                            <Spinner />
-                            <h4 className='text-center'>Waiting for a player ....</h4>
-                        </div>
-                        <div id='footer'>
-                            <Button
-                                id="closeBtn"
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={this.leaveRoom}>
-                                Leave Game
-                               </Button>
-                        </div>
-                    </Modal>
-                )
-            } else if (this.props.userLeftGame) {
-                game = (
-                    <Modal id={userLeftModalId}>
-                        <div id='body'>
-                            <h5 className='text-center'>Player has left the game. Game is over</h5>
-                        </div>
-                        <div id='footer'>
-                            <Button
-                                id="closeBtn"
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={this.leaveRoom}>
-                                Close Game
-                              </Button>
-                        </div>
-                    </Modal>
-                )
+
+            if (!this.props.waitForPlayer || this.props.gameFinished) {
+                // eslint-disable-next-line no-undef
+                $(`#${waitingUserModalId}`).modal('hide');
+            }
+
+            if (this.props.userLeftGame) {
+                game = this.getUserLeftModal();
+            } else if (this.props.waitForPlayer) {
+                game = this.getWaitingUserModal();
             } else {
-                let boardRows = []
-
-                for (let i = 0; i < 3; i++) {
-                    const boardSquares = this.state.squares.slice(i * 3, (i + 1) * 3).map(square => (
-                        <BoardSquare key={square.id} {...square} />
-                    ));
-
-                    boardRows.push((
-                        <tr>
-                            {boardSquares}
-                        </tr>
-                    ))
-                }
-
-                game = (
-                    <Aux>
-                        <div className={classes.gameBoard}>
-                            <div className="row">
-                                <div className={'col-2 ' + classes.border}>  </div>
-                                <div className='col-8'>
-                                    <div className='row align-items-center justify-content-center' style={{ height: "85%" }}>
-                                        <div className='col-10'>
-                                            <table className={classes.game}>
-                                                {boardRows}
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div className={'row text-center align-items-center ' + classes.playersPnl}>
-                                        <div className='col-4'>
-                                            <h5>
-                                                {/*this.props.player1.username*/} X
-                                            </h5>
-                                        </div>
-                                        <div className='col-4'>
-                                            <h3>
-                                                {this.state.player1Score} : {this.state.player2Score}
-                                            </h3>
-                                            <Button
-                                                id="closeBtn"
-                                                type="button"
-                                                className="btn btn-secondary"
-                                                onClick={this.leaveRoom}>
-                                                Leave Game
-                                                    </Button>
-                                        </div>
-                                        <div className='col-4'>
-                                            <h5>
-                                                {/*this.props.player2.username*/} O
-                                            </h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={'col-2 ' + classes.border}></div>
-                            </div>
-                        </div>
-                    </Aux>)
+                game = this.getGameBoard();
             }
         }
         return game;
@@ -199,7 +198,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToState = (dispatch) => {
     return {
         setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url)),
-        leaveRoom: (room) => dispatch(actions.leaveRoom(room))
+        leaveRoom: (room) => dispatch(actions.leaveRoom(room)),
+        playerMadeMove: (data) => dispatch(actions.playerMadeMove(data))
     }
 }
 

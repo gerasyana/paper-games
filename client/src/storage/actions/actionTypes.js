@@ -21,9 +21,11 @@ export const UPDATE_ROOMS = 'UPDATE_ROOMS';
 
 export const JOIN_ROOM = 'JOIN_ROOM';
 export const CREATE_ROOM = 'CREATE_ROOM';
-export const INIT_ROOM = 'INIT_ROOM';
-export const ROOM_CREATED = 'ROOM_CREATED';
-export const USER_JOINED = 'USER_JOINED';
+export const PLAYER1_JOINED = 'PLAYER1_JOINED';
+export const PLAYER2_JOINED = 'PLAYER2_JOINED';
 export const LEAVE_ROOM = 'LEAVE_ROOM';
 export const CLOSE_GAME = 'CLOSE_GAME';
 export const USER_LEFT_GAME = 'USER_LEFT_GAME';
+export const PLAYER_MADE_MOVE = 'PLAYER_MADE_MODE';
+export const UPDATE_GAME_BOARD = 'UPDATE_GAME_BOARD';
+

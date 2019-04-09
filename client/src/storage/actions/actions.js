@@ -21,11 +21,12 @@ export {
 
 export {
     createRoom,
-    roomCreated,
     joinRoom,
-    userJoined,
+    player1Joined,
+    player2Joined,
     closeGame,
     leaveRoom,
-    initRoom,
-    userLeftGame
+    userLeftGame,
+    updateGameBoard,
+    playerMadeMove
 } from './game'

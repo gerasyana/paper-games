@@ -40,3 +40,8 @@
 .game tr {
   border: 3px solid black;
 }
+
+.noUserTurn {
+  pointer-events:none;
+  cursor : default;
+}

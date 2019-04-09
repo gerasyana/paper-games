@@ -58,14 +58,11 @@ class NewRoom extends Component {
             })
         } else {
             this.props.createRoom({
-                room: {
-                    gameId: this.props.gameId,
-                    name: room
-                },
-                player1: this.props.player1
+                gameId: this.props.gameId,
+                name : room,
+                playerId: this.props.playerId
             });
             $(`#${modalId}`).modal('hide');
-            this.props.roomCreated(room);
         }
     }
 
@@ -102,7 +99,7 @@ class NewRoom extends Component {
 const mapStateToProps = (state) => {
     return {
         rooms: state.statistics.rooms,
-        player1: state.auth.user
+        playerId: state.auth.user.id
     }
 }
 

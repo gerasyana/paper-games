@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
-import { Route, Switch } from 'react-router';
+import { Route, Switch, Redirect } from 'react-router';
 
 import GameLogo from '../../components/Games/GameLogo/GameLogo';
 import Button from '../../UI/Button/Button';
@@ -18,7 +18,7 @@ class Game extends PureComponent {
             game: null,
             gameId: null,
             showNewRoomModal: false,
-            room: null,
+            startGame: false
         }
     }
 
@@ -48,25 +48,17 @@ class Game extends PureComponent {
         this.props.history.push('/rooms');
     }
 
-    startGame = (room) => {
-        this.setState({
-            showNewRoomModal: false,
-            room
-        });
-        let path = `${this.props.match.url}/${room}`;
-        path = path.replace('//', '/');
-        this.props.history.push(path);
-    }
-
     render() {
         let gameDetails = null;
         let modal = null;
 
         if (this.state.showNewRoomModal) {
-            modal = <NewRoom gameId={this.state.gameId} roomCreated={this.startGame} />
+            modal = <NewRoom gameId={this.state.gameId} />
         }
-
-        if (this.state.game) {
+        
+        if (this.props.room) {
+            gameDetails = <Redirect to={`${this.props.match.url}/${this.props.room}`} />;
+        } else if (this.state.game) {
             const rules = this.state.game.rules.map((rule, index) => <li key={index}>{rule}</li>);
 
             gameDetails = (
@@ -117,7 +109,8 @@ class Game extends PureComponent {
 
 const mapStateToProps = (state) => {
     return {
-        isAuthenticated: state.auth.isAuthenticated
+        isAuthenticated: state.auth.isAuthenticated,
+        room: state.game.room.name
     }
 }
 

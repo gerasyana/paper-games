@@ -6,18 +6,20 @@ import * as gameSagas from './game';
 
 export function* watchAuth() {
     yield all([
-        takeEvery(actionTypes.CHECK_AUTHENTICATION, authSagas.checkAuthenticationSaga),
-        takeEvery(actionTypes.AUTH_SET_TIMEOUT, authSagas.setAuthTimeoutSaga),
-        takeEvery(actionTypes.INIT_LOGIN, authSagas.loginSaga),
-        takeEvery(actionTypes.INIT_SIGNUP, authSagas.signUpSaga),
-        takeEvery(actionTypes.INIT_LOGOUT, authSagas.logoutSaga)
+        takeEvery(actionTypes.CHECK_AUTHENTICATION, authSagas.checkAuthentication),
+        takeEvery(actionTypes.AUTH_SET_TIMEOUT, authSagas.setAuthTimeout),
+        takeEvery(actionTypes.INIT_LOGIN, authSagas.login),
+        takeEvery(actionTypes.INIT_SIGNUP, authSagas.signUp),
+        takeEvery(actionTypes.INIT_LOGOUT, authSagas.logout)
     ])
 }
 
 export function* watchGame() {
     yield all([
-        takeEvery(actionTypes.JOIN_ROOM, gameSagas.joinRoomSaga),
-        takeEvery(actionTypes.CREATE_ROOM, gameSagas.createRoomSaga),
-        takeEvery(actionTypes.LEAVE_ROOM, gameSagas.leaveRoom)
+        takeEvery(actionTypes.JOIN_ROOM, gameSagas.joinRoom),
+        takeEvery(actionTypes.CREATE_ROOM, gameSagas.createRoom),
+        takeEvery(actionTypes.LEAVE_ROOM, gameSagas.leaveRoom),
+        takeEvery(actionTypes.PLAYER_MADE_MOVE, gameSagas.playerMadeMove)
     ])
 }
+

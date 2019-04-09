@@ -1,7 +1,7 @@
 const { authenticate } = require('../middlewares/authenticate');
 const { logout } = require('../middlewares/logout');
 const { getDecodedJWT } = require('../services/jwt');
-const userService = require('../services/user');
+const  userService  = require('../services/user');
 
 module.exports = app => {
 

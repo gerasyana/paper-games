@@ -1,48 +1,71 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    player1: null,
-    player2: null,
-    gameId: null,
-    name: null,
     gameStart: false,
+    waitForPlayer: false,
     gameFinished: false,
-    userLeftGame: false
+    userLeftGame: false,
+    room: {
+        player1: null,
+        player2: null,
+        gameId: null,
+        name: null,
+    },
+    gameBoard: {
+        playerStep: '0',
+        yourTurn: false,
+        moves: Array(9)
+    }
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.ROOM_CREATED: {
-            return {
-                ...action.room,
-                player1: action.player1,
-                player2: null,
-                gameStart: false
+        case actionTypes.PLAYER1_JOINED: {
+            const room = {
+                ...action.room
             }
-        }
-        case actionTypes.USER_JOINED: {
+            const waitForPlayer = !(room.player1 && room.player2)
             return {
                 ...state,
-                ...action.data,
-                gameStart: true
+                waitForPlayer,
+                room
+            }
+        }
+        case actionTypes.PLAYER2_JOINED: {
+            return {
+                ...state,
+                waitForPlayer: false,
+                room: {
+                    ...state.room,
+                    player2: action.player2
+                },
+                gameBoard: {
+                    ...state.gameBoard,
+                    yourTurn: true,
+                    playerStep: 'X'
+                }
             }
         }
         case actionTypes.CLOSE_GAME: {
             return {
-                ...state,
+                ...initialState,
                 gameFinished: true
             }
         }
         case actionTypes.USER_LEFT_GAME: {
             return {
-                ...state,
+                ...initialState,
                 userLeftGame: true
             }
         }
-        case actionTypes.INIT_ROOM : {
+        case actionTypes.UPDATE_GAME_BOARD: {
             return {
                 ...state,
-                ...action.room
+                gameBoard: {
+                    ...state.gameBoard,
+                    yourTurn: !state.gameBoard.yourTurn,
+                    ...action.data
+                }
             }
         }
         default:

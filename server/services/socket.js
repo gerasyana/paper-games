@@ -1,4 +1,5 @@
 const redis = require('./redis');
+const roomService = require('./room');
 
 class SocketClient {
 
@@ -21,81 +22,72 @@ class SocketClient {
                 this.io.sockets.emit('userConnected', ioDetails);
             });
 
-            client.on('createRoom', async (data) => {
-                const { room, player1 } = data;
+            this.handleRoomEvents(client);
+            this.handleGameEvents(client);
+        });
+    }
 
-                client.join(room.name);
-                await redis.rooms.save(room.name, {
-                    ...room,
-                    users: [player1]
+    handleRoomEvents(client) {
+        client.on('createRoom', async (data) => {
+            client.join(data.name);
+            const room = await roomService.saveRoom(data);
+            this.io.sockets.to(client.id).emit('player1Joined', room);
+            await this.notifyRoomsUpdate();
+        });
+
+        client.on('joinRoom', async (data) => {
+            const { name } = data;
+            const roomDetails = this.io.nsps['/'].adapter.rooms[name];
+
+            if (roomDetails && roomDetails.length == 1) {
+                client.join(name);
+                const room = await roomService.updateRoom(data);
+
+                client.broadcast.to(name).emit('player2Joined', room.player2);
+                this.io.sockets.to(client.id).emit('player1Joined', room);
+                await this.notifyRoomsUpdate();
+            }
+        });
+
+        client.on('leaveRoom', async (data) => {
+            const { name } = data;
+
+            client.leave(name);
+            this.io.sockets.to(client.id).emit('closeGame');
+
+            const clientIds = this.getRoomClientIds(name);
+            if (clientIds) {
+                clientIds.forEach(clientId => {
+                    this.io.sockets.connected[clientId].leave(name);
+                    client.broadcast.to(clientId).emit('userLeftGame');
                 });
+            }
 
-                this.io.sockets.to(client.id).emit('roomCreated', data);
-                await this.notifyRoomsUpdate();
-            });
+            await redis.rooms.remove(name);
+            await this.notifyRoomsUpdate();
+        })
+    }
 
-            client.on('joinRoom', async (data) => {
-                const { room, player2 } = data;
-                const { name, gameId } = room;
-                const [ player1 ] = room.users;
-                const roomDetails = this.io.nsps['/'].adapter.rooms[name];
-                
-                if (roomDetails && roomDetails.length == 1) {
-                    client.join(name);
-                    
-                    await redis.rooms.save(name, {
-                        name,
-                        gameId,
-                        users : [player1, player2]
-                    });
-
-                    client.broadcast.to(name).emit('userJoined', { player2 });
-                    this.io.sockets.to(client.id).emit('userJoined', {
-                        name,
-                        gameId,
-                        player1,
-                        player2
-                    });
-                }
-            });
-
-            client.on('leaveRoom', async (data) => {
-                const { room } = data;
-
-                client.leave(room);
-                this.io.sockets.to(client.id).emit('closeGame');
-
-                const clientIds = this.getRoomClientIds(room)
-                if (clientIds) {
-                    clientIds.forEach(clientId => {
-                        this.io.sockets.connected[clientId].leave(room);
-                        client.broadcast.to(clientId).emit('userLeftGame');
-                    });
-                }
-
-                await redis.rooms.remove(room);
-                await this.notifyRoomsUpdate();
-            })
+    handleGameEvents(client) {
+        client.on('playerMadeMove', async (data) => {
+            const { room, moves } = data;
+            //TODO : implement game logic
+            this.io.sockets.to(room).emit('updateGameBoard', { moves });
         });
     }
 
     async notifyRoomsUpdate() {
-        const rooms = await this.getRooms();
-        this.io.sockets.emit('roomsUpdated', { rooms });
+        const rooms = await roomService.getRooms();
+        this.io.sockets.emit('roomsUpdated', rooms);
     }
 
     async getConnectionDetails() {
         const usersOnline = await redis.sockets.getUsersOnlineCount();
-        const rooms = await this.getRooms();
+        const rooms = await roomService.getRooms();
         return {
             usersOnline,
             rooms
         }
-    }
-
-    async getRooms() {
-        const rooms = await redis.rooms.getAll();
-        return rooms ? Object.values(rooms).map(room => JSON.parse(room)) : null;
     }
 
     getRoomClientIds(roomName) {

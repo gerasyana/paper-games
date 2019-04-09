@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const { db } = require('../services/redis');
+const { documents } = require('../services/redis');
 const { USER_MODEL } = require('../constants/modelNames');
-const { USERS } = require('../constants/redisHashKeys');
+const { USERS_CACHE_OPTIONS } = require('../constants/cacheOptions');
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -28,6 +28,19 @@ UserSchema.statics.hashPassword = (password) => {
 
 UserSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
+}
+
+UserSchema.methods.cache = async function () {
+    await cache(this);
+}
+
+UserSchema.post('save', async (user) => {
+    await cache(user);
+});
+
+cache = async (user) => {
+    await documents.save(USERS_CACHE_OPTIONS.hashKey, user[USERS_CACHE_OPTIONS.hashSubKey], user);
+    await documents.setExpire(USERS_CACHE_OPTIONS.hashKey, USERS_CACHE_OPTIONS.expiresIn);
 }
 
 mongoose.model(USER_MODEL, UserSchema);

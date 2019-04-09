@@ -2,18 +2,31 @@
 const mongoose = require('mongoose');
 const jwtService = require('./jwt');
 const { USER_MODEL } = require('../constants/modelNames');
+const { USERS_CACHE_OPTIONS } = require('../constants/cacheOptions');
 
 const User = mongoose.model(USER_MODEL);
 
 class UserService {
 
     async getUserById(id) {
-        const user = await User.findById(id); 
+        const user = await User.findById(id).cache(USERS_CACHE_OPTIONS);
 
         if (!user) {
             return { error: 'User not found' };
         }
         return getUserWrapper(user);
+    }
+
+    async getUsernameById(id) {
+        const user = await User.findById(id).cache(USERS_CACHE_OPTIONS);
+
+        if (!user) {
+            return;
+        }
+        return {
+            id,
+            username: user.username
+        }
     }
 
     async signUp(data) {
@@ -45,6 +58,8 @@ class UserService {
         } else if (!user.validPassword(password)) {
             return { error: "Invalid password" };
         }
+
+        user.cache();
         return getUserDetails(user);
     }
 }

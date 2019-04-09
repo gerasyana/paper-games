@@ -14,21 +14,6 @@ export const createRoom = (data) => {
     }
 }
 
-export const initRoom = (room) => {
-    return {
-        type : actionTypes.INIT_ROOM,
-        room
-    }
-}
-
-export const roomCreated = (room, player1) => {
-    return {
-        type: actionTypes.ROOM_CREATED,
-        room,
-        player1
-    }
-}
-
 export const leaveRoom = (room) => {
     return {
         type : actionTypes.LEAVE_ROOM,
@@ -36,10 +21,17 @@ export const leaveRoom = (room) => {
     }
 }
 
-export const userJoined = (data) => {
+export const player2Joined = (player2) => {
     return {
-        type: actionTypes.USER_JOINED,
-        data
+        type: actionTypes.PLAYER2_JOINED,
+        player2
+    }
+}
+
+export const player1Joined = (room) => {
+    return {
+        type: actionTypes.PLAYER1_JOINED,
+        room
     }
 }
 
@@ -52,5 +44,19 @@ export const closeGame = () => {
 export const userLeftGame = () => {
     return {
         type :  actionTypes.USER_LEFT_GAME
+    }
+}
+
+export const playerMadeMove = (data) => {
+    return {
+        type :  actionTypes.PLAYER_MADE_MOVE,
+        data
+    }
+}
+
+export const updateGameBoard = (data) => {
+    return {
+        type :  actionTypes.UPDATE_GAME_BOARD,
+        data
     }
 }

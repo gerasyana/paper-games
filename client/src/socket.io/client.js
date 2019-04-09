@@ -3,7 +3,6 @@ import io from 'socket.io-client';
 import { SERVER_URL } from '../constants/configs';
 import store from '../storage/store';
 import * as actions from '../storage/actions/actions';
-import { debug } from 'util';
 
 class SocketClient {
 
@@ -28,29 +27,37 @@ class SocketClient {
             store.dispatch(actions.setSiteStatistics(data));
         })
 
-        this.client.on('roomCreated', (data) => {
-            store.dispatch(actions.roomCreated(data.room, data.player1));
+        this.client.on('roomsUpdated', (rooms) => {
+            store.dispatch(actions.updateRooms(rooms));
         });
 
-        this.client.on('roomsUpdated', (data) => {
-            store.dispatch(actions.updateRooms(data.rooms));
+        this.client.on('player1Joined', (room) => {
+            store.dispatch(actions.player1Joined(room));
         });
 
-        this.client.on('userJoined', (data) => {
-            store.dispatch(actions.userJoined(data));
+        this.client.on('player2Joined', (player2) => {
+            store.dispatch(actions.player2Joined(player2));
         });
 
         this.client.on('userLeftGame', () => {
             store.dispatch(actions.userLeftGame());
-        })
+        });
 
         this.client.on('closeGame', () => {
             store.dispatch(actions.closeGame());
-        })
+        });
+
+        this.client.on('updateGameBoard', (data) => {
+            store.dispatch(actions.updateGameBoard(data));
+        });
     }
 
-    leaveRoom(room) {
-        this.client.emit('leaveRoom', { room });
+    leaveRoom(name) {
+        this.client.emit('leaveRoom', { name });
+    }
+
+    playerMadeMove(data) {
+        this.client.emit('playerMadeMove', data);
     }
 
     disconnectUser() {

@@ -24,8 +24,8 @@ class Rooms extends Component {
         const room = this.props.rooms.find(room => room.name === name);
         this.setState({ roomSelected: room });
         this.props.joinRoom({
-            room,
-            player2: this.props.player2
+            name,
+            playerId: this.props.playerId
         });
     }
 
@@ -55,7 +55,7 @@ class Rooms extends Component {
 const mapStateToProps = (state) => {
     return {
         rooms: state.statistics.rooms,
-        player2: state.auth.user,
+        playerId: state.auth.user.id,
         gameStart: state.game.gameStart
     }
 }

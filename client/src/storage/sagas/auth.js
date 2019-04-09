@@ -5,14 +5,14 @@ import * as actions from '../actions/actions';
 import * as userRouters from '../../axios/routes/user';
 import * as keys from '../../constants/localStorageKeys';
 
-export function* logoutSaga(action) {
+export function* logout(action) {
   yield userRouters.logout();
   yield removeLocalStorage();
   yield put(actions.logoutSuccess());
   yield client.disconnectUser();
 }
 
-export function* checkAuthenticationSaga(action) {
+export function* checkAuthentication(action) {
   const token = yield localStorage.getItem(keys.TOKEN_KEY);
 
   if (token) {
@@ -35,7 +35,7 @@ export function* checkAuthenticationSaga(action) {
   }
 }
 
-export function* loginSaga(action) {
+export function* login(action) {
   yield put(actions.loginStart());
   const response = yield userRouters.login(action.credentials);
 
@@ -48,7 +48,7 @@ export function* loginSaga(action) {
   }
 }
 
-export function* signUpSaga(action) {
+export function* signUp(action) {
   yield put(actions.signUpStart());
   const response = yield userRouters.signUp(action.user);
 
@@ -61,7 +61,7 @@ export function* signUpSaga(action) {
   }
 }
 
-export function* setAuthTimeoutSaga(action) {
+export function* setAuthTimeout(action) {
   yield delay(action.expirationTime);
   yield put(actions.logout());
 }
