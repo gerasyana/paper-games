@@ -9,9 +9,9 @@ const room = (props) => (
                 <h5>{props.name}</h5>
             </div>
             <div className="card-body">
-                <h6 className="card-title">{props.users.map(user => user.username).join(',')}</h6>
+                <h6 className="card-title">{props.players.map(player => player.username).join(',')}</h6>
                 {
-                    props.users.length === 1 ?
+                    props.players.length === 1 ?
                         <Button
                             type='button'
                             className="btn btn-primary"

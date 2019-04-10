@@ -35,8 +35,8 @@ class SocketClient {
             store.dispatch(actions.player1Joined(room));
         });
 
-        this.client.on('player2Joined', (player2) => {
-            store.dispatch(actions.player2Joined(player2));
+        this.client.on('player2Joined', (players) => {
+            store.dispatch(actions.player2Joined(players));
         });
 
         this.client.on('playerLeftGame', () => {
@@ -47,8 +47,8 @@ class SocketClient {
             store.dispatch(actions.closeGame());
         });
 
-        this.client.on('updateGameBoard', (data) => {
-            store.dispatch(actions.updateGameBoard(data));
+        this.client.on('updateGameBoard', (gameBoard) => {
+            store.dispatch(actions.updateGameBoard(gameBoard));
         });
     }
 

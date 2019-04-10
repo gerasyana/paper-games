@@ -16,15 +16,15 @@ export const createRoom = (data) => {
 
 export const leaveRoom = (room) => {
     return {
-        type : actionTypes.LEAVE_ROOM,
+        type: actionTypes.LEAVE_ROOM,
         room
     }
 }
 
-export const player2Joined = (player2) => {
+export const player2Joined = (players) => {
     return {
         type: actionTypes.PLAYER2_JOINED,
-        player2
+        players
     }
 }
 
@@ -43,20 +43,20 @@ export const closeGame = () => {
 
 export const playerLeftGame = () => {
     return {
-        type :  actionTypes.PLAYER_LEFT_GAME
+        type: actionTypes.PLAYER_LEFT_GAME
     }
 }
 
 export const playerMadeMove = (data) => {
     return {
-        type :  actionTypes.PLAYER_MADE_MOVE,
+        type: actionTypes.PLAYER_MADE_MOVE,
         data
     }
 }
 
-export const updateGameBoard = (data) => {
+export const updateGameBoard = (gameBoard) => {
     return {
-        type :  actionTypes.UPDATE_GAME_BOARD,
-        data
+        type: actionTypes.UPDATE_GAME_BOARD,
+        gameBoard
     }
 }

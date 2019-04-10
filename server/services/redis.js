@@ -49,6 +49,9 @@ const sockets = {
     getAll: async () => {
         return await client.hgetall(USER_CONNECTIONS_KEY);
     },
+    getUserId : async (clientId) => {
+        return await client.hget(USER_CONNECTIONS_KEY, clientId);
+    },
     save: async (clientId, userId) => {
         await client.hset(USER_CONNECTIONS_KEY, clientId, userId);
         await client.expire(USER_CONNECTIONS_KEY, USER_CONNECTIONS_EXPIRES_IN);

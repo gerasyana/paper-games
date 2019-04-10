@@ -1,20 +1,18 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    gameStart: false,
-    waitForPlayer: false,
-    gameFinished: false,
+    gameStarted: false,
+    gameClosed: false,
     playerLeftGame: false,
     room: {
-        player1: null,
-        player2: null,
         gameId: null,
         name: null,
     },
     gameBoard: {
-        playerStep: '0',
+        gameFinished: false,
         yourTurn: false,
-        moves: Array(9)
+        playerStep: 'O',
+        moves: new Array(9).fill(null)
     }
 }
 
@@ -24,20 +22,24 @@ const reducer = (state = initialState, action) => {
             const room = {
                 ...action.room
             }
-            const waitForPlayer = !(room.player1 && room.player2)
             return {
                 ...state,
-                waitForPlayer,
+                playerLeftGame :false,
+                gameClosed : false,
+                gameStarted: Object.keys(action.room.players).length === 2,
+                gameBoard: {
+                    ...state.gameBoard,
+                },
                 room
             }
         }
         case actionTypes.PLAYER2_JOINED: {
             return {
                 ...state,
-                waitForPlayer: false,
+                gameStarted: Object.keys(action.players).length === 2,
                 room: {
                     ...state.room,
-                    player2: action.player2
+                    players : action.players
                 },
                 gameBoard: {
                     ...state.gameBoard,
@@ -49,7 +51,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.CLOSE_GAME: {
             return {
                 ...initialState,
-                gameFinished: true
+                gameClosed: true
             }
         }
         case actionTypes.PLAYER_LEFT_GAME: {
@@ -63,8 +65,8 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 gameBoard: {
                     ...state.gameBoard,
-                    yourTurn: !state.gameBoard.yourTurn,
-                    ...action.data
+                    ...action.gameBoard,
+                    yourTurn: !state.gameBoard.yourTurn
                 }
             }
         }

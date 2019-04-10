@@ -15,8 +15,8 @@ const navigationItems = (props) => {
 
     const usersItems = [
         {
-            key: 'scored',
-            label: '0 scores'
+            key: 'points',
+            label: '0 points'
         },
         {
             key: 'logout',

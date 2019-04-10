@@ -1,8 +1,10 @@
+/* eslint-disable no-undef */
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
 import classes from './TickTackToe.css';
+import Aux from '../../../hoc/Aux/Aux';
 import Modal from '../../../UI/Modal/Modal';
 import Spinner from '../../../UI/Spinner/Spinner';
 import Button from '../../../UI/Button/Button';
@@ -11,16 +13,18 @@ import * as actions from '../../../storage/actions/actions';
 import { ticktackToeKey } from '../../../constants/games';
 
 const waitingUserModalId = 'waitingUserModal';
-const userLeftModalId = 'userLeftModal';
+const playerLeftModalId = 'userLeftModal';
+const gameIsOverModalId = 'gameIsOverModalId';
 const gameDetailsUrl = `/game/${ticktackToeKey}`;
 
 class TickTackToe extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.isAuthenticated !== nextProps.isAuthenticated ||
-            this.props.waitForPlayer !== nextProps.waitForPlayer ||
-            this.props.gameFinished !== nextProps.gameFinished ||
+            this.props.gameStarted !== nextProps.gameStarted ||
+            this.props.gameClosed !== nextProps.gameClosed ||
             this.props.playerLeftGame !== nextProps.playerLeftGame ||
+            this.props.gameBoard.gameIsOver !== nextProps.gameBoard.gameIsOver ||
             this.props.gameBoard.moves !== nextProps.gameBoard.moves;
     }
 
@@ -28,8 +32,7 @@ class TickTackToe extends Component {
         if (!this.props.isAuthenticated) {
             this.props.setLoginRedirectUrl(this.props.location.pathname);
         } else {
-            if (this.props.waitForPlayer) {
-                // eslint-disable-next-line no-undef
+            if (!this.props.gameStarted) {
                 $(`#${waitingUserModalId}`).modal('show');
             }
             /*  window.addEventListener("beforeunload", e => {
@@ -49,9 +52,10 @@ class TickTackToe extends Component {
 
     componentDidUpdate() {
         if (this.props.playerLeftGame) {
-            // eslint-disable-next-line no-undef
-            $(`#${userLeftModalId}`).modal('show');
+            $(`#${playerLeftModalId}`).modal('show');
         }
+
+        $(`#${gameIsOverModalId}`).modal(this.props.gameBoard.gameIsOver ? 'show' : 'hide');
     }
 
     leaveRoom = () => {
@@ -59,8 +63,7 @@ class TickTackToe extends Component {
     }
 
     closeRoom = () => {
-        // eslint-disable-next-line no-undef
-        $(`#${userLeftModalId}`).modal('hide');
+        $(`#${playerLeftModalId}`).modal('hide');
         this.props.history.push(gameDetailsUrl);
     }
 
@@ -68,11 +71,18 @@ class TickTackToe extends Component {
         const key = event.target.id;
         let moves = [...this.props.gameBoard.moves];
         moves[key] = this.props.gameBoard.playerStep;
-        this.props.playerMadeMove({ room: this.props.room.name, moves });
+        const data = {
+            room: this.props.room,
+            gameBoard: {
+                ...this.props.gameBoard,
+                moves
+            }
+        }
+        this.props.playerMadeMove(data);
     }
 
     getPlayerLeftModal = () => (
-        <Modal id={userLeftModalId}>
+        <Modal id={playerLeftModalId}>
             <div id='body'>
                 <h5 className='text-center'>Player has left the game. Game is over</h5>
             </div>
@@ -107,17 +117,23 @@ class TickTackToe extends Component {
     )
 
     getGameBoard = () => {
-        let boardRows = []
+        let boardRows = [];
+        let modal = null;
+
+        if (this.props.gameBoard.gameIsOver) {
+            modal = this.getGameIsOverModal();
+        }
 
         for (let i = 0; i < 3; i++) {
-            let boardMoves = [];
-
-            for (let index = i * 3; index < (i + 1) * 3; index++) {
-                const boardMove = this.props.gameBoard.moves[index];
-                boardMoves.push(<BoardMove key={index} id={index} value={boardMove} clicked={this.playerMadeMove} />)
-            }
+            // eslint-disable-next-line no-loop-func
+            const boardMoves = this.props.gameBoard.moves
+                .slice(i * 3, (i + 1) * 3)
+                .map((boardMove, index) => {
+                    const id = i * 3 + index;
+                    return <BoardMove id={id} key={`col-${id}`} value={boardMove} onClick={this.playerMadeMove} />
+                });
             boardRows.push((
-                <tr key={i * 2}>
+                <tr key={`row${i}`} >
                     {boardMoves}
                 </tr>
             ));
@@ -125,21 +141,31 @@ class TickTackToe extends Component {
 
         return (
             <div className={classes.gameBoard}>
+                {modal}
                 <div className="row">
                     <div className={'col-2 ' + classes.border}></div>
                     <div className='col-8'>
-                        <div className='row align-items-center justify-content-center' style={{ height: "85%" }}>
+                        <div className='row align-items-center justify-content-center' style={{ height: "75%" }}>
                             <div className={this.props.gameBoard.yourTurn ? 'col-10' : classes.noUserTurn + ' col-10'}>
                                 <table className={classes.game}>
-                                    {boardRows}
+                                    <tbody>
+                                        {boardRows}
+                                    </tbody>
                                 </table>
                             </div>
+                        </div>
+                        <div className='row align-items-center justify-content-center' style={{ height: "10%" }}>
+                            {
+                                this.props.gameBoard.yourTurn ?
+                                    <h5>Your turn</h5> :
+                                    null
+                            }
                         </div>
                         <div className={'row text-center align-items-center ' + classes.playersPnl}>
                             <div className='col-4'>
                                 <h5>
-                                    {this.props.room.player1.username} X
-                                    </h5>
+                                    {this.props.room.players.player1.username}
+                                </h5>
                             </div>
                             <div className='col-4'>
                                 <Button
@@ -152,33 +178,43 @@ class TickTackToe extends Component {
                             </div>
                             <div className='col-4'>
                                 <h5>
-                                    {this.props.room.player2.username} O
-                                    </h5>
+                                    {this.props.room.players.player2.username}
+                                </h5>
                             </div>
                         </div>
                     </div>
                     <div className={'col-2 ' + classes.border}></div>
                 </div>
-            </div>)
+            </div>
+        );
     }
+
+    getGameIsOverModal = () => (
+        <Modal id={gameIsOverModalId}>
+            <div id='body'>
+                <h4 className='text-center'>Game is over</h4>
+            </div>
+            <div id='footer'>
+                button
+            </div>
+        </Modal>
+    );
 
     render() {
         let game = null;
 
+        if (this.props.gameStarted || this.props.gameClosed) {
+            $(`#${waitingUserModalId}`).modal('hide');
+        }
+
         if (!this.props.isAuthenticated) {
             game = <Redirect to='/login' />;
-        } else if (!this.props.room.name || this.props.gameFinished) {
+        } else if (this.props.playerLeftGame) {
+            game = this.getPlayerLeftModal();
+        } else if (!this.props.room.name || this.props.gameClosed) {
             game = <Redirect to={gameDetailsUrl} />;
         } else {
-
-            if (!this.props.waitForPlayer || this.props.gameFinished) {
-                // eslint-disable-next-line no-undef
-                $(`#${waitingUserModalId}`).modal('hide');
-            }
-
-            if (this.props.playerLeftGame) {
-                game = this.getPlayerLeftModal();
-            } else if (this.props.waitForPlayer) {
+            if (!this.props.gameStarted) {
                 game = this.getWaitingUserModal();
             } else {
                 game = this.getGameBoard();

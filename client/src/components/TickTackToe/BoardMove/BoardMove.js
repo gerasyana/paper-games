@@ -8,8 +8,7 @@ const boardMove = (props) => (
         <Button
             type="button"
             className={classes.boardMove}
-            id={props.id}
-            onClick={props.clicked}
+            {...props}
             disabled={props.value}>
             {props.value}
         </Button>

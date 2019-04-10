@@ -1,5 +1,6 @@
 const redis = require('./redis');
 const roomService = require('./room');
+const GameFactory = require('./games/gameFactory');
 
 class SocketClient {
 
@@ -43,7 +44,7 @@ class SocketClient {
                 client.join(name);
                 const room = await roomService.updateRoom(data);
 
-                client.broadcast.to(name).emit('player2Joined', room.player2);
+                client.broadcast.to(name).emit('player2Joined', room.players);
                 this.io.sockets.to(client.id).emit('player1Joined', room);
                 await this.notifyRoomsUpdate();
             }
@@ -59,7 +60,7 @@ class SocketClient {
             if (clientIds) {
                 clientIds.forEach(clientId => {
                     this.io.sockets.connected[clientId].leave(name);
-                    client.broadcast.to(clientId).emit('userLeftGame');
+                    client.broadcast.to(clientId).emit('playerLeftGame');
                 });
             }
 
@@ -70,9 +71,15 @@ class SocketClient {
 
     handleGameEvents(client) {
         client.on('playerMadeMove', async (data) => {
-            const { room, moves } = data;
-            //TODO : implement game logic
-            this.io.sockets.to(room).emit('updateGameBoard', { moves });
+            const { room, gameBoard } = data;
+            const gameService = new GameFactory(client.id, room, gameBoard);
+            await gameService.processPlayerMove();
+            this.io.sockets.to(room.name).emit('updateGameBoard', gameService.getUpdatedGameBoard());
+
+            if (gameService.gameIsOver) {
+                // TODO : update current user scopres total on UI
+                //TODO : notification on UI that user gen scores for finished game
+            }
         });
     }
 

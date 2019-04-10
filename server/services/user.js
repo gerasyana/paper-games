@@ -17,7 +17,7 @@ class UserService {
         return getUserWrapper(user);
     }
 
-    async getUsernameById(id) {
+    async getPlayerDetailsById(id) {
         const user = await User.findById(id).cache(USERS_CACHE_OPTIONS);
 
         if (!user) {

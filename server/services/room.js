@@ -1,58 +1,51 @@
 const { rooms } = require('./redis');
-const { getUsernameById } = require('./user');
+const { getPlayerDetailsById } = require('./user');
 
-saveRoom = async (data) => {
-    const { name, gameId, playerId } = data;
-    const player1 = await getUsernameById(playerId);
-    const room = {
-        name,
-        gameId,
-        player1
-    }
-    await rooms.save(name, room);
-    return room;
-}
+class RoomService {
 
-updateRoom = async (data) => {
-    const { name, playerId } = data;
-    const room = await rooms.get(name);
-    const player2 = await getUsernameById(playerId);
-    const roomUpdated = {
-        ...room,
-        player2
-    }
-    await rooms.save(name, roomUpdated);
-    return roomUpdated;
-}
-
-getRooms = async () => {
-    const data = await rooms.getAll();
-
-    if (!data) {
-        return [];
+    async saveRoom(data) {
+        const { name, gameId, playerId } = data;
+        const player1 = await getPlayerDetailsById(playerId);
+        const room = {
+            name,
+            gameId,
+            players: { player1 }
+        }
+        await rooms.save(name, room);
+        return room;
     }
 
-    return Object.values(data).map(room => {
-        const roomParsed = JSON.parse(room);
-        const users = [];
+    async updateRoom(data) {
+        const { name, playerId } = data;
+        const room = await rooms.get(name);
+        const player2 = await getPlayerDetailsById(playerId);
+        const roomUpdated = {
+            ...room,
+            players: {
+                ...room.players,
+                player2
+            }
+        }
+        await rooms.save(name, roomUpdated);
+        return roomUpdated;
+    }
 
-        if (roomParsed.player1) {
-            users.push(roomParsed.player1)
+    async getRooms() {
+        const data = await rooms.getAll();
+
+        if (!data) {
+            return [];
         }
 
-        if (roomParsed.player2) {
-            users.push(roomParsed.player2)
-        }
-        return {
-            name: roomParsed.name,
-            gameId: roomParsed.gameId,
-            users
-        }
-    });
+        return Object.values(data).map(room => {
+            const roomParsed = JSON.parse(room);
+            return {
+                name: roomParsed.name,
+                gameId: roomParsed.gameId,
+                players: Object.values(roomParsed.players)
+            }
+        });
+    }
 }
 
-module.exports = {
-    saveRoom,
-    updateRoom,
-    getRooms
-}
+module.exports = new RoomService();
