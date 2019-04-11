@@ -2,11 +2,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 
-import Modal from '../../UI/Modal/Modal';
-import Input from '../../UI/Input/Input';
-import Button from '../../UI/Button/Button';
-import { validateInput } from '../../helpers/validation';
-import * as actions from '../../storage/actions/actions';
+import Modal from '../../../UI/Modal/Modal';
+import Input from '../../../UI/Input/Input';
+import Button from '../../../UI/Button/Button';
+import { validateInput } from '../../../helpers/validation';
+import * as actions from '../../../storage/actions/actions';
 
 const modalId = 'newRoomModal';
 
