@@ -35,15 +35,15 @@ export const player1Joined = (room) => {
     }
 }
 
-export const closeGame = () => {
+export const closeRoom = () => {
     return {
-        type: actionTypes.CLOSE_GAME
+        type: actionTypes.CLOSE_ROOM
     }
 }
 
-export const playerLeftGame = () => {
+export const playerLeftRoom = () => {
     return {
-        type: actionTypes.PLAYER_LEFT_GAME
+        type: actionTypes.PLAYER_LEFT_ROOM
     }
 }
 

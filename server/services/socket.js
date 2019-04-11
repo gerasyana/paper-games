@@ -30,9 +30,11 @@ class SocketClient {
 
     handleRoomEvents(client) {
         client.on('createRoom', async (data) => {
-            client.join(data.name);
+            const { name } = data;
+            client.join(name);
+
             const room = await roomService.saveRoom(data);
-            this.io.sockets.to(client.id).emit('player1Joined', room);
+            client.emit('player1Joined', room);
             await this.notifyRoomsUpdate();
         });
 
@@ -45,7 +47,7 @@ class SocketClient {
                 const room = await roomService.updateRoom(data);
 
                 client.broadcast.to(name).emit('player2Joined', room.players);
-                this.io.sockets.to(client.id).emit('player1Joined', room);
+                client.emit('player1Joined', room);
                 await this.notifyRoomsUpdate();
             }
         });
@@ -54,16 +56,13 @@ class SocketClient {
             const { name } = data;
 
             client.leave(name);
-            this.io.sockets.to(client.id).emit('closeGame');
+            client.emit('closeRoom');
 
-            const clientIds = this.getRoomClientIds(name);
-            if (clientIds) {
-                clientIds.forEach(clientId => {
-                    this.io.sockets.connected[clientId].leave(name);
-                    client.broadcast.to(clientId).emit('playerLeftGame');
-                });
-            }
-
+            this.getRoomClientIds(name).forEach(clientId => {
+                this.io.sockets.connected[clientId].leave(name);
+                client.broadcast.to(clientId).emit('playerLeftRoom');
+            });
+            
             await redis.rooms.remove(name);
             await this.notifyRoomsUpdate();
         })
@@ -71,13 +70,14 @@ class SocketClient {
 
     handleGameEvents(client) {
         client.on('playerMadeMove', async (data) => {
-            const { room, gameBoard } = data;
-            const gameService = new GameFactory(client.id, room, gameBoard);
+            const { room } = data;
+            const playerId = await redis.sockets.getUserId(client.id);
+
+            const gameService = new GameFactory(playerId, data);
             await gameService.processPlayerMove();
             this.io.sockets.to(room.name).emit('updateGameBoard', gameService.getUpdatedGameBoard());
 
             if (gameService.gameIsOver) {
-                // TODO : update current user scopres total on UI
                 //TODO : notification on UI that user gen scores for finished game
             }
         });

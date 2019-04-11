@@ -31,20 +31,20 @@ class SocketClient {
             store.dispatch(actions.updateRooms(rooms));
         });
 
+        this.client.on('closeRoom', () => {
+            store.dispatch(actions.closeRoom());
+        });
+
+        this.client.on('playerLeftRoom', () => {
+            store.dispatch(actions.playerLeftRoom());
+        });
+
         this.client.on('player1Joined', (room) => {
             store.dispatch(actions.player1Joined(room));
         });
 
         this.client.on('player2Joined', (players) => {
             store.dispatch(actions.player2Joined(players));
-        });
-
-        this.client.on('playerLeftGame', () => {
-            store.dispatch(actions.playerLeftGame());
-        });
-
-        this.client.on('closeGame', () => {
-            store.dispatch(actions.closeGame());
         });
 
         this.client.on('updateGameBoard', (gameBoard) => {

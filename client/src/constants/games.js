@@ -1,10 +1,10 @@
 import battleshipImgSrc from '../assets/battleship.png';
 import tickTackToeImgSrc from '../assets/tick-tack-toe.jpg';
 
-export const ticktackToeKey = 'tick-tack-toe';
+export const tickTackToeKey = 'tick-tack-toe';
 
 const games = {
-    [ticktackToeKey]: {
+    [tickTackToeKey]: {
         name: 'Tic-Tac-Toe',
         src: tickTackToeImgSrc,
         gamePath: '/tick-tack-toe',

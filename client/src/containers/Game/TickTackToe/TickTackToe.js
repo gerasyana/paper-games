@@ -4,26 +4,25 @@ import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
 import classes from './TickTackToe.css';
-import Aux from '../../../hoc/Aux/Aux';
 import Modal from '../../../UI/Modal/Modal';
 import Spinner from '../../../UI/Spinner/Spinner';
 import Button from '../../../UI/Button/Button';
 import BoardMove from '../../../components/TickTackToe/BoardMove/BoardMove';
 import * as actions from '../../../storage/actions/actions';
-import { ticktackToeKey } from '../../../constants/games';
+import { tickTackToeKey } from '../../../constants/games';
 
 const waitingUserModalId = 'waitingUserModal';
-const playerLeftModalId = 'userLeftModal';
+const playerLeftRoomModalId = 'userLeftModal';
 const gameIsOverModalId = 'gameIsOverModalId';
-const gameDetailsUrl = `/game/${ticktackToeKey}`;
+const gameDetailsUrl = `/game/${tickTackToeKey}`;
 
 class TickTackToe extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.isAuthenticated !== nextProps.isAuthenticated ||
             this.props.gameStarted !== nextProps.gameStarted ||
-            this.props.gameClosed !== nextProps.gameClosed ||
-            this.props.playerLeftGame !== nextProps.playerLeftGame ||
+            this.props.roomClosed !== nextProps.roomClosed ||
+            this.props.playerLeftRoom !== nextProps.playerLeftRoom ||
             this.props.gameBoard.gameIsOver !== nextProps.gameBoard.gameIsOver ||
             this.props.gameBoard.moves !== nextProps.gameBoard.moves;
     }
@@ -51,8 +50,8 @@ class TickTackToe extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.playerLeftGame) {
-            $(`#${playerLeftModalId}`).modal('show');
+        if (this.props.playerLeftRoom) {
+            $(`#${playerLeftRoomModalId}`).modal('show');
         }
 
         $(`#${gameIsOverModalId}`).modal(this.props.gameBoard.gameIsOver ? 'show' : 'hide');
@@ -63,7 +62,7 @@ class TickTackToe extends Component {
     }
 
     closeRoom = () => {
-        $(`#${playerLeftModalId}`).modal('hide');
+        $(`#${playerLeftRoomModalId}`).modal('hide');
         this.props.history.push(gameDetailsUrl);
     }
 
@@ -81,10 +80,10 @@ class TickTackToe extends Component {
         this.props.playerMadeMove(data);
     }
 
-    getPlayerLeftModal = () => (
-        <Modal id={playerLeftModalId}>
+    getPlayerLeftRoomModal = () => (
+        <Modal id={playerLeftRoomModalId}>
             <div id='body'>
-                <h5 className='text-center'>Player has left the game. Game is over</h5>
+                <h5 className='text-center'>Player has left the room. Game is over</h5>
             </div>
             <div id='footer'>
                 <Button
@@ -110,7 +109,7 @@ class TickTackToe extends Component {
                     type="button"
                     className="btn btn-primary"
                     onClick={this.leaveRoom}>
-                    Leave Game
+                    Leave room
         </Button>
             </div>
         </Modal>
@@ -164,7 +163,7 @@ class TickTackToe extends Component {
                         <div className={'row text-center align-items-center ' + classes.playersPnl}>
                             <div className='col-4'>
                                 <h5>
-                                    {this.props.room.players.player1.username}
+                                    {this.props.room.players[0].username}
                                 </h5>
                             </div>
                             <div className='col-4'>
@@ -178,7 +177,7 @@ class TickTackToe extends Component {
                             </div>
                             <div className='col-4'>
                                 <h5>
-                                    {this.props.room.players.player2.username}
+                                    {this.props.room.players[1].username}
                                 </h5>
                             </div>
                         </div>
@@ -203,15 +202,15 @@ class TickTackToe extends Component {
     render() {
         let game = null;
 
-        if (this.props.gameStarted || this.props.gameClosed) {
+        if (this.props.gameStarted) {
             $(`#${waitingUserModalId}`).modal('hide');
         }
 
         if (!this.props.isAuthenticated) {
             game = <Redirect to='/login' />;
-        } else if (this.props.playerLeftGame) {
-            game = this.getPlayerLeftModal();
-        } else if (!this.props.room.name || this.props.gameClosed) {
+        } else if (this.props.playerLeftRoom) {
+            game = this.getPlayerLeftRoomModal();
+        } else if (!this.props.room.name || this.props.roomClosed) {
             game = <Redirect to={gameDetailsUrl} />;
         } else {
             if (!this.props.gameStarted) {

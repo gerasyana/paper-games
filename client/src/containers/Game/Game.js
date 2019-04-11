@@ -33,7 +33,7 @@ class Game extends PureComponent {
         }
     }
 
-    createGame = () => {
+    createRoom = () => {
         if (!this.props.isAuthenticated) {
             this.props.setLoginRedirectUrl(this.props.match.url);
             this.props.history.push('/login');
@@ -44,7 +44,7 @@ class Game extends PureComponent {
         }
     }
 
-    joinGame = () => {
+    joinRoom = () => {
         this.props.history.push('/rooms');
     }
 
@@ -80,14 +80,14 @@ class Game extends PureComponent {
                                     className='btn btn-primary mr-4 mb-4'
                                     data-toggle="modal"
                                     data-target="#newRoomModal"
-                                    onClick={this.createGame} >
-                                    Create a new game
+                                    onClick={this.createRoom} >
+                                    Create a new room
                                 </Button>
                                 <Button
                                     type="button"
                                     className='btn btn-primary mb-4'
-                                    onClick={this.joinGame}>
-                                    Join an existing game
+                                    onClick={this.joinRoom}>
+                                    Join an existing room
                             </Button>
                             </div>
                         </div>

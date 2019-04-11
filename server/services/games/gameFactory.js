@@ -1,11 +1,10 @@
 const TickTackToe = require('./tickTackToe');
 
 class GameFactory {
-    constructor(clientId, room, gameBoard) {
-        const { gameId } = room;
-        //TODO : get room inf ofrom redis
-        //get proper instance by gameId 
-        return new TickTackToe(clientId, room, gameBoard);
+    constructor(playerId, data) {
+        const { gameId } = data.room;
+        //TODO get proper instance by gameId 
+        return new TickTackToe(playerId, data);
     }
 }
 

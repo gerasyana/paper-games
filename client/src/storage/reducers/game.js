@@ -2,11 +2,12 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     gameStarted: false,
-    gameClosed: false,
-    playerLeftGame: false,
+    roomClosed: false,
+    playerLeftRoom: false,
     room: {
         gameId: null,
         name: null,
+        players: []
     },
     gameBoard: {
         gameFinished: false,
@@ -24,8 +25,8 @@ const reducer = (state = initialState, action) => {
             }
             return {
                 ...state,
-                playerLeftGame :false,
-                gameClosed : false,
+                playerLeftRoom: false,
+                roomClosed: false,
                 gameStarted: Object.keys(action.room.players).length === 2,
                 gameBoard: {
                     ...state.gameBoard,
@@ -39,7 +40,7 @@ const reducer = (state = initialState, action) => {
                 gameStarted: Object.keys(action.players).length === 2,
                 room: {
                     ...state.room,
-                    players : action.players
+                    players: action.players
                 },
                 gameBoard: {
                     ...state.gameBoard,
@@ -48,16 +49,16 @@ const reducer = (state = initialState, action) => {
                 }
             }
         }
-        case actionTypes.CLOSE_GAME: {
+        case actionTypes.CLOSE_ROOM: {
             return {
                 ...initialState,
-                gameClosed: true
+                roomClosed: true
             }
         }
-        case actionTypes.PLAYER_LEFT_GAME: {
+        case actionTypes.PLAYER_LEFT_ROOM: {
             return {
                 ...initialState,
-                playerLeftGame: true
+                playerLeftRoom: true
             }
         }
         case actionTypes.UPDATE_GAME_BOARD: {

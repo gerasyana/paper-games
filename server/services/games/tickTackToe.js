@@ -1,5 +1,5 @@
-const { sockets } = require('../redis');
 const { saveGame } = require('../gameHistory');
+const games = require('../../constants/games');
 
 const winningMoves = [
     [0, 1, 2],
@@ -14,11 +14,12 @@ const winningMoves = [
 
 class TickTackToe {
 
-    constructor(clientId, room, gameBoard) {
-        this.clientId = clientId;
-        this.gameBoard = gameBoard;
-        this.room = room;
+    constructor(playerId, data) {
+        this.playerId = playerId;
+        this.gameBoard = data.gameBoard;
+        this.room = data.room;
         this.gameIsOver = false;
+        this.points = games[data.room.gameId].points;
     }
 
     async processPlayerMove() {
@@ -26,18 +27,20 @@ class TickTackToe {
         this.gameIsOver = winningMoves.some((winningMove) =>
             winningMove.every(moveIndex => moves[moveIndex] === playerStep)
         );
-
+        
         if (this.gameIsOver) {
-            this.playerId = await sockets.getUserId(this.clientId);
-            await saveGame(this.room, this.playerId);
+            await saveGame({
+                room: this.room,
+                winnerId: this.playerId,
+                points: this.points
+            });
         }
     }
 
     getUpdatedGameBoard() {
         return {
             moves: this.gameBoard.moves,
-            gameIsOver: this.gameIsOver,
-            winnerId: this.playerId
+            gameIsOver: this.gameIsOver
         }
     }
 }
