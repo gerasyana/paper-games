@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const jwtService = require('./jwt');
 const { USER_MODEL } = require('../constants/modelNames');
 const { USERS_CACHE_OPTIONS } = require('../constants/cacheOptions');
+const { geUserTotalPoints } = require('./gameHistory')
 
 const User = mongoose.model(USER_MODEL);
 
@@ -14,7 +15,7 @@ class UserService {
         if (!user) {
             return { error: 'User not found' };
         }
-        return getUserWrapper(user);
+        return await getUserWrapper(user);
     }
 
     async getPlayerDetailsById(id) {
@@ -46,7 +47,7 @@ class UserService {
         if (!user) {
             return { error: 'Error while signing up . Please try again' }
         }
-        return getUserDetails(user);
+        return await getUserDetails(user);
     }
 
     async login(data) {
@@ -60,24 +61,27 @@ class UserService {
         }
 
         user.cache();
-        return getUserDetails(user);
+        return await getUserDetails(user);
     }
 }
 
-const getUserDetails = (user) => {
+const getUserDetails = async (user) => {
     const tokenDetails = jwtService.generateAndSaveJWT(user);
+    const userWrapper = await getUserWrapper(user);
     return {
         tokenDetails,
-        user: getUserWrapper(user)
+        user : userWrapper
     }
 }
 
-const getUserWrapper = (user) => (
-    {
+const getUserWrapper = async (user) => {
+    const totalPoints = await geUserTotalPoints(user._id);
+    return {
         email: user.email,
         username: user.username,
-        id: user._id
+        id: user._id,
+        totalPoints
     }
-)
+}
 
 module.exports = new UserService();

@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from 'react-router';
 
 import GameLogo from '../../components/Games/GameLogo/GameLogo';
 import Button from '../../UI/Button/Button';
-import NewRoom from '../NewRoom/NewRoom';
+import NewRoom from './NewRoom/NewRoom';
 import games from '../../constants/games';
 import * as actions from '../../storage/actions/actions';
 

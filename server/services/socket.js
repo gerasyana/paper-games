@@ -1,5 +1,6 @@
 const redis = require('./redis');
 const roomService = require('./room');
+const { geUserTotalPoints } = require('./gameHistory');
 const GameFactory = require('./games/gameFactory');
 
 class SocketClient {
@@ -38,6 +39,14 @@ class SocketClient {
             await this.notifyRoomsUpdate();
         });
 
+        client.on('reinitRoom', async (data) => {
+            const { name } = data;
+            client.join(name);
+
+            const room = await roomService.saveRoom(data);
+            client.emit('player1Joined', room);
+        });
+
         client.on('joinRoom', async (data) => {
             const { name } = data;
             const roomDetails = this.io.nsps['/'].adapter.rooms[name];
@@ -58,12 +67,17 @@ class SocketClient {
             client.leave(name);
             client.emit('closeRoom');
 
-            this.getRoomClientIds(name).forEach(clientId => {
-                this.io.sockets.connected[clientId].leave(name);
-                client.broadcast.to(clientId).emit('playerLeftRoom');
-            });
-            
-            await redis.rooms.remove(name);
+            const clientIds = this.getRoomClientIds(name);
+
+            if (clientIds.length === 0) {
+                await redis.rooms.remove(name);
+            } else {
+                const playerId = await redis.sockets.getUserId(client.id);
+                const room = await roomService.removePlayer(name, playerId);
+                clientIds.forEach(clientId => {
+                    client.broadcast.to(clientId).emit('playerLeftRoom', room);
+                });
+            }
             await this.notifyRoomsUpdate();
         })
     }
@@ -75,10 +89,21 @@ class SocketClient {
 
             const gameService = new GameFactory(playerId, data);
             await gameService.processPlayerMove();
-            this.io.sockets.to(room.name).emit('updateGameBoard', gameService.getUpdatedGameBoard());
+            const gameBoard = gameService.getUpdatedGameBoard();
 
             if (gameService.gameIsOver) {
-                //TODO : notification on UI that user gen scores for finished game
+                const totalPoints = await geUserTotalPoints(playerId);
+                client.emit('gameIsOver', {
+                    gameBoard: {
+                        ...gameBoard,
+                        youWon: true,
+                        points: gameService.points
+                    },
+                    totalPoints
+                });
+                client.broadcast.to(room.name).emit('gameIsOver', { gameBoard });
+            } else {
+                this.io.sockets.to(room.name).emit('togglePlayerTurn', gameBoard);
             }
         });
     }

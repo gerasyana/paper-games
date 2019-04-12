@@ -13,18 +13,6 @@ const navigationItems = (props) => {
         }
     ];
 
-    const usersItems = [
-        {
-            key: 'points',
-            label: '0 points'
-        },
-        {
-            key: 'logout',
-            label : 'Logout',
-            link: '/logout'
-        },
-    ];
-
     let navItemsRight = (
         <Aux>
             <NavigationItem type="link" link='/login' label="Login" />
@@ -39,15 +27,29 @@ const navigationItems = (props) => {
     )
 
     if (props.isAuthenticated) {
+
+        const usersItems = [
+            {
+                key: 'points',
+                label: `${props.user.totalPoints} points`
+            },
+            {
+                key: 'logout',
+                label: 'Logout',
+                link: '/logout'
+            },
+        ];
+
+
         navItemsRight = (
             <Aux>
                 <NavigationItem type="link" link='/rooms' label={`${props.rooms} rooms `} />
                 <NavigationItem type="text" label={`${props.usersOnline} users online`} />
-                <NavigationItem type="dropdown" dropdownItems={usersItems}  label={props.user.username}  />
+                <NavigationItem type="dropdown" dropdownItems={usersItems} label={props.user.username} />
             </Aux>
         )
     }
-    
+
     return (
         <Aux>
             <ul className="nav navbar-nav navbar-nav">

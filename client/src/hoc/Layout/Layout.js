@@ -29,7 +29,8 @@ class Layout extends Component {
     shouldComponentUpdate(nextProps, state) {
         return this.props.isAuthenticated !== nextProps.isAuthenticated ||
             this.props.usersOnline !== nextProps.usersOnline ||
-            this.props.rooms !== nextProps.rooms;
+            this.props.rooms !== nextProps.rooms ||
+            (this.props.user && this.props.user.totalPoints !== nextProps.user.totalPoints);
     }
 
     render() {

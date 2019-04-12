@@ -11,7 +11,8 @@ export {
     signUpFailed,
     logout,
     logoutSuccess,
-    setLoginRedirectUrl
+    setLoginRedirectUrl,
+    setUserTotalPoints
 } from './auth'
 
 export {
@@ -27,6 +28,9 @@ export {
     closeRoom,
     leaveRoom,
     playerLeftRoom,
-    updateGameBoard,
-    playerMadeMove
+    togglePlayerTurn,
+    playerMadeMove,
+    gameIsOver,
+    waitForPlayer,
+    restartGame
 } from './game'

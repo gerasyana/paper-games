@@ -51,6 +51,15 @@ const reducer = (state = initialState, action) => {
                 redirectUrl: action.redirectUrl
             };
         }
+        case actionTypes.SET_USER_TOTAL_POINTS: {
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    totalPoints: action.totalPoints
+                }
+            }
+        }
         default:
             return state;
     }

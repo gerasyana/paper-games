@@ -27,7 +27,7 @@ class TickTackToe {
         this.gameIsOver = winningMoves.some((winningMove) =>
             winningMove.every(moveIndex => moves[moveIndex] === playerStep)
         );
-        
+
         if (this.gameIsOver) {
             await saveGame({
                 room: this.room,
@@ -39,8 +39,7 @@ class TickTackToe {
 
     getUpdatedGameBoard() {
         return {
-            moves: this.gameBoard.moves,
-            gameIsOver: this.gameIsOver
+            moves: this.gameBoard.moves
         }
     }
 }

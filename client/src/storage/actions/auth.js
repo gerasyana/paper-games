@@ -6,7 +6,7 @@ export const checkAuthentication = () => {
     }
 }
 
-export const login = (credentials) => {
+export const login = credentials => {
     return {
         type: actionTypes.INIT_LOGIN,
         credentials
@@ -19,14 +19,14 @@ export const loginStart = () => {
     }
 }
 
-export const loginSuccess = (user) => {
+export const loginSuccess = user => {
     return {
         type: actionTypes.LOGIN_SUCCESS,
         user
     }
 }
 
-export const loginFailed = (error) => {
+export const loginFailed = error => {
     return {
         type: actionTypes.LOGIN_FAILED,
         error
@@ -45,7 +45,7 @@ export const logoutSuccess = () => {
     }
 }
 
-export const signUp = (user) => {
+export const signUp = user => {
     return {
         type: actionTypes.INIT_SIGNUP,
         user
@@ -58,30 +58,37 @@ export const signUpStart = () => {
     }
 }
 
-export const signUpSuccess = (user) => {
+export const signUpSuccess = user => {
     return {
         type: actionTypes.SIGNUP_SUCCESS,
         user
     }
 }
 
-export const signUpFailed = (error) => {
+export const signUpFailed = error => {
     return {
         type: actionTypes.SIGNUP_FAILED,
         error
     }
 }
 
-export const setAuthTimeout = (expirationTime) => {
+export const setAuthTimeout = expirationTime => {
     return {
         type: actionTypes.AUTH_SET_TIMEOUT,
         expirationTime
     }
 }
 
-export const setLoginRedirectUrl = (redirectUrl) => {
+export const setLoginRedirectUrl = redirectUrl => {
     return {
         type: actionTypes.SET_AUTH_REDIRECT_URL,
         redirectUrl
+    }
+}
+
+export const setUserTotalPoints = totalPoints => {
+    return {
+        type: actionTypes.SET_USER_TOTAL_POINTS,
+        totalPoints
     }
 }

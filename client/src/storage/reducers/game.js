@@ -10,7 +10,8 @@ const initialState = {
         players: []
     },
     gameBoard: {
-        gameFinished: false,
+        gameIsOver: false,
+        youWon: false,
         yourTurn: false,
         playerStep: 'O',
         moves: new Array(9).fill(null)
@@ -27,7 +28,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 playerLeftRoom: false,
                 roomClosed: false,
-                gameStarted: Object.keys(action.room.players).length === 2,
+                gameStarted: Object.keys(room.players).length === 2,
                 gameBoard: {
                     ...state.gameBoard,
                 },
@@ -57,11 +58,17 @@ const reducer = (state = initialState, action) => {
         }
         case actionTypes.PLAYER_LEFT_ROOM: {
             return {
-                ...initialState,
-                playerLeftRoom: true
+                ...state,
+                playerLeftRoom: true,
+                room: {
+                    ...action.room
+                },
+                gameBoard: {
+                    ...initialState.gameBoard
+                }
             }
         }
-        case actionTypes.UPDATE_GAME_BOARD: {
+        case actionTypes.TOGGLE_PLAYER_TURN: {
             return {
                 ...state,
                 gameBoard: {
@@ -69,6 +76,23 @@ const reducer = (state = initialState, action) => {
                     ...action.gameBoard,
                     yourTurn: !state.gameBoard.yourTurn
                 }
+            }
+        }
+        case actionTypes.GAME_IS_OVER: {
+            return {
+                ...state,
+                gameBoard: {
+                    ...state.gameBoard,
+                    gameIsOver: true,
+                    ...action.gameBoard
+                }
+            }
+        }
+        case actionTypes.WAIT_FOR_PLAYER: {
+            return {
+                ...state,
+                playerLeftRoom: false,
+                gameStarted: false
             }
         }
         default:

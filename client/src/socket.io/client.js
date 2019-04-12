@@ -19,15 +19,15 @@ class SocketClient {
 
         this.client.emit('setUserId', { userId });
 
-        this.client.on('userConnected', (data) => {
+        this.client.on('userConnected', data => {
             store.dispatch(actions.setSiteStatistics(data));
         })
 
-        this.client.on('userDisconnected', (data) => {
+        this.client.on('userDisconnected', data => {
             store.dispatch(actions.setSiteStatistics(data));
         })
 
-        this.client.on('roomsUpdated', (rooms) => {
+        this.client.on('roomsUpdated', rooms => {
             store.dispatch(actions.updateRooms(rooms));
         });
 
@@ -35,20 +35,28 @@ class SocketClient {
             store.dispatch(actions.closeRoom());
         });
 
-        this.client.on('playerLeftRoom', () => {
-            store.dispatch(actions.playerLeftRoom());
+        this.client.on('playerLeftRoom', room => {
+            store.dispatch(actions.playerLeftRoom(room));
         });
 
-        this.client.on('player1Joined', (room) => {
+        this.client.on('player1Joined', room => {
             store.dispatch(actions.player1Joined(room));
         });
 
-        this.client.on('player2Joined', (players) => {
+        this.client.on('player2Joined', players => {
             store.dispatch(actions.player2Joined(players));
         });
 
-        this.client.on('updateGameBoard', (gameBoard) => {
-            store.dispatch(actions.updateGameBoard(gameBoard));
+        this.client.on('togglePlayerTurn', gameBoard => {
+            store.dispatch(actions.togglePlayerTurn(gameBoard));
+        });
+
+        this.client.on('gameIsOver', data => {
+            store.dispatch(actions.gameIsOver(data.gameBoard));
+            
+            if (data.totalPoints) {
+                store.dispatch(actions.setUserTotalPoints(data.totalPoints)); 
+            }
         });
     }
 
