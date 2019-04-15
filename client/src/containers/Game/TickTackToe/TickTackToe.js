@@ -34,18 +34,17 @@ class TickTackToe extends Component {
             if (!this.props.gameStarted) {
                 $(`#${waitForPlayerModalId}`).modal('show');
             }
-            /*  window.addEventListener("beforeunload", e => {
-                  e = e || window.e;
-                  e.cancelBubble = true;
-                  e.returnValue = '<h1>You sure you want to leave?</h1>'; //This is displayed on the dialog
-  
-                  //e.stopPropagation works in Firefox.
-                  if (e.stopPropagation) {
-                      e.stopPropagation();
-                      e.preventDefault();
-                  }
-              });
-  */
+
+            window.addEventListener("beforeunload", e => {
+                e = e || window.e;
+                e.cancelBubble = true;
+                e.returnValue = '<h1>You sure you want to leave the room?</h1>';
+
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            });
         }
     }
 

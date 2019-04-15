@@ -18,10 +18,12 @@ class SocketClient {
                 this.io.sockets.emit('userConnected', ioDetails);
             });
 
-            client.on('disconnect', async () => {
-                await redis.sockets.remove(client.id);
-                const ioDetails = await this.getConnectionDetails();
-                this.io.sockets.emit('userConnected', ioDetails);
+            client.on('disconnecting', async () => {
+                const rooms = Object.keys(client.rooms).filter(room => room !== client.id);
+
+                rooms.forEach(async (name) => {
+                    await this.notifyRoomClientIds(client, name);
+                });
             });
 
             this.handleRoomEvents(client);
@@ -67,19 +69,23 @@ class SocketClient {
             client.leave(name);
             client.emit('closeRoom');
 
-            const clientIds = this.getRoomClientIds(name);
-
-            if (clientIds.length === 0) {
-                await redis.rooms.remove(name);
-            } else {
-                const playerId = await redis.sockets.getUserId(client.id);
-                const room = await roomService.removePlayer(name, playerId);
-                clientIds.forEach(clientId => {
-                    client.broadcast.to(clientId).emit('playerLeftRoom', room);
-                });
-            }
+            await this.notifyRoomClientIds(client, name);
             await this.notifyRoomsUpdate();
         })
+    }
+
+    async notifyRoomClientIds(client, name) {
+        const clientIds = this.getRoomClientIds(name).filter(clientId => clientId !== client.id);
+        
+        if (clientIds.length === 0) {
+            await redis.rooms.remove(name);
+        } else {
+            const playerId = await redis.sockets.getUserId(client.id);
+            const room = await roomService.removePlayer(name, playerId);
+            clientIds.forEach(clientId => {
+                client.broadcast.to(clientId).emit('playerLeftRoom', room);
+            });
+        }
     }
 
     handleGameEvents(client) {
