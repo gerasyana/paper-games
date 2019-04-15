@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 
@@ -8,7 +8,7 @@ import Spinner from '../../../UI/Spinner/Spinner';
 import * as actions from '../../../storage/actions/actions'
 import { validateInput } from '../../../helpers/validation';
 
-class SignUp extends PureComponent {
+class SignUp extends Component {
 
     constructor(props) {
         super(props);
@@ -56,6 +56,13 @@ class SignUp extends PureComponent {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.isAuthenticated !== nextProps.isAuthenticated ||
+            this.props.loading !== nextProps.loading ||
+            this.props.error !== nextProps.error ||
+            this.state.controls !== nextState.controls;
+    }
+
     setControlValue = (event) => {
         const key = event.target.id;
         const value = event.target.value;
@@ -93,10 +100,9 @@ class SignUp extends PureComponent {
     }
 
     render() {
-        const formElemets = [];
-        Object.keys(this.state.controls).forEach(key => {
+        const formElements = Object.keys(this.state.controls).map(key => {
             const input = this.state.controls[key];
-            formElemets.push(<Input key={key}{...input} onChange={this.setControlValue} />)
+            return <Input key={key}{...input} onChange={this.setControlValue} />;
         });
 
         let errorMessage = null;
@@ -113,7 +119,7 @@ class SignUp extends PureComponent {
                 <div className="row justify-content-center">
                     <div className="col-4">
                         {errorMessage}
-                        {formElemets}
+                        {formElements}
                         <div>
                             <Button
                                 type="submit"

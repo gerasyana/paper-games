@@ -1,4 +1,4 @@
-import React, { memo} from 'react';
+import React, { memo } from 'react';
 import NavigationItems from './NavigationItems/NavigationItems';
 
 const navigationBar = (props) => (
@@ -12,6 +12,6 @@ const navigationBar = (props) => (
       </div>
     </div>
   </div>
-);
+)
 
 export default memo(navigationBar);

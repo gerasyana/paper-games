@@ -29,7 +29,8 @@ class TickTackToe extends Component {
 
     componentDidMount() {
         if (!this.props.isAuthenticated) {
-            this.props.setLoginRedirectUrl(this.props.location.pathname);
+            this.props.setLoginRedirectUrl(gameDetailsUrl);
+            this.props.history.push('/login');
         } else {
             if (!this.props.gameStarted) {
                 $(`#${waitForPlayerModalId}`).modal('show');
@@ -44,6 +45,10 @@ class TickTackToe extends Component {
                     e.stopPropagation();
                     e.preventDefault();
                 }
+            });
+
+            window.addEventListener("popstate", e => {
+                this.leaveRoom();
             });
         }
     }
@@ -65,8 +70,8 @@ class TickTackToe extends Component {
 
     leaveRoom = () => {
         $(`#${waitForPlayerModalId}`).modal('hide');
-        $(`#${gameIsOverModalId}`).modal('hide');
         $(`#${playerLeftRoomModalId}`).modal('hide');
+        $(`#${gameIsOverModalId}`).modal('hide');
         this.props.leaveRoom(this.props.room.name);
     }
 
@@ -80,10 +85,6 @@ class TickTackToe extends Component {
             this.props.waitForPlayer();
         }, 500);
         $(`#${playerLeftRoomModalId}`).modal('hide');
-    }
-
-    restartGame = () => {
-        $(`#${gameIsOverModalId}`).modal('show');
     }
 
     playerMadeMove = (event) => {
@@ -149,19 +150,17 @@ class TickTackToe extends Component {
             message = `You win! You got an extra ${this.props.gameBoard.points} points`;
         }
 
+        setTimeout(() => {
+            $(`#${gameIsOverModalId}`).modal('hide');
+            this.props.restartGame();
+        }, 3000);
+
         return (
             <Modal id={gameIsOverModalId}>
                 <div id='body'>
                     <h5 className='text-center'> {message}</h5>
                 </div>
                 <div id='footer'>
-                    <Button
-                        id="closeBtn"
-                        type="button"
-                        className="btn btn-primary mr-4 "
-                        onClick={this.restartGame}>
-                        Try again
-                    </Button>
                     <Button
                         id="closeBtn"
                         type="button"
@@ -249,7 +248,7 @@ class TickTackToe extends Component {
 
     render() {
         let game = null;
-        debugger;
+
         if (!this.props.isAuthenticated) {
             game = <Redirect to='/login' />;
         } else if (this.props.playerLeftRoom) {
@@ -280,7 +279,8 @@ const mapDispatchToState = (dispatch) => {
         setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url)),
         leaveRoom: (room) => dispatch(actions.leaveRoom(room)),
         playerMadeMove: (data) => dispatch(actions.playerMadeMove(data)),
-        waitForPlayer: () => dispatch(actions.waitForPlayer())
+        waitForPlayer: () => dispatch(actions.waitForPlayer()),
+        restartGame: () => dispatch(actions.restartGame())
     }
 }
 

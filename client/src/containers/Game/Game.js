@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Route, Switch, Redirect } from 'react-router';
 
@@ -10,7 +10,7 @@ import * as actions from '../../storage/actions/actions';
 
 import TickTackToe from './TickTackToe/TickTackToe';
 
-class Game extends PureComponent {
+class Game extends Component {
 
     constructor(props) {
         super(props);
@@ -20,6 +20,13 @@ class Game extends PureComponent {
             showNewRoomModal: false,
             startGame: false
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.isAuthenticated !== nextProps.isAuthenticated ||
+            this.props.room !== nextProps.room ||
+            this.state.gameId !== nextState.gameId ||
+            this.state.showNewRoomModal !== nextState.showNewRoomModal;
     }
 
     componentDidMount() {
@@ -55,7 +62,7 @@ class Game extends PureComponent {
         if (this.state.showNewRoomModal) {
             modal = <NewRoom gameId={this.state.gameId} />
         }
-        
+
         if (this.props.room) {
             gameDetails = <Redirect to={`${this.props.match.url}/${this.props.room}`} />;
         } else if (this.state.game) {

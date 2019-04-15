@@ -43,7 +43,7 @@ function getDrowdown(props) {
 
     if (props.dropdownItems) {
         dropdownItems = props.dropdownItems.map(item => (
-            <NavLink key={item.key} to={item.link ? item.link  : '/'} className="dropdown-item" exact={item.exact}>
+            <NavLink key={item.key} to={item.link ? item.link : '/'} className="dropdown-item" exact={item.exact}>
                 {item.label}
             </NavLink>
         ));

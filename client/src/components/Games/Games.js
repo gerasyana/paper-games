@@ -1,4 +1,4 @@
-import React , {memo} from 'react';
+import React, { memo } from 'react';
 
 import GameLogo from './GameLogo/GameLogo';
 

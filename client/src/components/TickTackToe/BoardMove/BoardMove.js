@@ -1,4 +1,4 @@
-import React , {memo} from 'react';
+import React, { memo } from 'react';
 
 import classes from './BoardMove.css';
 import Button from '../../../UI/Button/Button';

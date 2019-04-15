@@ -95,6 +95,16 @@ const reducer = (state = initialState, action) => {
                 gameStarted: false
             }
         }
+        case actionTypes.RESTART_GAME : {
+            return {
+                ...state,
+                gameBoard : {
+                    ...initialState.gameBoard,
+                    yourTurn : state.gameBoard.yourTurn,
+                    playerStep : state.gameBoard.playerStep
+                }
+            }
+        }
         default:
             return state;
     }
