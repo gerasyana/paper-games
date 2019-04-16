@@ -253,6 +253,7 @@ class TickTackToe extends Component {
             game = <Redirect to='/login' />;
         } else if (this.props.playerLeftRoom) {
             game = this.getPlayerLeftRoomModal();
+            $(`#${gameIsOverModalId}`).modal('hide');
         } else if (!this.props.room.name || this.props.roomClosed) {
             game = <Redirect to={gameDetailsUrl} />;
         } else {

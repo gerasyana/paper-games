@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -7,7 +7,7 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import axios from '../../axios/axios';
 import * as actions from '../../storage/actions/actions';
 
-class Layout extends PureComponent {
+class Layout extends Component {
 
     componentWillMount() {
         this.setInterceptor();
