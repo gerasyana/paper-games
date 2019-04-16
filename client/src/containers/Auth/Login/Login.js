@@ -107,7 +107,7 @@ class Login extends Component {
         let form = (
             <div className="container body-container">
                 <div className="row justify-content-center">
-                    <div className="col-4">
+                    <div className="col-sm-4 col-margin-fixed">
                         {errorMessage}
                         {formElements}
                         <div>

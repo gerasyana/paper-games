@@ -4,9 +4,13 @@ html, body {
 }
 
 div.body-container {
-  padding-top : 80px
+  padding-top : 70px
 }
 
 .no-cursor {
   cursor: default;
+}
+
+.col-margin-fixed {
+  margin: 10px 30px 10px 30px
 }

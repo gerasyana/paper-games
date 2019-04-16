@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const jwtService = require('./jwt');
 const { USER_MODEL } = require('../constants/modelNames');
 const { USERS_CACHE_OPTIONS } = require('../constants/cacheOptions');
-const { geUserTotalPoints } = require('./gameHistory')
+const { geUserTotalPoints } = require('./game')
 
 const User = mongoose.model(USER_MODEL);
 

@@ -1,4 +1,4 @@
-const { saveGame } = require('../gameHistory');
+const { saveGame } = require('../game');
 const games = require('../../constants/games');
 
 const winningMoves = [

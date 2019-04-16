@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Route, Switch, Redirect } from 'react-router';
 
-import GameLogo from '../../components/Games/GameLogo/GameLogo';
+import GameRating from '../../components/Games/GameRating/GameRating';
 import Button from '../../UI/Button/Button';
 import NewRoom from './NewRoom/NewRoom';
 import games from '../../constants/games';
@@ -72,10 +72,10 @@ class Game extends Component {
                 <div className="container body-container">
                     {modal}
                     <div className='row justify-content-center'>
-                        <div className='col-4'>
-                            <GameLogo name={this.state.game.name} src={this.state.game.src} />
+                        <div className='col-sm-4 col-margin-fixed'>
+                            <GameRating />
                         </div>
-                        <div className='col-5 offset-md-1'>
+                        <div className='col-sm-5 offset-sm-1 col-margin-fixed'>
                             <h1>{this.state.game.name}</h1>
                             <h3>How To Play</h3>
                             <ol>

@@ -1,6 +1,6 @@
 const redis = require('./redis');
 const roomService = require('./room');
-const { geUserTotalPoints } = require('./gameHistory');
+const { geUserTotalPoints } = require('./game');
 const GameFactory = require('./games/gameFactory');
 
 class SocketClient {
