@@ -63,8 +63,6 @@ class Game extends Component {
     }
 
     render() {
-        console.log('render game');
-        console.log(this.props)
         let gameDetails = null;
 
         if (this.props.room) {
