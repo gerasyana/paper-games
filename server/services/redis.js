@@ -8,12 +8,15 @@ const OPEN_ROOMS_KEY = 'openRooms';
 const OPEN_ROOMS_EXPIRES_IN = 30 * 60;
 
 const TOKENS_WHITELIST_KEY = 'validTokens';
-const TOKENS_WHITELISt_EXPIRES_IN = 2 * 60 * 60;
+const TOKENS_WHITELIST_EXPIRES_IN = 2 * 60 * 60;
+
+const GAMES_RATING_KEY = 'gamesRating';
+const GAMES_RATING_EXPIRES_IN = 2 * 60 * 60;
 
 const tokens = {
     addToWhitelist: async (token) => {
         await client.sadd(TOKENS_WHITELIST_KEY, token);
-        await client.expire(TOKENS_WHITELIST_KEY, TOKENS_WHITELISt_EXPIRES_IN);
+        await client.expire(TOKENS_WHITELIST_KEY, TOKENS_WHITELIST_EXPIRES_IN);
     },
     isValid: async (token) => {
         return await client.sismember(TOKENS_WHITELIST_KEY, token);
@@ -49,7 +52,7 @@ const sockets = {
     getAll: async () => {
         return await client.hgetall(USER_CONNECTIONS_KEY);
     },
-    getUserId : async (clientId) => {
+    getUserId: async (clientId) => {
         return await client.hget(USER_CONNECTIONS_KEY, clientId);
     },
     save: async (clientId, userId) => {
@@ -70,7 +73,6 @@ const sockets = {
 const documents = {
     save: async (key, subkey, data) => {
         await client.hset(key, subkey.toString(), JSON.stringify(data));
-
     },
     get: async (key, subkey) => {
         const data = await client.hget(key, subkey.toString());
@@ -81,9 +83,26 @@ const documents = {
     }
 }
 
+const gameRating = {
+    get: async (gameId) => {
+        const gameRating = await client.hget(GAMES_RATING_KEY, gameId);
+        
+        if (gameRating) {
+            return gameRating.split(';').map(item => JSON.parse(item));
+        }
+        return [];
+    },
+    save: async (gameId, rating) => {
+        const gameRating = rating.map(item => JSON.stringify(item)).join(';');
+        await client.hset(GAMES_RATING_KEY, gameId, gameRating);
+        await client.expire(GAMES_RATING_KEY, GAMES_RATING_EXPIRES_IN);
+    }
+}
+
 module.exports = {
     tokens,
     rooms,
     sockets,
-    documents
+    documents,
+    gameRating
 }

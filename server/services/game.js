@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { gameRating } = require('../services/redis');
 const { GAME_HISTORY_MODEL, USER_MODEL } = require('../constants/modelNames');
 
 const GameHistory = mongoose.model(GAME_HISTORY_MODEL);
@@ -44,14 +45,23 @@ class GameHistoryService {
     }
 
     async getGameRating(gameId) {
-        const results = await GameHistory.aggregate([{
+        let data = await gameRating.get(gameId);
+
+        if (!data || data.length === 0) {
+            data = await this.refreshGameRating(gameId);
+        }
+        return data;
+    }
+
+    async refreshGameRating(gameId) {
+        let results = await GameHistory.aggregate([{
             $match: {
                 "room.gameId": gameId
             }
         }]).group({
             _id: "$winnerId",
-            totalPoints: { $sum: '$points' }
-        }).sort({ totalPoints: "desc" });
+            points: { $sum: '$points' }
+        }).sort({ points: "desc" });
 
         const userIds = results.map(result => result._id);
         const users = await User.
@@ -62,10 +72,12 @@ class GameHistoryService {
             }, "_id username").
             toMap('_id');
 
-        return results.map(result => ({
+        results = results.map(result => ({
             username: users[result._id].username,
-            points: result.totalPoints
+            points: result.points
         }));
+        await gameRating.save(gameId, results);
+        return results;
     }
 }
 

@@ -19,10 +19,10 @@ mongoose.Query.prototype.exec = async function () {
         const { hashKey, hashSubKey, expiresIn } = this.cacheOptions;
         const subKey = this.getQuery()[hashSubKey];
         data = await documents.get(hashKey, subKey);
-        
+
         if (!data) {
             data = await exec.apply(this, arguments);
-            
+
             if (data) {
                 await documents.save(hashKey, subKey, data);
                 await documents.setExpire(hashKey, expiresIn);
@@ -33,7 +33,7 @@ mongoose.Query.prototype.exec = async function () {
     if (this.mapFieldKey !== undefined) {
         return data.reduce((obj, item) => {
             const fieldValue = item[this.mapFieldKey];
-            if (fieldValue){
+            if (fieldValue) {
                 obj[fieldValue] = item;
             }
             return obj;

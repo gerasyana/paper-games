@@ -53,11 +53,16 @@ class SocketClient {
 
         this.client.on('gameIsOver', data => {
             store.dispatch(actions.gameIsOver(data.gameBoard));
-            
+
             if (data.totalPoints) {
-                store.dispatch(actions.setUserTotalPoints(data.totalPoints)); 
+                store.dispatch(actions.setUserTotalPoints(data.totalPoints));
             }
         });
+
+        this.client.on('updateGameRating', data => {
+            const { gameId, rating } = data;
+            store.dispatch(actions.setGameRating(gameId, rating));
+        })
     }
 
     leaveRoom(name) {

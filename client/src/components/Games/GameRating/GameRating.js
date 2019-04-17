@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 const gameRating = (props) => {
+    const rating = props.rating.map(ratingItem => (
+        <tr key={ratingItem.username}>
+            <td>{ratingItem.username}</td>
+            <td>{ratingItem.points}</td>
+        </tr>
+    ));
+
     return (
         <div>
-            <h4>Today's game rating : </h4> <br/>
-            <div class="table-responsive">
-                <table class="table table-striped">
+            <h4>Today's game rating : </h4> <br />
+            <div className="table-responsive">
+                <table className="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col">Username</th>
@@ -13,10 +20,7 @@ const gameRating = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Mark</td>
-                            <td>100</td>
-                        </tr>
+                        {rating}
                     </tbody>
                 </table>
             </div>
@@ -24,4 +28,4 @@ const gameRating = (props) => {
     );
 }
 
-export default gameRating
+export default memo(gameRating);

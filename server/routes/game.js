@@ -1,8 +1,9 @@
-const { getGameRating } = require('../services/game');
+const gameService = require('../services/game');
 
 module.exports = (app) => {
     app.get('/api/game/rating', async (req, res) => {
-        const { gameId } = req.body;
-        return await getGameRating(gameId);
+        const { gameId } = req.query;
+        const rating = await gameService.getGameRating(gameId);
+        return res.json(rating);
     });
 }

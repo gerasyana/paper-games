@@ -1,6 +1,6 @@
 const redis = require('./redis');
 const roomService = require('./room');
-const { geUserTotalPoints } = require('./game');
+const gameService = require('./game');
 const GameFactory = require('./games/gameFactory');
 
 class SocketClient {
@@ -41,14 +41,6 @@ class SocketClient {
             await this.notifyRoomsUpdate();
         });
 
-        client.on('reinitRoom', async (data) => {
-            const { name } = data;
-            client.join(name);
-
-            const room = await roomService.saveRoom(data);
-            client.emit('player1Joined', room);
-        });
-
         client.on('joinRoom', async (data) => {
             const { name } = data;
             const roomDetails = this.io.nsps['/'].adapter.rooms[name];
@@ -74,9 +66,42 @@ class SocketClient {
         })
     }
 
+    handleGameEvents(client) {
+
+        client.on('playerMadeMove', async (data) => {
+            const { room } = data;
+            const playerId = await redis.sockets.getUserId(client.id);
+
+            const game = new GameFactory(playerId, data);
+            await game.processPlayerMove();
+            const gameBoard = game.getUpdatedGameBoard();
+
+            if (game.gameIsOver) {
+                const totalPoints = await gameService.geUserTotalPoints(playerId);
+                client.emit('gameIsOver', {
+                    gameBoard: {
+                        ...gameBoard,
+                        youWon: true,
+                        points: game.points
+                    },
+                    totalPoints
+                });
+                client.broadcast.to(room.name).emit('gameIsOver', { gameBoard });
+                await this.updateGameRating(room.gameId);
+            } else {
+                this.io.sockets.to(room.name).emit('togglePlayerTurn', gameBoard);
+            }
+        });
+    }
+
+    async updateGameRating(gameId) {
+        const rating = await gameService.getGameRating(gameId);
+        this.io.sockets.emit('updateGameRating', { gameId, rating });
+    }
+
     async notifyRoomClientIds(client, name) {
         const clientIds = this.getRoomClientIds(name).filter(clientId => clientId !== client.id);
-        
+
         if (clientIds.length === 0) {
             await redis.rooms.remove(name);
         } else {
@@ -86,32 +111,6 @@ class SocketClient {
                 client.broadcast.to(clientId).emit('playerLeftRoom', room);
             });
         }
-    }
-
-    handleGameEvents(client) {
-        client.on('playerMadeMove', async (data) => {
-            const { room } = data;
-            const playerId = await redis.sockets.getUserId(client.id);
-
-            const gameService = new GameFactory(playerId, data);
-            await gameService.processPlayerMove();
-            const gameBoard = gameService.getUpdatedGameBoard();
-
-            if (gameService.gameIsOver) {
-                const totalPoints = await geUserTotalPoints(playerId);
-                client.emit('gameIsOver', {
-                    gameBoard: {
-                        ...gameBoard,
-                        youWon: true,
-                        points: gameService.points
-                    },
-                    totalPoints
-                });
-                client.broadcast.to(room.name).emit('gameIsOver', { gameBoard });
-            } else {
-                this.io.sockets.to(room.name).emit('togglePlayerTurn', gameBoard);
-            }
-        });
     }
 
     async notifyRoomsUpdate() {

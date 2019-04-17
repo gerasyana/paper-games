@@ -17,16 +17,25 @@ class Game extends Component {
         this.state = {
             game: null,
             gameId: null,
-            showNewRoomModal: false,
-            startGame: false
+            startGame: false,
+            gameRating: []
         }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.isAuthenticated !== nextProps.isAuthenticated ||
             this.props.room !== nextProps.room ||
-            this.state.gameId !== nextState.gameId ||
-            this.state.showNewRoomModal !== nextState.showNewRoomModal;
+            this.state.gameRating !== nextState.gameRating;
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (Object.keys(nextProps.gamesRating).includes(prevState.gameId)) {
+            return {
+                ...prevState.state,
+                gameRating: nextProps.gamesRating[prevState.gameId]
+            }
+        }
+        return prevState;
     }
 
     componentDidMount() {
@@ -37,6 +46,8 @@ class Game extends Component {
                 game,
                 gameId
             });
+
+            this.props.getGameRating(gameId);
         }
     }
 
@@ -44,10 +55,6 @@ class Game extends Component {
         if (!this.props.isAuthenticated) {
             this.props.setLoginRedirectUrl(this.props.match.url);
             this.props.history.push('/login');
-        } else {
-            this.setState({
-                showNewRoomModal: true
-            });
         }
     }
 
@@ -56,12 +63,9 @@ class Game extends Component {
     }
 
     render() {
+        console.log('render game');
+        console.log(this.props)
         let gameDetails = null;
-        let modal = null;
-
-        if (this.state.showNewRoomModal) {
-            modal = <NewRoom gameId={this.state.gameId} />
-        }
 
         if (this.props.room) {
             gameDetails = <Redirect to={`${this.props.match.url}/${this.props.room}`} />;
@@ -70,10 +74,10 @@ class Game extends Component {
 
             gameDetails = (
                 <div className="container body-container">
-                    {modal}
+                    <NewRoom gameId={this.state.gameId} />
                     <div className='row justify-content-center'>
                         <div className='col-sm-4 col-margin-fixed'>
-                            <GameRating />
+                            <GameRating rating={this.state.gameRating} />
                         </div>
                         <div className='col-sm-5 offset-sm-1 col-margin-fixed'>
                             <h1>{this.state.game.name}</h1>
@@ -117,13 +121,15 @@ class Game extends Component {
 const mapStateToProps = (state) => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        room: state.game.room.name
+        room: state.game.room.name,
+        gamesRating: state.statistics.gamesRating
     }
 }
 
 const mapDispatchToState = (dispatch) => {
     return {
-        setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url))
+        setLoginRedirectUrl: (url) => dispatch(actions.setLoginRedirectUrl(url)),
+        getGameRating: (gameId) => dispatch(actions.getGameRating(gameId))
     }
 }
 

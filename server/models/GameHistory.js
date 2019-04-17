@@ -4,16 +4,16 @@ const { GAME_HISTORY_MODEL } = require('../constants/modelNames');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const GameHistorySchema = new mongoose.Schema({
-    room: { 
-            name: {
-                type: String
-            },
-            gameId: {
-                type: String
-            },
-            players: {
-                type: Array
-            }
+    room: {
+        name: {
+            type: String
+        },
+        gameId: {
+            type: String
+        },
+        players: {
+            type: Array
+        }
     },
     winnerId: {
         type: ObjectId,
@@ -24,6 +24,11 @@ const GameHistorySchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
+});
+
+GameHistorySchema.post('save', async function (gameHistory) {
+    const { refreshGameRating } = require('../services/game');
+    await refreshGameRating(gameHistory.room.gameId);
 });
 
 mongoose.model(GAME_HISTORY_MODEL, GameHistorySchema);

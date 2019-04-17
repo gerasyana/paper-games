@@ -3,6 +3,7 @@ import { all, takeEvery } from 'redux-saga/effects';
 import * as actionTypes from '../actions/actionTypes';
 import * as authSagas from './auth';
 import * as gameSagas from './game';
+import * as statistics from './statistics';
 
 export function* watchAuth() {
     yield all([
@@ -23,3 +24,8 @@ export function* watchGame() {
     ])
 }
 
+export function* watchStatistics() {
+    yield all([
+        takeEvery(actionTypes.GET_GAME_RATING, statistics.getGameRating),
+    ])
+};

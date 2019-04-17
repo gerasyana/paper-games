@@ -32,3 +32,6 @@ export const PLAYER_MADE_MOVE = 'PLAYER_MADE_MODE';
 export const TOGGLE_PLAYER_TURN = 'TOGGLE_PLAYER_TURN';
 export const GAME_IS_OVER = 'GAME_IS_OVER';
 export const RESTART_GAME = 'RESTART_GAME';
+
+export const SET_GAME_RATING = 'SET_GAME_RATING';
+export const GET_GAME_RATING = 'GET_GAME_RATING';

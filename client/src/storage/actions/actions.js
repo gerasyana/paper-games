@@ -17,7 +17,9 @@ export {
 
 export {
     updateRooms,
-    setSiteStatistics
+    setSiteStatistics,
+    getGameRating,
+    setGameRating
 } from './statistics'
 
 export {
