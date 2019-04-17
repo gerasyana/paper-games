@@ -10,7 +10,7 @@ const gameRating = (props) => {
 
     return (
         <div>
-            <h4>Today's game rating : </h4> <br />
+            <h4>Game rating : </h4> <br />
             <div className="table-responsive">
                 <table className="table table-striped">
                     <thead>

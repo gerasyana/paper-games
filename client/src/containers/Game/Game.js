@@ -79,7 +79,7 @@ class Game extends Component {
                         <div className='col-sm-4 col-margin-fixed'>
                             <GameRating rating={this.state.gameRating} />
                         </div>
-                        <div className='col-sm-5 offset-sm-1 col-margin-fixed'>
+                        <div className='col-sm-5 col-margin-fixed'>
                             <h1>{this.state.game.name}</h1>
                             <h3>How To Play</h3>
                             <ol>

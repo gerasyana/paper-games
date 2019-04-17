@@ -1,6 +1,9 @@
 import React, { memo } from 'react';
 import { NavLink } from 'react-router-dom';
 
+import store from '../../../../storage/store';
+import * as actions from '../../../../storage/actions/actions';
+
 const navigationItem = (props) => {
     let navItem = null;
 
@@ -20,9 +23,16 @@ const navigationItem = (props) => {
     return navItem;
 }
 
+const leaveRoom = () => {
+    const room = store.getState().game.room;
+    if (room.name) {
+        store.dispatch(actions.leaveRoom(room.name));
+    }
+}
+
 function getLink(props) {
     return (
-        <li className="nav-item">
+        <li className="nav-item" onClick={() => leaveRoom()} >
             <NavLink to={props.link} className="nav-link" exact={props.exact}>
                 {props.label}
             </NavLink>

@@ -21,9 +21,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.PLAYER1_JOINED: {
-            const room = {
-                ...action.room
-            }
+            const { room } = action;
             return {
                 ...state,
                 playerLeftRoom: false,
@@ -95,13 +93,13 @@ const reducer = (state = initialState, action) => {
                 gameStarted: false
             }
         }
-        case actionTypes.RESTART_GAME : {
+        case actionTypes.RESTART_GAME: {
             return {
                 ...state,
-                gameBoard : {
+                gameBoard: {
                     ...initialState.gameBoard,
-                    yourTurn : state.gameBoard.yourTurn,
-                    playerStep : state.gameBoard.playerStep
+                    yourTurn: state.gameBoard.yourTurn,
+                    playerStep: state.gameBoard.playerStep
                 }
             }
         }
