@@ -1,5 +1,5 @@
 const asyncRedis = require("async-redis");
-const client = asyncRedis.createClient();
+const client = asyncRedis.createClient(process.env.REDIS_URL);
 
 const USER_CONNECTIONS_KEY = 'userConnections';
 const USER_CONNECTIONS_EXPIRES_IN = 2 * 60 * 60;
