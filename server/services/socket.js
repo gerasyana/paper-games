@@ -25,6 +25,9 @@ class SocketClient {
                 rooms.forEach(async (name) => {
                     await this.notifyRoomClientIds(client, name);
                 });
+
+                const ioDetails = await this.getConnectionDetails();
+                this.io.sockets.emit('userDisconnected', ioDetails);
             });
 
             this.handleRoomEvents(client);
@@ -68,7 +71,6 @@ class SocketClient {
     }
 
     handleGameEvents(client) {
-
         client.on('playerMadeMove', async (data) => {
             const { room } = data;
             const playerId = await redis.sockets.getUserId(client.id);

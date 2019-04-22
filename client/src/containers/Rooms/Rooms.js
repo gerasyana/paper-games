@@ -25,14 +25,22 @@ class Rooms extends Component {
         this.setState({ roomSelected: room });
         this.props.joinRoom({
             name,
-            playerId: this.props.player.id
+            playerId: this.props.user.id
         });
     }
 
     render() {
         let rooms = this.props.rooms.map(room => (
-            <Room key={room.name} {...room} join={this.joinRoom} />
-        ))
+            <Room key={room.name} {...room} join={this.joinRoom} userId={this.props.user.id} />
+        ));
+
+        if (this.props.rooms.length === 0) {
+            rooms = (
+                <div className="col-md-8 offset-md-2">
+                    <h4 className='align-middle'>No open rooms</h4>
+                </div>
+            )
+        }
 
         if (this.state.roomSelected) {
             rooms = <Redirect to={`game/${this.state.roomSelected.gameId}/${this.state.roomSelected.name}`} />
@@ -40,12 +48,8 @@ class Rooms extends Component {
 
         return (
             <div className='container body-container'>
-                <div className='row justify-content-around'>
-                    <div className='col-10'>
-                        <div className='row'>
-                            {rooms}
-                        </div>
-                    </div>
+                <div className='row'>
+                    {rooms}
                 </div>
             </div>
         );
@@ -55,7 +59,7 @@ class Rooms extends Component {
 const mapStateToProps = (state) => {
     return {
         rooms: state.statistics.rooms,
-        player: state.auth.user,
+        user: state.auth.user,
         gameStart: state.game.gameStart
     }
 }

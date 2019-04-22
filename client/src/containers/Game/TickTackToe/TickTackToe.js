@@ -187,7 +187,7 @@ class TickTackToe extends Component {
                 .slice(i * 3, (i + 1) * 3)
                 .map((boardMove, index) => {
                     const id = i * 3 + index;
-                    return <BoardMove id={id} key={`col-${id}`} value={boardMove} onClick={this.playerMadeMove} />
+                    return <BoardMove id={id} key={`col-sm-${id}`} value={boardMove} onClick={this.playerMadeMove} />
                 });
             boardRows.push((
                 <tr key={`row${i}`} >
@@ -200,10 +200,10 @@ class TickTackToe extends Component {
             <div className={classes.gameBoard}>
                 {modal}
                 <div className="row">
-                    <div className={'col-2 ' + classes.border}></div>
-                    <div className='col-8'>
+                    <div className={'col-sm-2 ' + classes.border}></div>
+                    <div className='col-sm-8'>
                         <div className='row align-items-center justify-content-center' style={{ height: "75%" }}>
-                            <div className={this.props.gameBoard.yourTurn ? 'col-10' : classes.noUserTurn + ' col-10'}>
+                            <div className={this.props.gameBoard.yourTurn ? 'col-sm-10' : classes.noUserTurn + ' col-sm-10'}>
                                 <table className={classes.game}>
                                     <tbody>
                                         {boardRows}
@@ -219,12 +219,12 @@ class TickTackToe extends Component {
                             }
                         </div>
                         <div className={'row text-center align-items-center ' + classes.playersPnl}>
-                            <div className='col-4'>
+                            <div className='col-sm-4'>
                                 <h5>
                                     {this.props.room.players[0].username}
                                 </h5>
                             </div>
-                            <div className='col-4'>
+                            <div className='col-sm-4'>
                                 <Button
                                     id="closeBtn"
                                     type="button"
@@ -233,14 +233,14 @@ class TickTackToe extends Component {
                                     Leave Game
                                 </Button>
                             </div>
-                            <div className='col-4'>
+                            <div className='col-sm-4'>
                                 <h5>
                                     {this.props.room.players[1].username}
                                 </h5>
                             </div>
                         </div>
                     </div>
-                    <div className={'col-2 ' + classes.border}></div>
+                    <div className={'col-sm-2 ' + classes.border}></div>
                 </div>
             </div>
         );

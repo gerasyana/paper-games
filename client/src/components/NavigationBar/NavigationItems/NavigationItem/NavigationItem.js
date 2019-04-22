@@ -52,11 +52,22 @@ function getDrowdown(props) {
     let dropdownItems;
 
     if (props.dropdownItems) {
-        dropdownItems = props.dropdownItems.map(item => (
-            <NavLink key={item.key} to={item.link ? item.link : '/'} className="dropdown-item" exact={item.exact}>
-                {item.label}
-            </NavLink>
-        ));
+        dropdownItems = props.dropdownItems.map(item => {
+            let dropDownItem = (
+                <span key={item.key} className="dropdown-item" >
+                    {item.label}
+                </span>
+            );
+
+            if (item.link) {
+                dropDownItem = (
+                    <NavLink key={item.key} to={item.link ? item.link : '/'} className="dropdown-item" exact={item.exact}>
+                        {item.label}
+                    </NavLink>
+                )
+            }
+            return dropDownItem;
+        });
     }
 
     return (

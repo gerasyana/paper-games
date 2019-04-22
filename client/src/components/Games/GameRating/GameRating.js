@@ -11,7 +11,7 @@ const gameRating = (props) => {
     return (
         <div>
             <h4>Game rating : </h4> <br />
-            <div className="table-responsive">
+            <div className="table-responsive" style={{ maxHeight: "350px", overflow: "scroll" }}>
                 <table className="table table-striped">
                     <thead>
                         <tr>

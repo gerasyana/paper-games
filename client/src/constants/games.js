@@ -13,7 +13,7 @@ const games = {
             'Player 2: Enter another username and the room id that is displayed on first window',
             'Click on join game'
         ]
-    },
+    }/*,
     'battleship': {
         name: 'Battleship',
         src: battleshipImgSrc,
@@ -23,7 +23,7 @@ const games = {
             'Player 2: Enter another username and the room id that is displayed on first window',
             'Click on join game'
         ]
-    }
+    }*/
 }
 
 export default games;

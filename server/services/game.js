@@ -26,24 +26,6 @@ class GameHistoryService {
         return result.length > 0 ? result[0].totalPoints : 0;
     }
 
-    async getUserGameHistory(userId) {
-        const userGames = await GameHistory.find({
-            "room.players": {
-                $elemMatch: { id: userId }
-            }
-        });
-        return userGames.map(userGame => {
-            const { room, points } = userGame;
-
-            return {
-                room: room.name,
-                players: room.players.map(player => player.username),
-                youWin: userGame.winnerId === userId,
-                points
-            }
-        });
-    }
-
     async getGameRating(gameId) {
         let data = await gameRating.get(gameId);
 
