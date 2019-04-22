@@ -57,3 +57,5 @@ const fileNames = fs.readdirSync(path.resolve(__dirname, '../models'));
 fileNames.forEach(fileName => {
     require(`../models/${fileName}`);
 });
+
+module.exports = mongoose;

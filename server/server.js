@@ -13,10 +13,23 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-require('./init-scripts/mongoose');
+const mongoose = require('./init-scripts/mongoose');
 require('./init-scripts/routes')(app);
 
 const client = require('./services/socket')(io);
 client.initConnection();
 
 server.listen(PORT, () => console.log(`Server start running on ${PORT}`));
+
+const exiProcess = () => {
+    server.close(() => {
+        console.log('Http server closed');
+        mongoose.connection.close(false, () => {
+            console.log('Mongoose connection closed');
+            process.exit('0');
+        });
+    });
+}
+
+process.on('SIGTERM', () => exiProcess());
+process.on('SIGINT', () => exiProcess());
