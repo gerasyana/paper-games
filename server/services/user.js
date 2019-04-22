@@ -38,30 +38,39 @@ class UserService {
             return { error: 'Account with the username already exists' };
         }
 
-        user = await User.create({
-            email,
-            username,
-            password: User.hashPassword(password)
-        });
+        try {
+            user = await User.create({
+                email,
+                username,
+                password: User.hashPassword(password)
+            });
 
-        if (!user) {
-            return { error: 'Error while signing up . Please try again' }
+            if (!user) {
+                return { error: 'Error while signing up . Please try again' }
+            }
+            return await getUserDetails(user);
+        } catch (err) {
+            return { error: err.message }
         }
-        return await getUserDetails(user);
     }
 
     async login(data) {
         const { username, password } = data;
-        const user = await User.findOne({ username });
 
-        if (!user) {
-            return { error: `User not found` };
-        } else if (!user.validPassword(password)) {
-            return { error: "Invalid password" };
+        try {
+            const user = await User.findOne({ username });
+
+            if (!user) {
+                return { error: `User not found` };
+            } else if (!user.validPassword(password)) {
+                return { error: "Invalid password" };
+            }
+
+            user.cache();
+            return await getUserDetails(user);
+        } catch (err) {
+            return { error: err.message }
         }
-
-        user.cache();
-        return await getUserDetails(user);
     }
 }
 
@@ -70,7 +79,7 @@ const getUserDetails = async (user) => {
     const userWrapper = await getUserWrapper(user);
     return {
         tokenDetails,
-        user : userWrapper
+        user: userWrapper
     }
 }
 
