@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { gameRating } = require('../services/redis');
 const { GAME_HISTORY_MODEL, USER_MODEL } = require('../constants/modelNames');
+const { logError } = require('./logger');
 
 const GameHistory = mongoose.model(GAME_HISTORY_MODEL);
 const User = mongoose.model(USER_MODEL);
@@ -8,7 +9,11 @@ const User = mongoose.model(USER_MODEL);
 class GameHistoryService {
 
     async saveGame(game) {
-        await GameHistory.create(game);
+        try {
+            await GameHistory.create(game);
+        } catch (error) {
+            logError(error);
+        }
     }
 
     async geUserTotalPoints(userId) {
@@ -36,30 +41,38 @@ class GameHistoryService {
     }
 
     async refreshGameRating(gameId) {
-        let results = await GameHistory.aggregate([{
-            $match: {
-                "room.gameId": gameId
-            }
-        }]).group({
-            _id: "$winnerId",
-            points: { $sum: '$points' }
-        }).sort({ points: "desc" });
+        let results = [];
 
-        const userIds = results.map(result => result._id);
-        const users = await User.
-            find({
-                _id: {
-                    $in: userIds
+        try {
+            results = await GameHistory.aggregate([{
+                $match: {
+                    "room.gameId": gameId
                 }
-            }, "_id username").
-            toMap('_id');
+            }]).group({
+                _id: "$winnerId",
+                points: { $sum: '$points' }
+            }).sort({ points: "desc" });
 
-        results = results.map(result => ({
-            username: users[result._id].username,
-            points: result.points
-        }));
-        await gameRating.save(gameId, results);
-        return results;
+            const userIds = results.map(result => result._id);
+            const users = await User.
+                find({
+                    _id: {
+                        $in: userIds
+                    }
+                }, "_id username").
+                toMap('_id');
+
+            results = results.map(result => ({
+                username: users[result._id].username,
+                points: result.points
+            }));
+            await gameRating.save(gameId, results);
+            return results;
+        } catch (error) {
+            logError(error);
+        } finally {
+            return results;
+        }
     }
 }
 

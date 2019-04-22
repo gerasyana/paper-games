@@ -1,24 +1,30 @@
 const jwt = require('jsonwebtoken');
 const { tokens } = require('./redis');
 const keys = require('../configs/keys');
+const { logError } = require('./logger');
 
 const EXPIRES_IN = '2h';
 
 class JWTService {
 
     generateAndSaveJWT(user) {
-        const today = new Date();
-        const expirationDate = new Date();
-        expirationDate.setHours(today.getHours() + 2);
-        const options = {
-            email: user.email,
-            id: user._id,
-            expirationDate: expirationDate
-        };
+        try {
+            const today = new Date();
+            const expirationDate = new Date();
+            expirationDate.setHours(today.getHours() + 2);
+            const options = {
+                email: user.email,
+                id: user._id,
+                expirationDate: expirationDate
+            };
 
-        const token = jwt.sign(options, keys.JWT_SECRET, { expiresIn: EXPIRES_IN });
-        tokens.addToWhitelist(token);
-        return { token, expirationDate }
+            const token = jwt.sign(options, keys.JWT_SECRET, { expiresIn: EXPIRES_IN });
+            tokens.addToWhitelist(token);
+            return { token, expirationDate }
+        } catch (error) {
+            logError(error);
+            return false;
+        }
     }
 
     async isValidJWT(token) {
@@ -26,13 +32,14 @@ class JWTService {
             const decoded = jwt.verify(token, keys.JWT_SECRET);
             const isValid = await tokens.isValid(token);
             return decoded && !!isValid;
-        } catch (ex) {
+        } catch (error) {
+            logError(error);
             return false;
         }
     }
 
     getDecodedJWT(token) {
-        return jwt.decode(token, keys.JWT_SECRET);
+        return token ? jwt.decode(token, keys.JWT_SECRET) : {};
     }
 }
 

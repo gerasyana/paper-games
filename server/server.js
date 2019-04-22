@@ -30,6 +30,6 @@ const exiProcess = () => {
         });
     });
 }
-
 process.on('SIGTERM', () => exiProcess());
 process.on('SIGINT', () => exiProcess());
+

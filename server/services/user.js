@@ -4,29 +4,40 @@ const jwtService = require('./jwt');
 const { USER_MODEL } = require('../constants/modelNames');
 const { USERS_CACHE_OPTIONS } = require('../constants/cacheOptions');
 const { geUserTotalPoints } = require('./game')
+const { logError } = require('./logger');
 
 const User = mongoose.model(USER_MODEL);
 
 class UserService {
 
     async getUserById(id) {
-        const user = await User.findById(id).cache(USERS_CACHE_OPTIONS);
+        try {
+            const user = await User.findById(id).cache(USERS_CACHE_OPTIONS);
 
-        if (!user) {
+            if (!user) {
+                return { error: 'User not found' };
+            }
+            return await getUserWrapper(user);
+        } catch (err) {
+            logError(err);
             return { error: 'User not found' };
         }
-        return await getUserWrapper(user);
     }
 
     async getPlayerDetailsById(id) {
-        const user = await User.findById(id).cache(USERS_CACHE_OPTIONS);
+        try {
+            const user = await User.findById(id).cache(USERS_CACHE_OPTIONS);
 
-        if (!user) {
-            return;
-        }
-        return {
-            id,
-            username: user.username
+            if (!user) {
+                return;
+            }
+            return {
+                id,
+                username: user.username
+            }
+        } catch (err) {
+            logError(err);
+            return { error: 'User not found' };
         }
     }
 
@@ -50,6 +61,7 @@ class UserService {
             }
             return await getUserDetails(user);
         } catch (err) {
+            logError(err);
             return { error: err.message }
         }
     }
@@ -69,6 +81,7 @@ class UserService {
             user.cache();
             return await getUserDetails(user);
         } catch (err) {
+            logError(err);
             return { error: err.message }
         }
     }
