@@ -5,7 +5,11 @@ const keys = require('../configs/keys');
 const { documents } = require('../services/redis');
 
 mongoose.Promise = global.Promise;
-mongoose.connect(keys.MONGO_URL, { useNewUrlParser: true });
+mongoose.connect(keys.MONGO_URL, {
+    useNewUrlParser: true,
+    useCreateIndex: true
+});
+
 const exec = mongoose.Query.prototype.exec;
 
 mongoose.Query.prototype.exec = async function () {

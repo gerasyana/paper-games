@@ -4,21 +4,27 @@ const { documents } = require('../services/redis');
 const { USER_MODEL } = require('../constants/modelNames');
 const { USERS_CACHE_OPTIONS } = require('../constants/cacheOptions');
 
+const EMAIL_PATTERN = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/i;
+
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true,
+        required: [true, 'Username is required'],
         unique: true,
         minlength: 5,
         maxlength: 15
     },
     email: {
         type: String,
-        required: true
+        validate: {
+            validator: (value) => EMAIL_PATTERN.test(value),
+            message: () => 'Email is invalid'
+        },
+        required: [true, 'Email is required']
     },
     password: {
         type: String,
-        required: true,
+        required: [true, 'Password is required']
     }
 });
 
