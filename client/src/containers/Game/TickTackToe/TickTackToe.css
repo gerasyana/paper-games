@@ -1,0 +1,48 @@
+
+  .gameBoard {
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    bottom: 0px;
+  }
+
+  .gameBoard > div {
+    height: 100%;
+    width: 100%;
+    margin: 0px
+  }
+
+  .border {
+    background-color: #ebf7f4;
+  }
+
+  .playersPnl {
+    background-color : #78C2AD;
+    bottom: 0px;
+    height: 15%;
+    overflow: scroll;
+  }
+
+.game {
+  margin: 0 auto;
+  max-width: 420px;
+  max-height: 420px;
+  width: 50vw;  
+  height: 50vw;
+  border-spacing: initial;
+}
+
+.game td {
+  width: 33%; 
+  height: 33%;
+  border: 3px solid black;
+}
+
+.game tr {
+  border: 3px solid black;
+}
+
+.noUserTurn {
+  pointer-events:none;
+  cursor : default;
+}

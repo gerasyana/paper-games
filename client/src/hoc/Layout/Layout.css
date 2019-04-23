@@ -1,0 +1,19 @@
+.appContainer {
+  height: 100%;
+  width: 100%
+}
+
+.header {
+  width: 100%;
+  background-color: #78C2AD;
+  position: absolute;
+  top: 0;
+}
+
+.body {
+  position: absolute;
+  width: 100%;
+  top: 56px;
+  bottom: 0
+}
+

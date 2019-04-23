@@ -1,28 +1,50 @@
-import React, { Component } from 'react';
-import { Route, Switch } from 'react-router';
+import React, { Component, Suspense } from 'react';
+import { Route, Switch, Redirect, withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
+import Spinner from './UI/Spinner/Spinner';
 import Layout from './hoc/Layout/Layout';
-import Games from './containers/Games/Games';
-import Login from './containers/Login/Login';
-import Rooms from './containers/Rooms/Rooms';
+import Home from './containers/Home/Home';
+import * as actions from './storage/actions/actions';
+
+const Login = React.lazy(() => import('./containers/Auth/Login/Login'));
+const Logout = React.lazy(() => import('./containers/Auth/Logout/Logout'));
+const SignUp = React.lazy(() => import('./containers/Auth/SignUp/SignUp'));
 
 class App extends Component {
 
-  render() {
-    const routes = (
-      <Switch>
-        <Route path='/rooms' exact component={Rooms} />
-        <Route path='/login' exact component={Login} />
-        <Route path={['/', '/games']} component={Games} />
-      </Switch>
-    );
+  componentDidMount() {
+    this.props.checkAuthentication();
+  }
 
+  render() {
     return (
       <Layout>
-        {routes}
+        <Suspense fallback={<Spinner />}>
+          <Switch>
+            <Route path='/login' exact render={() => <Login {...this.props} />} />
+            <Route path='/signup' exact render={() => <SignUp {...this.props} />} />
+            <Route path="/logout" exact render={() => <Logout {...this.props} />} />
+
+            <Route path='/' component={Home} />
+            <Redirect to='/' />
+          </Switch>
+        </Suspense>
       </Layout>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.auth.isAuthenticated
+  }
+}
+
+const mapDispatchToState = (dispatch) => {
+  return {
+    checkAuthentication: () => dispatch(actions.checkAuthentication())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToState)(withRouter(App));

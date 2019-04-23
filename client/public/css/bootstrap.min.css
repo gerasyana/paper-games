@@ -3660,16 +3660,9 @@ input[type="button"].btn-block {
 
 .dropdown-item:hover,
 .dropdown-item:focus {
-    color: #fff;
+    color:#212529;
     text-decoration: none;
-    background-color: #F3969A
-}
-
-.dropdown-item.active,
-.dropdown-item:active {
-    color: #fff;
-    text-decoration: none;
-    background-color: #78C2AD
+    background-color: #f8f9fa
 }
 
 .dropdown-item.disabled,
