@@ -17,7 +17,7 @@ const GameHistorySchema = new mongoose.Schema({
     },
     winnerId: {
         type: ObjectId,
-        required: true,
+        required: [true, 'Id of winned user is mandatory'],
         index: true
     },
     points: {
