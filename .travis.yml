@@ -12,7 +12,8 @@ services :
   - redis-server
   
 install:
-  - npm run build
+  - npm run install-server
+  - npm run build-client
   
 before_deploy:
  - mv herokuDeploy/.gitignore .gitignore
