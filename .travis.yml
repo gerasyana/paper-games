@@ -1,10 +1,11 @@
 language: node_js
 node_js:
   - "10"
-
-branches:
-  only:
-    -development
+  
+cache:
+  directories:
+  - server/node_modules
+  - client/node_modules
   
 services : 
   - mongodb
@@ -12,4 +13,3 @@ services :
   
 install:
   - npm run build
-  
