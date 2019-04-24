@@ -11,10 +11,6 @@ cache:
   directories:
   - server/node_modules
   - client/node_modules
-
-services : 
-  - mongodb
-  - redis-server
   
 install:
   - npm run build-client
