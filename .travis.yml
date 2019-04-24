@@ -4,7 +4,7 @@ node_js:
   
  branches:
   only:
-    - heroku-server
+    - heroku
     - development
     
 cache:
@@ -27,5 +27,5 @@ deploy:
   skip_cleanup: true
   github_token: $github-token
   on:
-    branch : heroku-server
+    branch : heroku
 
