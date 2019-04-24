@@ -1,6 +1,6 @@
 
 
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga'
 
 import authReducer from './reducers/auth';
