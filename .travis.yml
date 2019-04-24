@@ -21,6 +21,6 @@ deploy:
   provider: pages
   skip_cleanup: true
   github_token: $github-token
-  local_dir: build
-  on:
-    branch: heroku-server
+  local_dir: client/build
+  target_branch: heroku-server
+
