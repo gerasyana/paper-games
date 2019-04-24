@@ -2,6 +2,11 @@ language: node_js
 node_js:
   - "10"
   
+ branches:
+  only:
+    - heroku-server
+    - development
+    
 cache:
   directories:
   - server/node_modules
@@ -15,7 +20,7 @@ install:
   - npm run build-client
   
 before_deploy:
- - mv herokuDeploy/.gitignore .gitignore
+  - mv herokuDeploy/.gitignore .gitignore
 
 deploy:
   provider: pages
