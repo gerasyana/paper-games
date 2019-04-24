@@ -2,7 +2,6 @@ language: node_js
 node_js:
   - "10"
 
-    
 cache:
   directories:
   - server/node_modules
@@ -23,7 +22,7 @@ before_deploy:
 deploy:
   provider: pages
   skip_cleanup: true
-  github_token: $github-token
+  github_token: $github_token
   target_branch : heroku
   on:
     branch : development
