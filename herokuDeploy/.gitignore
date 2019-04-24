@@ -1,5 +1,5 @@
 /client/*
-/client/!build
+!/client/build/*
 /server/node_modules
 /server/dump.rdb
 /server/.env
