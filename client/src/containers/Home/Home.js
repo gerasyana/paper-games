@@ -8,8 +8,8 @@ import games from '../../constants/games';
 
 class Home extends PureComponent {
 
-    openGameDetails = id => {
-        this.props.history.push(`/game/${id}`);
+    openGameDetails = url => {
+        this.props.history.push(url);
     }
 
     render() {

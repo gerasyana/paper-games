@@ -7,7 +7,7 @@ const games = (props) => (
         const game = props.games[key];
         return (
             <div key={key} className='col-sm-4 col-margin-fixed' >
-                <GameLogo name={game.name} src={game.src} onClick={() => props.gameSelected(key)} />
+                <GameLogo name={game.name} src={game.src} onClick={() => props.gameSelected(game.url)} />
             </div>
         );
     })
