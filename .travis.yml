@@ -12,7 +12,6 @@ services :
   - redis-server
   
 install:
-  - npm run install-server
   - npm run build-client
   
 before_deploy:
