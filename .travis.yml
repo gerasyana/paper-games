@@ -22,6 +22,8 @@ deploy:
   provider: pages
   skip_cleanup: true
   github_token: $github-token
+  target_branch : heroku
   on:
-    branch : heroku
+    branch : development
+  
 
