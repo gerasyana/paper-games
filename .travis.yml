@@ -21,15 +21,16 @@ before_deploy:
   - mv herokuDeploy/.gitignore .gitignore
 
 deploy:
+  - provider : heroku
+    app : paper-games
+    api_key : $heroku_token
+    on : production
   - provider: pages
     skip_cleanup: true
     github_token: $github_token
     target_branch : heroku
     on:
       branch : development
-  - provider : heroku
-    app : paper-games
-    api_key : $heroku_token
-    on : production
+  
   
 
