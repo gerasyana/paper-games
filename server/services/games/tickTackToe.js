@@ -18,22 +18,25 @@ class TickTackToe {
         this.playerId = playerId;
         this.gameBoard = data.gameBoard;
         this.room = data.room;
+        this.playerWon = false;
         this.gameIsOver = false;
         this.points = games[data.room.gameId].points;
     }
 
     async processPlayerMove() {
         const { moves, playerStep } = this.gameBoard;
-        this.gameIsOver = winningMoves.some((winningMove) =>
+        this.playerWon = winningMoves.some((winningMove) =>
             winningMove.every(moveIndex => moves[moveIndex] === playerStep)
         );
 
-        if (this.gameIsOver) {
+        if (this.playerWon) {
             await saveGame({
                 room: this.room,
                 winnerId: this.playerId,
                 points: this.points
             });
+        } else {
+            this.gameIsOver = moves.filter(move => move).length === moves.length;
         }
     }
 

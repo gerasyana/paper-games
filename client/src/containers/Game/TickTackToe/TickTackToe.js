@@ -102,7 +102,7 @@ class TickTackToe extends Component {
     }
 
     getGameIsOverModal = () => {
-        let message = 'You lose. Game is over';
+        let message = 'Game is over. Try again.';
 
         if (this.props.gameBoard.youWon) {
             message = `You win! You got an extra ${this.props.gameBoard.points} points`;

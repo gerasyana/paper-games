@@ -79,7 +79,7 @@ class SocketClient {
             await game.processPlayerMove();
             const gameBoard = game.getUpdatedGameBoard();
 
-            if (game.gameIsOver) {
+            if (game.playerWon) {
                 const totalPoints = await gameService.geUserTotalPoints(playerId);
                 client.emit('gameIsOver', {
                     gameBoard: {
@@ -90,6 +90,9 @@ class SocketClient {
                     totalPoints
                 });
                 client.broadcast.to(room.name).emit('gameIsOver', { gameBoard });
+                await this.updateGameRating(room.gameId);
+            } else if (game.gameIsOver) {
+                this.io.sockets.to(room.name).emit('gameIsOver', { gameBoard });
                 await this.updateGameRating(room.gameId);
             } else {
                 this.io.sockets.to(room.name).emit('togglePlayerTurn', gameBoard);
