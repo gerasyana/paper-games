@@ -9,7 +9,7 @@ module.exports = app => {
             res.sendFile(path.join(__dirname, '../../client/build/index.html'));
         });
     } else {
-        app.get('/*', (req, res) => {
+        app.get('/', (req, res) => {
             res.send({ status: 200 });
         })
     }
