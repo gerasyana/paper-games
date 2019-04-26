@@ -1,26 +1,30 @@
 import tickTackToeImgSrc from '../assets/tick-tack-toe.jpg';
+import battleshipImgSrc from '../assets/battleship.png';
 
 export const tickTackToeKey = 'tick-tack-toe';
+export const battleship = 'battleship';
 
 const games = {
     [tickTackToeKey]: {
         name: 'Tic-Tac-Toe',
+        label: 'Tick Tac Toe',
+        componentName: 'TickTackToe',
         src: tickTackToeImgSrc,
         url: '/game/tick-tack-toe',
         rules: [
-            'Player 1: Create a new game by entering room name',
-            'Player 2: Enter another username and the room id that is displayed on first window',
-            'Click on join game'
+            'Player 1: Create a new room by entering room name',
+            'Player 2: Join to existing room'
         ]
     }/*,
-    'battleship': {
+    [battleship]: {
         name: 'Battleship',
+        label: 'Battleship',
+        componentName: 'Battleship',
         src: battleshipImgSrc,
-        gamePath: '/battleship',
+        url: '/game/battleship',
         rules: [
-            'Player 1: Create a new game by entering the username',
-            'Player 2: Enter another username and the room id that is displayed on first window',
-            'Click on join game'
+            'Player 1: Create a new room by entering room name',
+            'Player 2: Join to existing room'
         ]
     }*/
 }

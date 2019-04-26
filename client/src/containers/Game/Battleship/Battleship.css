@@ -1,0 +1,24 @@
+
+  .gameBoard {
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    bottom: 0px;
+  }
+
+  .gameBoard > div {
+    height: 100%;
+    width: 100%;
+    margin: 0px
+  }
+
+  .playersPnl {
+    background-color : #78C2AD;
+    bottom: 0px;
+    height: 15%;
+    overflow: scroll;
+  }
+
+  .border {
+    background-color: #ebf7f4;
+  }

@@ -8,8 +8,6 @@ import NewRoom from './NewRoom/NewRoom';
 import games from '../../constants/games';
 import * as actions from '../../storage/actions/actions';
 
-import TickTackToe from './TickTackToe/TickTackToe';
-
 class Game extends Component {
 
     constructor(props) {
@@ -25,7 +23,8 @@ class Game extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.isAuthenticated !== nextProps.isAuthenticated ||
             this.props.room !== nextProps.room ||
-            this.state.gameRating !== nextState.gameRating;
+            this.state.gameRating !== nextState.gameRating ||
+            this.props.location.pathname !== nextProps.location.pathname;
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -40,6 +39,18 @@ class Game extends Component {
 
     componentDidMount() {
         if (!this.state.game && this.props.match.params.id) {
+            this.getGameRating();
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.props.match.params.id !== this.state.gameId && this.props.match.params.id) {
+            this.getGameRating();
+        }
+    }
+
+    getGameRating = () => {
+        if ((!this.state.game || this.props.match.params.id !== this.state.gameId) && this.props.match.params.id) {
             const gameId = this.props.match.params.id;
             const game = games[gameId];
             this.setState({
@@ -60,6 +71,15 @@ class Game extends Component {
 
     joinRoom = () => {
         this.props.history.push('/rooms');
+    }
+
+    getGameComponent = () => {
+        if (this.state.gameId) {
+            const gameDetails = games[this.state.gameId];
+            const { componentName } = gameDetails;
+            const Game = React.lazy(() => import(`./${componentName}/${componentName}`));
+            return <Game {...this.props} />;
+        }
     }
 
     render() {
@@ -107,7 +127,7 @@ class Game extends Component {
 
         return (
             <Switch>
-                <Route path={`${this.props.match.path}:room`} exact component={TickTackToe} />;
+                <Route path={`${this.props.match.path}:room`} exact render={() => this.getGameComponent()} />;
                 <Route path={`${this.props.match.path}`} exact >
                     {gameDetails}
                 </Route>

@@ -2,16 +2,19 @@ import React, { memo } from 'react';
 
 import Aux from '../../../hoc/Aux/Aux';
 import NavigationItem from './NavigationItem/NavigationItem';
+import games from '../../../constants/games';
 
 const navigationItems = (props) => {
-    const gamesDropdownItems = [
-        {
-            key: 'tic-tack-toe',
-            label: 'Tic Tack Toe',
+    const gamesDropdownItems = Object.keys(games).map(key => {
+        const game = games[key];
+        const { label, url} = game;
+        return {
             type: 'link',
-            link: '/game/tick-tack-toe'
+            link : url,
+            key,
+            label
         }
-    ];
+    })
 
     let navItemsRight = (
         <Aux>
@@ -49,7 +52,7 @@ const navigationItems = (props) => {
             </Aux>
         )
     }
-
+console.log(props);
     return (
         <Aux>
             <ul className="nav navbar-nav navbar-nav">
