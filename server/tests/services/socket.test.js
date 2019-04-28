@@ -30,7 +30,7 @@ module.exports = app => {
             const io = socketIO(httpServer);
             const httpServerAddr = httpServer.listen().address();
             socketPort = `http://[${httpServerAddr.address}]:${httpServerAddr.port}`;
-
+            console.log('socketPort', socketPort);
             ioServer = require('../../services/socket')(io);
             ioServer.initConnection();
 
