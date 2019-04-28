@@ -30,7 +30,6 @@ module.exports = app => {
             const io = socketIO(httpServer);
             const httpServerAddr = httpServer.listen().address();
             socketPort = `http://[${httpServerAddr.address}]:${httpServerAddr.port}`;
-            console.log('socketPort', socketPort);
             ioServer = require('../../services/socket')(io);
             ioServer.initConnection();
 
@@ -38,8 +37,6 @@ module.exports = app => {
             user2 = await mongoose.model(USER_MODEL).create(TEST_USER_2);
             user1Id = user1._id.toString();
             user2Id = user2._id.toString();
-            console.log(user1);
-            console.log(user2);
         });
 
         after(async () => {
@@ -51,7 +48,7 @@ module.exports = app => {
 
         it('It should connect user 1 ', async () => {
             ioClient1 = socketIOClient.connect(socketPort, options);
-
+            console.log(ioClient1.id);
             ioClient1.on('userConnected', async (data) => {
                 const result = await sockets.getUserId(ioClient1.id);
                 expect(result).to.not.null;
