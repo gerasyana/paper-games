@@ -18,8 +18,8 @@ cache:
   
 install:
   - npm run install-server
-  - npm run build-client
   - npm test
+  - npm run build-client 
   
 before_deploy:
   - git config --global user.password "19961996yankayanka"
