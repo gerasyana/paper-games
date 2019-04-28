@@ -52,7 +52,6 @@ const navigationItems = (props) => {
             </Aux>
         )
     }
-console.log(props);
     return (
         <Aux>
             <ul className="nav navbar-nav navbar-nav">
