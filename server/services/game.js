@@ -67,7 +67,6 @@ class GameHistoryService {
                 points: result.points
             }));
             await gameRating.save(gameId, results);
-            return results;
         } catch (error) {
             logError(error);
         } finally {

@@ -16,8 +16,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const mongoose = require('./init-scripts/mongoose');
 require('./init-scripts/routes')(app);
 
-const client = require('./services/socket')(io);
-client.initConnection();
+const ioServer = require('./services/socket')(io);
+ioServer.initConnection();
 
 server.listen(PORT, () => console.log(`Server start running on ${PORT}`));
 

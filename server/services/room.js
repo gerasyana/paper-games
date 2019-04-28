@@ -17,10 +17,13 @@ class RoomService {
 
     async removePlayer(name, playerId) {
         const room = await rooms.get(name);
-        const players = room.players.filter(player => player.id !== playerId);
-        const roomUpdated = {
-            ...room,
-            players
+        let roomUpdated = {
+            ...room
+        }
+
+        if (room.players) {
+            const players = room.players .filter(player => player.id !== playerId);
+            roomUpdated.players = players;
         }
         await rooms.save(name, roomUpdated);
         return roomUpdated;
