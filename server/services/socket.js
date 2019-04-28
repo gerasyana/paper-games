@@ -11,7 +11,7 @@ class SocketClient {
 
     initConnection() {
         this.io.on('connection', async (client) => {
-
+            console.log('user connected ', client.id);
             client.on('setUserId', async (data) => {
                 await redis.sockets.save(client.id, data.userId);
                 const ioDetails = await this.getConnectionDetails();
@@ -74,7 +74,7 @@ class SocketClient {
         client.on('playerMadeMove', async (data) => {
             const { room } = data;
             const playerId = await redis.sockets.getUserId(client.id);
-           
+
             const game = new GameFactory(playerId, data);
             await game.processPlayerMove();
             const gameBoard = game.getUpdatedGameBoard();
