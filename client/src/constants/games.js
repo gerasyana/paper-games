@@ -1,5 +1,5 @@
 import tickTackToeImgSrc from '../assets/tick-tack-toe.jpg';
-import battleshipImgSrc from '../assets/battleship.png';
+// import battleshipImgSrc from '../assets/battleship.png';
 
 export const tickTackToeKey = 'tick-tack-toe';
 export const battleship = 'battleship';

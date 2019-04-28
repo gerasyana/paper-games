@@ -1,4 +1,6 @@
 /* eslint-disable no-undef */
+
+/*
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
@@ -54,4 +56,6 @@ const mapDispatchToState = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToState)(Battleship);
+export default connect(mapStateToProps, mapDispatchToState)(Battleship);*/
+
+export default '';
