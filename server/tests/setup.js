@@ -1,5 +1,3 @@
-process.env.MONGO_URL = 'mongodb://admin:YanaGeras12061996@ds147926.mlab.com:47926/paper-games-test';
-
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
