@@ -12,9 +12,7 @@ services :
   - redis-server
   
 env:
-  - MONGO_URL=mongodb://admin:YanaGeras12061996@ds147926.mlab.com:47926/paper-games-test
-  - REDIS_URL=redis://127.0.0.1:6379
-  - JWT_SECRET=YanaGeras12061996
+  - MONGO_URL=mongodb://admin:YanaGeras12061996@ds147926.mlab.com:47926/paper-games-test REDIS_URL=redis://127.0.0.1:6379 JWT_SECRET=YanaGeras12061996
   
 cache:
   directories:
