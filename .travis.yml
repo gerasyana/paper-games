@@ -20,6 +20,7 @@ cache:
     - client/node_modules
   
 install:
+  - npm run install-server
   - npm test
   
 before_deploy:
