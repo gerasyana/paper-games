@@ -3,3 +3,4 @@
 /server/node_modules
 /server/dump.rdb
 /server/.env
+/server/.nyc_output
