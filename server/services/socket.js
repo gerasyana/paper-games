@@ -11,6 +11,7 @@ class SocketClient {
 
     initConnection() {
         this.io.on('connection', async (client) => {
+            console.log(`${client.id} connected`);
             client.on('setUserId', async (data) => {
                 await redis.sockets.save(client.id, data.userId);
                 const ioDetails = await this.getConnectionDetails();

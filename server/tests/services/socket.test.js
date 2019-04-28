@@ -38,6 +38,8 @@ module.exports = app => {
             user2 = await mongoose.model(USER_MODEL).create(TEST_USER_2);
             user1Id = user1._id.toString();
             user2Id = user2._id.toString();
+            console.log(user1);
+            console.log(user2);
         });
 
         after(async () => {
