@@ -5,8 +5,11 @@ import { Route, Switch, Redirect } from 'react-router';
 import GameRating from '../../components/Games/GameRating/GameRating';
 import Button from '../../UI/Button/Button';
 import NewRoom from './NewRoom/NewRoom';
-import games from '../../constants/games';
+import games, { tickTackToeKey, battleship } from '../../constants/games';
 import * as actions from '../../storage/actions/actions';
+
+import TickTackToe from '../Game/TickTackToe/TickTackToe';
+import Battleship from '../Game/Battleship/Battleship';
 
 class Game extends Component {
 
@@ -73,15 +76,6 @@ class Game extends Component {
         this.props.history.push('/rooms');
     }
 
-    getGameComponent = () => {
-        if (this.state.gameId) {
-            const gameDetails = games[this.state.gameId];
-            const { componentName } = gameDetails;
-            const Game = React.lazy(() => import(`./${componentName}/${componentName}`));
-            return <Game {...this.props} />;
-        }
-    }
-
     render() {
         let gameDetails = null;
 
@@ -127,7 +121,8 @@ class Game extends Component {
 
         return (
             <Switch>
-                <Route path={`${this.props.match.path}:room`} exact render={() => this.getGameComponent()} />;
+                <Route path={`/game/${tickTackToeKey}/:room`} exact component={TickTackToe} />;
+                <Route path={`/game/${battleship}/:room`} exact component={Battleship} />;
                 <Route path={`${this.props.match.path}`} exact >
                     {gameDetails}
                 </Route>

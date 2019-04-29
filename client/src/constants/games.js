@@ -1,5 +1,5 @@
 import tickTackToeImgSrc from '../assets/tick-tack-toe.jpg';
-// import battleshipImgSrc from '../assets/battleship.png';
+import battleshipImgSrc from '../assets/battleship.png';
 
 export const tickTackToeKey = 'tick-tack-toe';
 export const battleship = 'battleship';
@@ -15,7 +15,7 @@ const games = {
             'Player 1: Create a new room by entering room name',
             'Player 2: Join to existing room'
         ]
-    }/*,
+    },
     [battleship]: {
         name: 'Battleship',
         label: 'Battleship',
@@ -26,7 +26,7 @@ const games = {
             'Player 1: Create a new room by entering room name',
             'Player 2: Join to existing room'
         ]
-    }*/
+    }
 }
 
 export default games;
