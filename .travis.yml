@@ -7,6 +7,9 @@ branches:
   only:
     - development
    
+addons:
+  hosts:
+
 services : 
   - mongodb
   - redis-server
