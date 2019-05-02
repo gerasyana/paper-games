@@ -34,5 +34,8 @@ export {
     playerMadeMove,
     gameIsOver,
     waitForPlayer,
-    restartGame
+    restartGame,
+    updateGameBoard,
+    gameBoardUpdated,
+    cleanGameBoard
 } from './game'

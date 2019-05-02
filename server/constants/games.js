@@ -1,5 +1,7 @@
+const gameIds = require('./gameIds');
+
 module.exports = {
-    'tick-tack-toe': {
+    [gameIds.TICK_TACK_TOE_ID]: {
         points: 10
     }
 }

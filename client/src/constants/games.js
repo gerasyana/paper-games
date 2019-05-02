@@ -13,7 +13,8 @@ const games = {
         url: '/game/tick-tack-toe',
         rules: [
             'Player 1: Create a new room by entering room name',
-            'Player 2: Join to existing room'
+            'Player 2: Join to existing room',
+            'For each won game you got 10 points'
         ]
     },
     [battleship]: {
@@ -26,6 +27,37 @@ const games = {
             'Player 1: Create a new room by entering room name',
             'Player 2: Join to existing room'
         ]
+    }
+}
+
+export const gameBoards = {
+    [tickTackToeKey]: {
+        gameIsOver: false,
+        youWon: false,
+        yourTurn: false,
+        playerStep: '0',
+        moves: new Array(9).fill(null)
+    },
+    [battleship]: {
+        gameIsOver: false,
+        youWon: false,
+        yourTurn: false,
+        player1Fleet: {
+            shipsAreSet: false,
+            gridColumns: new Array(100).fill(false).map((value, index) => ({
+                id: `gridColumn-${index}`,
+                selected: false,
+                hovered: false
+            }))
+        },
+        player2Fleet: {
+            shipsAreSet: false,
+            gridColumns: new Array(100).fill(false).map((value, index) => ({
+                id: `gridColumn-${index}`,
+                selected: false,
+                hovered: false
+            }))
+        }
     }
 }
 

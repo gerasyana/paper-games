@@ -1,10 +1,15 @@
-const TickTackToe = require('./tickTackToe');
+const gameIds = require('../../constants/gameIds');
+
+
+const gameInstances = {
+    [gameIds.TICK_TACK_TOE_ID]: require('./tickTackToe'),
+    [gameIds.BATTLESHIP_ID]: require('./battleship')
+}
 
 class GameFactory {
-    constructor(playerId, data) {
-        const { gameId } = data.room;
-        //TODO get proper instance by gameId  (when there will be more then one game)
-        return new TickTackToe(playerId, data);
+    constructor(gameId, params) {
+        const game = gameInstances[gameId];
+        return new game(gameId, params);
     }
 }
 

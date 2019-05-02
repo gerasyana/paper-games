@@ -1,0 +1,41 @@
+.shipCell {
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    background-color: #88dac34f;
+    border: 1px solid black;
+}
+
+.ship {
+    height: 30px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
+
+.ship:hover > div {
+    cursor: pointer;
+    background-color: #78c2ad
+}
+
+.shipSelected > div{
+    background-color: #78c2ad
+}
+
+.orientation {
+    font-size: 1.1rem;
+    padding-bottom: 10px;
+}
+
+.orientationSelected {
+    color: #78C2AD;
+}
+
+.orientation span:hover {
+    cursor: pointer;
+    color: #78C2AD;
+}
+
+.shipsPanel {
+    width: 350px;
+    margin: 0 auto;
+}

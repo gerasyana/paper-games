@@ -1,5 +1,4 @@
-
-  .gameBoard {
+ .gameBoard {
     position: absolute;
     width: 100%;
     top: 0px;
@@ -7,8 +6,13 @@
   }
 
   .gameBoard > div {
-    height: 100%;
     width: 100%;
+    margin: 0px;
+    overflow: scroll;
+  }
+
+  .gamePnl {
+    height: 85%;
     margin: 0px
   }
 
@@ -20,7 +24,8 @@
     background-color : #78C2AD;
     bottom: 0px;
     height: 15%;
-    overflow: scroll;
+    position: absolute;
+    bottom: 0px;
   }
 
 .game {

@@ -20,7 +20,8 @@ export function* watchGame() {
         takeEvery(actionTypes.JOIN_ROOM, gameSagas.joinRoom),
         takeEvery(actionTypes.CREATE_ROOM, gameSagas.createRoom),
         takeEvery(actionTypes.LEAVE_ROOM, gameSagas.leaveRoom),
-        takeEvery(actionTypes.PLAYER_MADE_MOVE, gameSagas.playerMadeMove)
+        takeEvery(actionTypes.PLAYER_MADE_MOVE, gameSagas.playerMadeMove),
+        takeEvery(actionTypes.UPDATE_GAME_BOARD, gameSagas.updateGameBoard),
     ])
 }
 

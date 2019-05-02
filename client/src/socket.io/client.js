@@ -39,12 +39,12 @@ class SocketClient {
             store.dispatch(actions.playerLeftRoom(room));
         });
 
-        this.client.on('player1Joined', room => {
-            store.dispatch(actions.player1Joined(room));
+        this.client.on('player1Joined', data => {
+            store.dispatch(actions.player1Joined(data));
         });
 
-        this.client.on('player2Joined', players => {
-            store.dispatch(actions.player2Joined(players));
+        this.client.on('player2Joined', data => {
+            store.dispatch(actions.player2Joined(data));
         });
 
         this.client.on('togglePlayerTurn', gameBoard => {
@@ -63,6 +63,10 @@ class SocketClient {
             const { gameId, rating } = data;
             store.dispatch(actions.setGameRating(gameId, rating));
         })
+
+        this.client.on('gameBoardUpdated', data => {
+            store.dispatch(actions.gameBoardUpdated(data.gameBoard));
+        })
     }
 
     leaveRoom(name) {
@@ -71,6 +75,10 @@ class SocketClient {
 
     playerMadeMove(data) {
         this.client.emit('playerMadeMove', data);
+    }
+
+    updateGameBoard(data) {
+        this.client.emit('updateGameBoard', data);
     }
 
     disconnectUser() {

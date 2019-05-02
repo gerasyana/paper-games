@@ -21,17 +21,17 @@ export const leaveRoom = room => {
     }
 }
 
-export const player2Joined = players => {
+export const player2Joined = data => {
     return {
         type: actionTypes.PLAYER2_JOINED,
-        players
+        data
     }
 }
 
-export const player1Joined = room => {
+export const player1Joined = data => {
     return {
         type: actionTypes.PLAYER1_JOINED,
-        room
+        data
     }
 }
 
@@ -78,5 +78,25 @@ export const waitForPlayer = () => {
 export const restartGame = () => {
     return {
         type : actionTypes.RESTART_GAME
+    }
+}
+
+export const updateGameBoard = data => {
+    return {
+        type : actionTypes.UPDATE_GAME_BOARD,
+        data
+    }
+}
+
+export const gameBoardUpdated = gameBoard => {
+    return {
+        type : actionTypes.GAME_BOARD_UPDATED,
+        gameBoard
+    }
+}
+
+export const cleanGameBoard = () => {
+    return {
+        type : actionTypes.CLEAN_GAME_BOARD
     }
 }

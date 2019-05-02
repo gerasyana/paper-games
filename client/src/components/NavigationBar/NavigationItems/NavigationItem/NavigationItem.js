@@ -26,6 +26,7 @@ const navigationItem = (props) => {
 const leaveRoom = () => {
     const room = store.getState().game.room;
     if (room.name) {
+        store.dispatch(actions.cleanGameBoard());
         store.dispatch(actions.leaveRoom(room.name));
     }
 }
@@ -76,7 +77,7 @@ function getDrowdown(props) {
                 {props.label}
                 <span className="caret"></span>
             </a>
-            <div className="dropdown-menu" aria-labelledby="download">
+            <div className="dropdown-menu" aria-labelledby="download" onClick={() => leaveRoom()}>
                 {dropdownItems}
             </div>
         </li>

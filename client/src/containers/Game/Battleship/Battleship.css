@@ -7,16 +7,19 @@
   }
 
   .gameBoard > div {
-    height: 100%;
     width: 100%;
-    margin: 0px
+    margin: 0px;
+    overflow: scroll;
+  }
+
+  .gamePnl {
+    height: 93%;
   }
 
   .playersPnl {
     background-color : #78C2AD;
     bottom: 0px;
-    height: 15%;
-    overflow: scroll;
+    height: 7%;
   }
 
   .border {

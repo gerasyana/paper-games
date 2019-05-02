@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
+import { gameBoards } from '../../constants/games';
 
 const initialState = {
     gameStarted: false,
@@ -9,43 +10,32 @@ const initialState = {
         name: null,
         players: []
     },
-    gameBoard: {
-        gameIsOver: false,
-        youWon: false,
-        yourTurn: false,
-        playerStep: 'O',
-        moves: new Array(9).fill(null)
-    }
+    gameBoard: {}
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.PLAYER1_JOINED: {
-            const { room } = action;
+            const { room, gameBoard } = action.data;
             return {
                 ...state,
                 playerLeftRoom: false,
                 roomClosed: false,
                 gameStarted: Object.keys(room.players).length === 2,
-                gameBoard: {
-                    ...state.gameBoard,
-                },
+                gameBoard,
                 room
             }
         }
         case actionTypes.PLAYER2_JOINED: {
+            const { players, gameBoard } = action.data;
             return {
                 ...state,
-                gameStarted: Object.keys(action.players).length === 2,
+                gameStarted: Object.keys(players).length === 2,
                 room: {
                     ...state.room,
-                    players: action.players
+                    players
                 },
-                gameBoard: {
-                    ...state.gameBoard,
-                    yourTurn: true,
-                    playerStep: 'X'
-                }
+                gameBoard
             }
         }
         case actionTypes.CLOSE_ROOM: {
@@ -97,11 +87,23 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 gameBoard: {
-                    ...initialState.gameBoard,
+                    ...gameBoards[state.room.gameId],
                     yourTurn: state.gameBoard.yourTurn,
                     playerStep: state.gameBoard.playerStep
                 }
             }
+        }
+        case actionTypes.GAME_BOARD_UPDATED: {
+            return {
+                ...state,
+                gameBoard: {
+                    ...state.gameBoard,
+                    ...action.gameBoard
+                }
+            }
+        }
+        case actionTypes.CLEAN_GAME_BOARD: {
+            return initialState;
         }
         default:
             return state;

@@ -12,15 +12,26 @@ const winningMoves = [
     [2, 4, 6]
 ];
 
+const initialGameBoard = {
+    gameIsOver: false,
+    youWon: false,
+    yourTurn: false,
+    playerStep: '0',
+    moves: new Array(9).fill(null)
+}
+
 class TickTackToe {
 
-    constructor(playerId, data) {
-        this.playerId = playerId;
-        this.gameBoard = data.gameBoard;
-        this.room = data.room;
+    constructor(gameId, params) {
         this.playerWon = false;
         this.gameIsOver = false;
-        this.points = games[data.room.gameId].points;
+        this.points = games[gameId].points;
+
+        if (params) {
+            this.playerId = params.playerId;
+            this.gameBoard = params.gameBoard;
+            this.room = params.room;
+        }
     }
 
     async processPlayerMove() {
@@ -44,6 +55,18 @@ class TickTackToe {
         return {
             moves: this.gameBoard.moves
         }
+    }
+
+    getPlayer1InitialGameBoard() {
+        return initialGameBoard;
+    }
+
+    getPlayer2InitialGameBoard() {
+        return {
+            ...initialGameBoard,
+            yourTurn: true,
+            playerStep: 'X',
+        };
     }
 }
 

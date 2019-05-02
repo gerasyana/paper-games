@@ -40,7 +40,11 @@ class SocketClient {
             client.join(name);
 
             const room = await roomService.saveRoom(data);
-            client.emit('player1Joined', room);
+            const game = new GameFactory(room.gameId);
+            client.emit('player1Joined', {
+                room,
+                gameBoard: game.getPlayer1InitialGameBoard()
+            });
             await this.notifyRoomsUpdate();
         });
 
@@ -51,9 +55,16 @@ class SocketClient {
             if (roomDetails && roomDetails.length == 1) {
                 client.join(name);
                 const room = await roomService.updateRoom(data);
+                const game = new GameFactory(room.gameId);
 
-                client.broadcast.to(name).emit('player2Joined', room.players);
-                client.emit('player1Joined', room);
+                client.broadcast.to(name).emit('player2Joined', {
+                    players: room.players,
+                    gameBoard: game.getPlayer2InitialGameBoard()
+                });
+                client.emit('player1Joined', {
+                    room,
+                    gameBoard: game.getPlayer1InitialGameBoard()
+                });
                 await this.notifyRoomsUpdate();
             }
         });
@@ -74,7 +85,7 @@ class SocketClient {
             const { room } = data;
             const playerId = await redis.sockets.getUserId(client.id);
 
-            const game = new GameFactory(playerId, data);
+            const game = new GameFactory(room.gameId, { playerId, ...data });
             await game.processPlayerMove();
             const gameBoard = game.getUpdatedGameBoard();
 
@@ -97,6 +108,11 @@ class SocketClient {
                 this.io.sockets.to(room.name).emit('togglePlayerTurn', gameBoard);
             }
         });
+
+        client.on('updateGameBoard', async (data) => {
+            const { room, gameBoard } = data;
+            this.io.sockets.to(room).emit('gameBoardUpdated', { gameBoard });
+        })
     }
 
     async updateGameRating(gameId) {

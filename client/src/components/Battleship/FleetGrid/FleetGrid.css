@@ -1,0 +1,45 @@
+.fleetGrid {
+    width: 350px;
+    height: 400px;
+    border-spacing: initial;
+    margin: 0 auto
+}
+
+.row:hover {
+    cursor: pointer;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.fleetCellHeader {
+    background-color: white;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 3vmin;
+    display: inline-block;
+    height: 35px;
+    width: 35px;
+    border: 1px solid black;
+    border-top: none;
+}
+
+.cell {
+    vertical-align: top;
+    height: 35px;
+    width: 35px;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.075);
+    border: 1px solid black;
+}
+
+.selected {
+    background-color: #78c2ad
+}
+
+.outOfBoundary { 
+    background-color  :#F3969A;
+    cursor: default;
+}

@@ -8,8 +8,8 @@ import Button from '../../../UI/Button/Button';
 import BoardMove from '../../../components/TickTackToe/BoardMove/BoardMove';
 import * as actions from '../../../storage/actions/actions';
 import games, { tickTackToeKey } from '../../../constants/games';
-import * as modals from '../../../constants/modalsIds';
 
+import * as modals from '../../../constants/modalsIds';
 import WaitForPlayerModal from '../../../components/Games/Notifications/WaitForPlayerModal';
 import PlayerLeftRoomModal from '../../../components/Games/Notifications/PlayerLeftRoomModal';
 import GameIsOverModal from '../../../components/Games/Notifications/GameIsOverModal';
@@ -118,11 +118,7 @@ class TickTackToe extends Component {
 
     getGameBoard = () => {
         let boardRows = [];
-        let modal = null;
-
-        if (this.props.gameBoard.gameIsOver) {
-            modal = this.getGameIsOverModal();
-        }
+        let modal = this.props.gameBoard.gameIsOver ? this.getGameIsOverModal() : null;
 
         for (let i = 0; i < 3; i++) {
             // eslint-disable-next-line no-loop-func
@@ -142,10 +138,10 @@ class TickTackToe extends Component {
         return (
             <div className={classes.gameBoard}>
                 {modal}
-                <div className="row">
-                    <div className={'col-sm-2 ' + classes.border}></div>
-                    <div className='col-sm-8'>
-                        <div className='row align-items-center justify-content-center' style={{ height: "75%" }}>
+                <div className={'row ' + classes.gamePnl}>
+                    <div className={'col-2 ' + classes.border}></div>
+                    <div className='col-8'>
+                        <div className='row align-items-center justify-content-center' style={{ height: "90%" }}>
                             <div className={this.props.gameBoard.yourTurn ? 'col-sm-10' : classes.noUserTurn + ' col-sm-10'}>
                                 <table className={classes.game}>
                                     <tbody>
@@ -161,29 +157,30 @@ class TickTackToe extends Component {
                                     null
                             }
                         </div>
-                        <div className={'row text-center align-items-center ' + classes.playersPnl}>
-                            <div className='col-sm-4'>
-                                <h5>
-                                    {this.props.room.players[0].username}
-                                </h5>
-                            </div>
-                            <div className='col-sm-4'>
-                                <Button
-                                    id="closeBtn"
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={this.leaveRoom}>
-                                    Leave Game
-                                </Button>
-                            </div>
-                            <div className='col-sm-4'>
-                                <h5>
-                                    {this.props.room.players[1].username}
-                                </h5>
-                            </div>
-                        </div>
+
                     </div>
-                    <div className={'col-sm-2 ' + classes.border}></div>
+                    <div className={'col-2 ' + classes.border}></div>
+                </div>
+                <div className={'row text-center align-items-center justify-content-center ' + classes.playersPnl}>
+                    <div className='col-md-3'>
+                        <h5>
+                            {this.props.room.players[0].username}
+                        </h5>
+                    </div>
+                    <div className='col-md-2 text-break'>
+                        <Button
+                            id="closeBtn"
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={this.leaveRoom}>
+                            Leave Game
+                                </Button>
+                    </div>
+                    <div className='col-md-3'>
+                        <h5>
+                            {this.props.room.players[1].username}
+                        </h5>
+                    </div>
                 </div>
             </div>
         );
@@ -197,7 +194,7 @@ class TickTackToe extends Component {
         } else if (this.props.playerLeftRoom) {
             game = <PlayerLeftRoomModal startWaitingForPlayer={this.startWaitingForPlayer} leaveRoom={this.leaveRoom} />
             $(`#${modals.gameIsOverModalId}`).modal('hide');
-        } else if (!this.props.room.name || this.props.roomClosed) {
+        } else if (!this.props.room.name || this.props.roomClosed || this.props.gameBoard === undefined) {
             game = <Redirect to={gameDetailsUrl} />;
         } else {
             if (!this.props.gameStarted) {

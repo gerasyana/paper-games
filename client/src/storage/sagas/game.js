@@ -15,3 +15,7 @@ export function* leaveRoom(action) {
 export function* playerMadeMove(action) {
     yield client.playerMadeMove(action.data);
 }
+
+export function* updateGameBoard(action) {
+    yield client.updateGameBoard(action.data);
+}
