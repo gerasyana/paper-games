@@ -53,7 +53,7 @@ class UserService {
             user = await User.create({
                 email,
                 username,
-                password: User.hashPassword(password)
+                password
             });
 
             if (!user) {
@@ -79,6 +79,24 @@ class UserService {
             }
 
             user.cache();
+            return await getUserDetails(user);
+        } catch (err) {
+            logError(err);
+            return { error: err.message }
+        }
+    }
+
+    async resetPassword(data) {
+        const { username, password } = data;
+
+        try {
+            const user = await User.findOneAndUpdate({ username }, { password: User.hashPassword(password) });
+
+            if (!user) {
+                return { error: `User not found` };
+            }
+
+            user.cache(user);
             return await getUserDetails(user);
         } catch (err) {
             logError(err);

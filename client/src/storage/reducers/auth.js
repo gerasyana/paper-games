@@ -12,7 +12,8 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.LOGIN_START:
-        case actionTypes.SIGNUP_START: {
+        case actionTypes.SIGNUP_START:
+        case actionTypes.RESET_PASSWORD_START: {
             return {
                 ...state,
                 loading: true,
@@ -21,7 +22,8 @@ const reducer = (state = initialState, action) => {
             };
         }
         case actionTypes.LOGIN_SUCCESS:
-        case actionTypes.SIGNUP_SUCCESS: {
+        case actionTypes.SIGNUP_SUCCESS:
+        case actionTypes.RESET_PASSWORD_SUCCESS: {
             return {
                 ...state,
                 loading: false,
@@ -30,7 +32,8 @@ const reducer = (state = initialState, action) => {
             };
         }
         case actionTypes.LOGIN_FAILED:
-        case actionTypes.SIGNUP_FAILED: {
+        case actionTypes.SIGNUP_FAILED:
+        case actionTypes.RESET_PASSWORD_FAILED: {
             return {
                 ...state,
                 loading: false,

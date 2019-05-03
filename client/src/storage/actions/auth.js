@@ -33,6 +33,33 @@ export const loginFailed = error => {
     }
 }
 
+export const resetPassword = data => {
+    return {
+        type: actionTypes.INIT_RESET_PASSWORD,
+        data
+    }
+}
+
+export const resetPasswordStart = () => {
+    return {
+        type: actionTypes.RESET_PASSWORD_START
+    }
+}
+
+export const resetPasswordSuccess = user => {
+    return {
+        type: actionTypes.RESET_PASSWORD_SUCCESS,
+        user
+    }
+}
+
+export const resetPasswordFailed = error => {
+    return {
+        type: actionTypes.RESET_PASSWORD_FAILED,
+        error
+    }
+}
+
 export const logout = () => {
     return {
         type: actionTypes.INIT_LOGOUT

@@ -10,6 +10,7 @@ import * as actions from './storage/actions/actions';
 const Login = React.lazy(() => import('./containers/Auth/Login/Login'));
 const Logout = React.lazy(() => import('./containers/Auth/Logout/Logout'));
 const SignUp = React.lazy(() => import('./containers/Auth/SignUp/SignUp'));
+const ResetPassword =  React.lazy(() => import('./containers/Auth/ResetPassport/ResetPassport'));
 
 class App extends Component {
 
@@ -25,6 +26,7 @@ class App extends Component {
             <Route path='/login' exact render={() => <Login {...this.props} />} />
             <Route path='/signup' exact render={() => <SignUp {...this.props} />} />
             <Route path="/logout" exact render={() => <Logout {...this.props} />} />
+            <Route path="/resetpassword" exact render={() => <ResetPassword {...this.props} />} />
 
             <Route path='/' component={Home} />
             <Redirect to='/' />

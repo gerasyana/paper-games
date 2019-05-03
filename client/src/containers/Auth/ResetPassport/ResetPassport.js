@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Redirect, withRouter } from 'react-router';
-import { connect } from 'react-redux'
+import { Redirect } from 'react-router';
+import { connect } from 'react-redux';
 
 import Input from '../../../UI/Input/Input';
 import Button from '../../../UI/Button/Button';
@@ -8,23 +8,25 @@ import Spinner from '../../../UI/Spinner/Spinner';
 import * as actions from '../../../storage/actions/actions'
 import { validateInput } from '../../../helpers/validation';
 
-class Login extends Component {
+class ForgotPassword extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             controls: {
                 username: {
+                    id: 'username',
                     type: 'text',
                     label: 'Username',
                     value: '',
                     placeholder: 'Enter username'
                 },
                 password: {
+                    id: 'password',
                     type: 'password',
-                    label: 'Password',
+                    label: 'New password',
                     value: '',
-                    placeholder: 'Enter password'
+                    placeholder: 'Enter new password'
                 }
             },
             validation: {
@@ -39,7 +41,7 @@ class Login extends Component {
                     maxLength: 20
                 }
             },
-            loginButtonEnabled: false
+            buttonEnabled: false
         }
     }
 
@@ -65,7 +67,7 @@ class Login extends Component {
         }
         this.setState({
             controls,
-            loginButtonEnabled: this.isButtonEnabled(controls)
+            buttonEnabled: this.isButtonEnabled(controls)
         });
     }
 
@@ -77,22 +79,18 @@ class Login extends Component {
         return Object.keys(controls).length === validControls.length;
     }
 
-    login = () => {
-        const credentials = {
+    resetPassword = () => {
+        const data = {
             username: this.state.controls.username.value,
             password: this.state.controls.password.value
         }
-        this.props.login(credentials);
-    }
-
-    goToForgotPassword = () => {
-        this.props.history.push('/resetpassword');
+        this.props.resetPassword(data);
     }
 
     render() {
         const formElements = Object.keys(this.state.controls).map(key => {
             const input = this.state.controls[key];
-            return <Input key={key} id={key} {...input} onChange={this.setControlValue} />;
+            return <Input key={key}{...input} onChange={this.setControlValue} />;
         });
 
         let errorMessage = null;
@@ -105,7 +103,7 @@ class Login extends Component {
         }
 
         let form = (
-            <div className="container body-container">
+            <div className="body-container container">
                 <div className="row justify-content-center">
                     <div className="col-sm-4 col-margin-fixed">
                         {errorMessage}
@@ -113,16 +111,10 @@ class Login extends Component {
                         <div>
                             <Button
                                 type="submit"
-                                className='btn btn-primary mr-4 mb-4'
-                                disabled={!this.state.loginButtonEnabled}
-                                onClick={this.login} >
-                                Login
-                            </Button>
-                            <Button
-                                type="button"
-                                className='btn btn-primary mb-4'
-                                onClick={this.goToForgotPassword}>
-                                Restore passwort
+                                className='btn btn-primary'
+                                onClick={this.resetPassword}
+                                disabled={!this.state.buttonEnabled}>
+                                Reset password
                             </Button>
                         </div>
                     </div>
@@ -131,7 +123,7 @@ class Login extends Component {
         );
 
         if (this.props.isAuthenticated) {
-            form = <Redirect to={this.props.redirectUrl} />
+            form = <Redirect to='/' />
         }
 
         if (this.props.loading) {
@@ -145,15 +137,14 @@ const mapStateToProps = (state) => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
         loading: state.auth.loading,
-        error: state.auth.error,
-        redirectUrl: state.auth.redirectUrl
+        error: state.auth.error
     }
 }
 
 const mapDispatchToState = (dispatch) => {
     return {
-        login: (credentials) => dispatch(actions.login(credentials))
+        resetPassword: (user) => dispatch(actions.resetPassword(user))
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToState)(withRouter(Login));
+export default connect(mapStateToProps, mapDispatchToState)(ForgotPassword);

@@ -11,7 +11,8 @@ export function* watchAuth() {
         takeEvery(actionTypes.AUTH_SET_TIMEOUT, authSagas.setAuthTimeout),
         takeEvery(actionTypes.INIT_LOGIN, authSagas.login),
         takeEvery(actionTypes.INIT_SIGNUP, authSagas.signUp),
-        takeEvery(actionTypes.INIT_LOGOUT, authSagas.logout)
+        takeEvery(actionTypes.INIT_LOGOUT, authSagas.logout),
+        takeEvery(actionTypes.INIT_RESET_PASSWORD, authSagas.resetPassword)
     ])
 }
 

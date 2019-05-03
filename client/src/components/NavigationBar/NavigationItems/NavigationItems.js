@@ -19,6 +19,7 @@ const navigationItems = (props) => {
     let navItemsRight = (
         <Aux>
             <NavigationItem type="link" link='/login' label="Login" />
+            <NavigationItem type="link" link='/signup' label="Sign up" />
         </Aux>
     )
 

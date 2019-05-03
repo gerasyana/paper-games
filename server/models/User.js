@@ -40,6 +40,17 @@ UserSchema.methods.cache = async function () {
     await cache(this);
 }
 
+UserSchema.pre('save', function (next) {
+    console.log('pre save')
+    this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10));
+    next();
+});
+
+UserSchema.pre('update',  function (next) {
+    console.log('pre update')
+    next();
+})
+
 UserSchema.post('save', async (user) => {
     await cache(user);
 });

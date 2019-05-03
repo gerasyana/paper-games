@@ -1,7 +1,7 @@
 const { authenticate } = require('../middlewares/authenticate');
 const { logout } = require('../middlewares/logout');
 const { getDecodedJWT } = require('../services/jwt');
-const  userService  = require('../services/user');
+const userService = require('../services/user');
 
 module.exports = app => {
     app.get('/api/user', authenticate, async (req, res) => {
@@ -22,5 +22,10 @@ module.exports = app => {
 
     app.post('/api/user/logout', logout, (req, res) => {
         return res.sendStatus(200);
+    });
+
+    app.post('/api/user/resetpassword', async (req, res) => {
+        const data = await userService.resetPassword(req.body);
+        return res.json(data);
     });
 }

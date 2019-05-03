@@ -61,6 +61,19 @@ export function* signUp(action) {
   }
 }
 
+export function* resetPassword(action) {
+  yield put(actions.resetPasswordStart());
+  const response = yield userRouters.resetPassword(action.data);
+  
+  if (response.data.error || response.status !== 200) {
+    yield put(actions.resetPasswordFailed(response.data.error));
+  } else {
+    yield put(actions.resetPasswordSuccess(response.data.user));
+    yield setLocalStorage(response.data.tokenDetails);
+    yield client.connectUser(response.data.user.id);
+  }
+}
+
 export function* setAuthTimeout(action) {
   yield delay(action.expirationTime);
   yield put(actions.logout());
