@@ -5,51 +5,58 @@ const initialGameBoard = {
     gameIsOver: false,
     youWon: false,
     yourTurn: false,
-    player1Fleet: {
-        shipsAreSet: false,
-        gridColumns: new Array(100).fill(false).map((value, index) => ({
-            id: `gridColumn-${index}`,
-            selected: false,
-            hovered: false
-        }))
-    },
-    player2Fleet: {
-        shipsAreSet: false,
-        gridColumns: new Array(100).fill(false).map((value, index) => ({
-            id: `gridColumn-${index}`,
-            selected: false,
-            hovered: false
-        }))
-    }
+    fleets: []
 }
 
 class Battleship {
 
     constructor(gameId, params) {
-        /* this.playerId = params.playerId;
-         this.gameBoard = params.gameBoard;
-         this.room = params.room;
-         this.playerWon = false;
-         this.gameIsOver = false;
-         this.points = games[gameId].points;*/
+        this.playerWon = false;
+        this.gameIsOver = false;
+        this.points = games[gameId].points;
+
+        if (params) {
+            this.playerId = params.playerId;
+            this.gameBoard = params.gameBoard;
+            this.room = params.room;
+        }
     }
 
     async processPlayerMove() {
+        this.gameBoard.fleets.forEach(fleet => {
+            if (fleet.playerId !== this.playerId) {
+                fleet.ships.forEach(ship => ship.destroyed = ship.columns.every(column => fleet.moves.includes(column)));
+            }
+        });
 
+        this.playerWon = this.gameBoard.fleets.some(fleet => fleet.ships.every(ship => ship.destroyed));
+
+        if (this.playerWon) {
+            await saveGame({
+                room: this.room,
+                winnerId: this.playerId,
+                points: this.points
+            });
+        }
     }
 
     getUpdatedGameBoard() {
         return {
-            moves: this.gameBoard.moves
+            fleets: this.gameBoard.fleets
         }
     }
 
     getPlayer1InitialGameBoard() {
-        return initialGameBoard;
+        return {
+            ...initialGameBoard,
+            yourTurn: true
+        }
     }
 
     getPlayer2InitialGameBoard() {
-        return initialGameBoard;
+        return {
+            ...initialGameBoard
+        }
     }
 }
 

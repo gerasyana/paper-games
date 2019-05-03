@@ -42,22 +42,7 @@ export const gameBoards = {
         gameIsOver: false,
         youWon: false,
         yourTurn: false,
-        player1Fleet: {
-            shipsAreSet: false,
-            gridColumns: new Array(100).fill(false).map((value, index) => ({
-                id: `gridColumn-${index}`,
-                selected: false,
-                hovered: false
-            }))
-        },
-        player2Fleet: {
-            shipsAreSet: false,
-            gridColumns: new Array(100).fill(false).map((value, index) => ({
-                id: `gridColumn-${index}`,
-                selected: false,
-                hovered: false
-            }))
-        }
+        fleets: []
     }
 }
 

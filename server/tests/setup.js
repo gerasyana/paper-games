@@ -1,3 +1,5 @@
+process.env.NOVE_ENV = 'test';
+console.log(process.env.NOVE_ENV)
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -29,3 +31,4 @@ const getTestFilesFromDirectory = (file) => {
 
 const unitTests = getTestFilesFromDirectory();
 unitTests.forEach(unitTest => require(unitTest)(app));
+

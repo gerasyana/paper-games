@@ -1,12 +1,8 @@
 .fleetGrid {
-    width: 350px;
+    width: 400px;
     height: 400px;
     border-spacing: initial;
     margin: 0 auto
-}
-
-.row:hover {
-    cursor: pointer;
 }
 
 .row {
@@ -14,7 +10,14 @@
     flex-wrap: wrap;
 }
 
-.fleetCellHeader {
+.gridCellHeaderEmpty {
+    border-top: none;
+    background-color: white;
+    height: 35px;
+    width: 35px;
+}
+
+.gridCellHeader {
     background-color: white;
     text-align: center;
     vertical-align: middle;
@@ -26,6 +29,18 @@
     border-top: none;
 }
 
+.gridRowNumber {
+    background-color: white;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 3vmin;
+    display: inline-block;
+    height: 35px;
+    width: 35px;
+    border: 1px solid black;
+    border-left: none;
+}
+
 .cell {
     vertical-align: top;
     height: 35px;
@@ -35,8 +50,24 @@
     border: 1px solid black;
 }
 
+.empty:hover {
+    cursor: pointer;
+}
+
 .selected {
-    background-color: #78c2ad
+    background-color: #78c2ada6
+}
+
+.destroyed {
+    background-color:#f53d45;
+}
+
+.moved {
+    background-color:  #FF7851;
+}
+
+.readOnly {
+    cursor: not-allowed;
 }
 
 .outOfBoundary { 

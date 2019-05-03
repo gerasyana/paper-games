@@ -151,13 +151,8 @@ class TickTackToe extends Component {
                             </div>
                         </div>
                         <div className='row align-items-center justify-content-center' style={{ height: "10%" }}>
-                            {
-                                this.props.gameBoard.yourTurn ?
-                                    <h5>Your turn</h5> :
-                                    null
-                            }
+                            {this.props.gameBoard.yourTurn ? <h5>Your turn</h5> : null}
                         </div>
-
                     </div>
                     <div className={'col-2 ' + classes.border}></div>
                 </div>
@@ -174,7 +169,7 @@ class TickTackToe extends Component {
                             className="btn btn-secondary"
                             onClick={this.leaveRoom}>
                             Leave Game
-                                </Button>
+                        </Button>
                     </div>
                     <div className='col-md-3'>
                         <h5>

@@ -10,6 +10,7 @@ import Fleet from './Fleet/Fleet';
 import ShipsPlacement from './Fleet/ShipsPlacement/ShipsPlacement';
 import Aux from '../../../hoc/Aux/Aux';
 import Spinner from '../../../UI/Spinner/Spinner';
+import Button from '../../../UI/Button/Button';
 
 import * as modals from '../../../constants/modalsIds';
 import WaitForPlayerModal from '../../../components/Games/Notifications/WaitForPlayerModal';
@@ -26,8 +27,7 @@ class Battleship extends Component {
             this.props.roomClosed !== nextProps.roomClosed ||
             this.props.playerLeftRoom !== nextProps.playerLeftRoom ||
             this.props.gameBoard.gameIsOver !== nextProps.gameBoard.gameIsOver ||
-            this.props.gameBoard.player1Fleet !== nextProps.gameBoard.player1Fleet ||
-            this.props.gameBoard.player2Fleet !== nextProps.gameBoard.player2Fleet;
+            this.props.gameBoard.fleets !== nextProps.gameBoard.fleets;
     }
 
     componentDidMount() {
@@ -91,17 +91,12 @@ class Battleship extends Component {
     }
 
     getGameBoard = () => {
-        const { gameBoard, room } = this.props;
+        const { fleets } = this.props.gameBoard;
         const userId = this.props.user.id;
-        let content = <ShipsPlacement gameBoardFleetId={room.players[0].id === userId ? 'player1Fleet' : 'player2Fleet'} />;
-        let modal = this.props.gameBoard.gameIsOver ? this.getGameIsOverModal() : null;
-        let waitForPlayer = false;
-
-        if ((room.players[0].id === userId && gameBoard.player1Fleet.shipsAreSet && !gameBoard.player2Fleet.shipsAreSet) ||
-            (room.players[1].id === userId && gameBoard.player2Fleet.shipsAreSet && !gameBoard.player1Fleet.shipsAreSet)) {
-            waitForPlayer = true;
-        }
-        
+        const modal = this.props.gameBoard.gameIsOver ? this.getGameIsOverModal() : null;
+        const waitForPlayer = fleets.length === 1 && fleets[0].playerId === userId;
+        let content = <ShipsPlacement />;
+       
         if (waitForPlayer) {
             content = (
                 <div className='col-md-8 m-3'>
@@ -109,25 +104,33 @@ class Battleship extends Component {
                     <h4 className='text-center'>Please wait while the enemy places ships</h4>
                 </div>
             );
-        } else if (gameBoard.player1Fleet.shipsAreSet && gameBoard.player2Fleet.shipsAreSet) {
+        } else if (fleets.length === 2 && fleets.every(fleet => fleet.shipsAreSet)) {
             content = (
                 <Aux>
-                    <div className='col-md-5 m-3'>
+                    <div className='col-lg-5 mt-5'>
                         <Fleet
-                            fleet={gameBoard.player1Fleet}
-                            playerCurrentUser={room.players[0].id === userId}
-                            gameBoardFleetId='player1Fleet'
+                            fleet={fleets.find(fleet => fleet.playerId === userId)}
+                            player={this.props.room.players.find(player => player.id === userId)}
+                            readOnlyMode
                         />
                     </div>
-                    <div className='col-md-5 m-3'>
+                    <div className='col-lg-5 mt-5'>
                         <Fleet
-                            fleet={gameBoard.player2Fleet}
-                            playerCurrentUser={room.players[1].id === userId}
-                            gameBoardFleetId='player2Fleet'
+                            fleet={fleets.find(fleet => fleet.playerId !== userId)}
+                            player={this.props.room.players.find(player => player.id !== userId)}
                         />
                     </div>
-                    <div className='col-md-8 text-center'>
-                        <h4>Your turn</h4>
+                    <div className='col-12 text-center' style={{ height: '30px' }}>
+                        {this.props.gameBoard.yourTurn ? <h5>Your turn</h5> : null}
+                    </div>
+                    <div className='col-12 text-center' style={{ height: '40px' }}>
+                        <Button
+                            id="closeBtn"
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={this.leaveRoom}>
+                            Leave Game
+                       </Button>
                     </div>
                 </Aux>
             );
@@ -136,12 +139,10 @@ class Battleship extends Component {
         return (
             <div className={classes.gameBoard}>
                 {modal}
-                <div className={'row justify-content-center  align-items-center ' + classes.gamePnl}>
+                <div className={'row justify-content-center align-items-center ' + classes.gamePnl}>
                     {content}
                 </div>
-                <div className={'row text-center align-items-center ' + classes.playersPnl}>
-
-                </div>
+                <div className={'row justify-content-center align-items-center ' + classes.playersPnl}></div>
             </div>
         )
     }

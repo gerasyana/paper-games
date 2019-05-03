@@ -36,9 +36,7 @@ class TickTackToe {
 
     async processPlayerMove() {
         const { moves, playerStep } = this.gameBoard;
-        this.playerWon = winningMoves.some((winningMove) =>
-            winningMove.every(moveIndex => moves[moveIndex] === playerStep)
-        );
+        this.playerWon = winningMoves.some((winningMove) => winningMove.every(moveIndex => moves[moveIndex] === playerStep));
 
         if (this.playerWon) {
             await saveGame({

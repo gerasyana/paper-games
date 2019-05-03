@@ -5,7 +5,7 @@ const keys = require('../configs/keys');
 const { documents } = require('../services/redis');
 
 mongoose.Promise = global.Promise;
-mongoose.connect(keys.MONGO_URL, {
+mongoose.connect(process.env.NOVE_ENV === 'test' ? 'mongodb://localhost/test' : keys.MONGO_URL, {
     useNewUrlParser: true,
     useCreateIndex: true
 });

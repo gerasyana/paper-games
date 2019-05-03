@@ -40,7 +40,7 @@ class SocketClient {
             client.join(name);
 
             const room = await roomService.saveRoom(data);
-            const game = new GameFactory(room.gameId);
+            const game = new GameFactory(room.gameId, { room });
             client.emit('player1Joined', {
                 room,
                 gameBoard: game.getPlayer1InitialGameBoard()
@@ -55,7 +55,7 @@ class SocketClient {
             if (roomDetails && roomDetails.length == 1) {
                 client.join(name);
                 const room = await roomService.updateRoom(data);
-                const game = new GameFactory(room.gameId);
+                const game = new GameFactory(room.gameId, { room });
 
                 client.broadcast.to(name).emit('player2Joined', {
                     players: room.players,

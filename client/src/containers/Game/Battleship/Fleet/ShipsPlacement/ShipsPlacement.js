@@ -36,13 +36,6 @@ const ships = {
 
 class ShipsPlacement extends Component {
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.state.selectedShip !== nextState.selectedShip ||
-            this.state.gridColumns !== nextState.gridColumns ||
-            this.state.gridColumns.shipsAreSet !== nextState.gridColumns.shipsAreSet ||
-            this.state.horizontalShip !== nextState.horizontalShip;
-    }
-
     constructor(props) {
         super(props);
         const playerShips = {};
@@ -51,24 +44,30 @@ class ShipsPlacement extends Component {
             for (let i = count; i > 0; i--) {
                 playerShips[`${shipId}-${i}`] = {
                     key: `${shipId}-${i}`,
-                    shipId,
-                    size,
-                    selected: false
+                    id: shipId,
+                    size
                 };
             }
         });
 
         this.state = {
-            gridColumns: new Array(100).fill(false).map((value, index) => ({
+            gridColumns: new Array(100).fill(null).map((value, index) => ({
                 id: `gridColumn-${index}`,
                 selected: false,
                 hovered: false
             })),
             ships: playerShips,
+            placedShips: [],
             selectedShip: null,
-            shipColumnsIndexes: [],
+            selectedShipColumns: [],
             horizontalShip: true
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.state.selectedShip !== nextState.selectedShip ||
+            this.state.gridColumns !== nextState.gridColumns ||
+            this.state.horizontalShip !== nextState.horizontalShip;
     }
 
     selectShip = (id) => {
@@ -82,38 +81,51 @@ class ShipsPlacement extends Component {
     }
 
     placeShip = () => {
-        if (!this.state.shipOutOfBoundary && this.state.selectedShip) {
-            const ships = { ...this.state.ships };
-            delete ships[this.state.selectedShip.key];
+        if (this.state.shipOutOfBoundary || !this.state.selectedShip) {
+            return;
+        }
 
-            const gridColumns = this.state.gridColumns
-                .map((item, index) => {
-                    if (this.state.shipColumnsIndexes.includes(index)) {
-                        item.selected = true;
-                    }
-                    return item;
-                });
+        const placedShips = [...this.state.placedShips];
+        const ships = { ...this.state.ships };
+        delete ships[this.state.selectedShip.key];
 
-            if (Object.keys(ships).length === 0) {
-                this.updateGameBoard(gridColumns);
-            } else {
-                this.setState({
-                    ships,
-                    selectedShip: null,
-                    gridColumns
-                });
-            }
+        const gridColumns = this.state.gridColumns
+            .map((item, index) => {
+                if (this.state.selectedShipColumns.includes(index)) {
+                    item.selected = true;
+                }
+                return item;
+            });
+        placedShips.push({
+            id: this.state.selectedShip.id,
+            columns: [...this.state.selectedShipColumns]
+        });
+
+        if (Object.keys(ships).length === 0) {
+            this.updateGameBoard(placedShips);
+        } else {
+            this.setState({
+                ships,
+                selectedShip: null,
+                selectedShipColumns: [],
+                gridColumns,
+                placedShips
+            });
         }
     }
 
-    updateGameBoard = (gridColumns) => {
+    updateGameBoard = (placedShips) => {
         this.props.updateGameBoard({
             room: this.props.room.name,
             gameBoard: {
-                [this.props.gameBoardFleetId]: {
-                    shipsAreSet: true,
-                    gridColumns
-                }
+                fleets: [
+                    ...this.props.fleets,
+                    {
+                        playerId: this.props.user.id,
+                        shipsAreSet: true,
+                        ships: placedShips
+                    }
+                ]
             }
         });
     }
@@ -121,37 +133,38 @@ class ShipsPlacement extends Component {
     gridColumnHovered = (event) => {
         const id = event.target.id;
 
-        if (this.state.selectedShip && id.indexOf('gridColumn-') > -1) {
-            const { size } = this.state.selectedShip;
-            const index = +this.state.gridColumns.findIndex(column => column.id === id);
-            const currentRow = Math.floor(index / 10);
-
-            const columnsIndexesToHover = [...new Array(size)]
-                .map((item, i) => this.state.horizontalShip ? index + i : index + 10 * i)
-                .filter(item => this.state.horizontalShip ? Math.floor(item / 10) !== currentRow + 1 : item < 100);
-            const columnsFilled = this.state.gridColumns
-                .filter((column, i) => columnsIndexesToHover.includes(i))
-                .reduce((filled, column) => {
-                    if (column.selected) {
-                        filled = true;
-                    }
-                    return filled;
-                }, false);
-            const shipOutOfBoundary = columnsFilled || columnsIndexesToHover.length !== size;
-
-            const gridColumns = this.state.gridColumns.map((gridColumn, i) => {
-                return {
-                    ...gridColumn,
-                    outOfBoundary: shipOutOfBoundary && columnsIndexesToHover.includes(i),
-                    hovered: columnsIndexesToHover.includes(i)
-                }
-            })
-            this.setState({
-                shipOutOfBoundary,
-                gridColumns,
-                shipColumnsIndexes: columnsIndexesToHover
-            });
+        if (!this.state.selectedShip || id.indexOf('gridColumn-') === -1) {
+            return;
         }
+        const { size } = this.state.selectedShip;
+        const index = +this.state.gridColumns.findIndex(column => column.id === id);
+        const currentRow = Math.floor(index / 10);
+
+        const selectedShipColumns = [...new Array(size)]
+            .map((item, i) => this.state.horizontalShip ? index + i : index + 10 * i)
+            .filter(item => this.state.horizontalShip ? Math.floor(item / 10) !== currentRow + 1 : item < 100);
+        const columnsFilled = this.state.gridColumns
+            .filter((column, i) => selectedShipColumns.includes(i))
+            .reduce((filled, column) => {
+                if (column.selected) {
+                    filled = true;
+                }
+                return filled;
+            }, false);
+        const shipOutOfBoundary = columnsFilled || selectedShipColumns.length !== size;
+
+        const gridColumns = this.state.gridColumns.map((gridColumn, i) => {
+            return {
+                ...gridColumn,
+                outOfBoundary: shipOutOfBoundary && selectedShipColumns.includes(i),
+                hovered: selectedShipColumns.includes(i)
+            }
+        })
+        this.setState({
+            shipOutOfBoundary,
+            gridColumns,
+            selectedShipColumns: selectedShipColumns
+        });
     }
 
     setOrientation = (horizontalShip) => {
@@ -205,12 +218,12 @@ class ShipsPlacement extends Component {
                 <div className='col-md-12'>
                     {<h4 className='text-center m-3'>Your fleet</h4>}
                 </div>
-                <div className='col-md-4 m-3'>
+                <div className='col-md-3 m-3'>
                     <div className={classes.shipsPanel}>
                         {shipsPanel}
                     </div>
                 </div>
-                <div className='col-md-6 m-3'>
+                <div className='col-md-5 m-3'>
                     <FleetGrid
                         gridColumns={this.state.gridColumns}
                         onClick={this.placeShip}
@@ -224,7 +237,9 @@ class ShipsPlacement extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        room: state.game.room
+        room: state.game.room,
+        user: state.auth.user,
+        fleets: state.game.gameBoard.fleets
     }
 }
 
