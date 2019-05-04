@@ -122,7 +122,7 @@ class Login extends Component {
                                 type="button"
                                 className='btn btn-primary mb-4'
                                 onClick={this.goToResetPassword}>
-                                Forgot password
+                                Reset password
                             </Button>
                         </div>
                     </div>
