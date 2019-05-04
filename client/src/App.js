@@ -10,7 +10,7 @@ import * as actions from './storage/actions/actions';
 const Login = React.lazy(() => import('./containers/Auth/Login/Login'));
 const Logout = React.lazy(() => import('./containers/Auth/Logout/Logout'));
 const SignUp = React.lazy(() => import('./containers/Auth/SignUp/SignUp'));
-const ResetPassword =  React.lazy(() => import('./containers/Auth/ResetPassport/ResetPassport'));
+const ResetPassword =  React.lazy(() => import('./containers/Auth/ResetPassword/ResetPassword'));
 
 class App extends Component {
 

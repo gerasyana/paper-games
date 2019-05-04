@@ -85,7 +85,7 @@ class Login extends Component {
         this.props.login(credentials);
     }
 
-    goToForgotPassword = () => {
+    goToResetPassword = () => {
         this.props.history.push('/resetpassword');
     }
 
@@ -121,8 +121,8 @@ class Login extends Component {
                             <Button
                                 type="button"
                                 className='btn btn-primary mb-4'
-                                onClick={this.goToForgotPassword}>
-                                Restore passwort
+                                onClick={this.goToResetPassword}>
+                                Forgot password
                             </Button>
                         </div>
                     </div>

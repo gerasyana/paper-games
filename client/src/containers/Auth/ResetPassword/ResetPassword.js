@@ -8,7 +8,7 @@ import Spinner from '../../../UI/Spinner/Spinner';
 import * as actions from '../../../storage/actions/actions'
 import { validateInput } from '../../../helpers/validation';
 
-class ForgotPassword extends Component {
+class ResetPassword extends Component {
 
     constructor(props) {
         super(props);
@@ -147,4 +147,4 @@ const mapDispatchToState = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToState)(ForgotPassword);
+export default connect(mapStateToProps, mapDispatchToState)(ResetPassword);

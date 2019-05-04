@@ -47,15 +47,13 @@ class Battleship {
     }
 
     getPlayer1InitialGameBoard() {
-        return {
-            ...initialGameBoard,
-            yourTurn: true
-        }
+        return initialGameBoard;
     }
 
     getPlayer2InitialGameBoard() {
         return {
-            ...initialGameBoard
+            ...initialGameBoard,
+            yourTurn: true
         }
     }
 }
