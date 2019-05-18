@@ -61,7 +61,7 @@ class GameHistoryService {
                     }
                 }, "_id username").
                 toMap('_id');
-
+                
             results = results.map(result => ({
                 username: users[result._id].username,
                 points: result.points

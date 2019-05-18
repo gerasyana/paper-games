@@ -1,24 +1,24 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
-const http = require('http');
-const socketIO = require('socket.io');
-const socketIOClient = require('socket.io-client');
+const io = require('socket.io-client');
 const { USER_MODEL, GAME_HISTORY_MODEL } = require('../../constants/modelNames');
 const { TEST_USER_1, TEST_USER_2 } = require('../constants');
 const { sockets } = require('../../services/redis');
+const { expect } = chai;
 
+const PORT = process.env.PORT || 5000;
+const socketURL = `http://localhost:${PORT}`;
 const options = {
     transports: ['websocket'],
     'force new connection': true
 }
-const { expect } = chai;
+
 chai.use(chaiHttp);
 
 module.exports = app => {
-    describe('Sockets', async () => {
-        let ioServer, socketPort,
-            ioClient1, ioClient2,
+    describe('Sockets', () => {
+        let ioClient1, ioClient2,
             user1, user2, user1Id, user2Id,
             testRoom = {
                 name: 'test room',
@@ -26,11 +26,8 @@ module.exports = app => {
             }
 
         before(async () => {
-            const httpServer = http.Server(app);
-            const io = socketIO(httpServer);
-            const httpServerAddr = httpServer.listen().address();
-            socketPort = `http://[${httpServerAddr.address}]:${httpServerAddr.port}`;
-            ioServer = require('../../services/socket')(io);
+            const socketIO = require('socket.io').listen(PORT);
+            const ioServer = require('../../services/socket')(socketIO);
             ioServer.initConnection();
 
             user1 = await mongoose.model(USER_MODEL).create(TEST_USER_1);
@@ -46,39 +43,45 @@ module.exports = app => {
             await ioClient2.disconnect();
         })
 
-        it('It should connect user 1 ', async () => {
-            ioClient1 = socketIOClient.connect(socketPort, options);
-            console.log(ioClient1.id);
-            ioClient1.on('userConnected', async (data) => {
-                const result = await sockets.getUserId(ioClient1.id);
-                expect(result).to.not.null;
-                expect(result).to.equal(user1Id);
-                expect(data).to.have.property('rooms');
-                expect(data).to.have.property('usersOnline');
-            });
+        it('It should connect user 1 ', function (done) {
+            ioClient1 = io.connect(socketURL, options);
 
-            ioClient1.emit('setUserId', { userId: user1Id });
+            ioClient1.on('connect', data => {
+                ioClient1.on('userConnected', async (data) => {
+                    const result = await sockets.getUserId(ioClient1.id);
+                    expect(result).to.not.null;
+                    expect(result).to.equal(user1Id);
+                    expect(data).to.have.property('rooms');
+                    expect(data).to.have.property('usersOnline');
+                });
+
+                ioClient1.emit('setUserId', { userId: user1Id });
+                done();
+            });
         });
 
-        it('It should connect user 2 ', async () => {
-            ioClient2 = socketIOClient.connect(socketPort, options);
+        it('It should connect user 2 ', function (done) {
+            ioClient2 = io.connect(socketURL, options);
 
-            ioClient2.on('userConnected', async (data) => {
-                const result = await sockets.getUserId(ioClient2.id);
-                expect(result).to.not.null;
-                expect(result).to.equal(user2Id);
-                expect(data).to.have.property('rooms');
-                expect(data).to.have.property('usersOnline');
+            ioClient2.on('connect', data => {
+                ioClient2.on('userConnected', async (data) => {
+                    const result = await sockets.getUserId(ioClient2.id);
+                    expect(result).to.not.null;
+                    expect(result).to.equal(user2Id);
+                    expect(data).to.have.property('rooms');
+                    expect(data).to.have.property('usersOnline');
+                });
+
+                ioClient2.emit('setUserId', { userId: user2Id });
+                done();
             });
-
-            ioClient2.emit('setUserId', { userId: user2Id });
         });
 
         describe('Test room events', () => {
 
-            it('User 1 should create a new test room ', async () => {
+            it('User 1 should create a new test room ', function (done) {
                 ioClient1.on('player1Joined', (data) => {
-                    const { name, players } = data;
+                    const { name, players } = data.room;
                     expect(name).to.equal(testRoom.name);
                     expect(players).have.lengthOf(1);
                 });
@@ -87,11 +90,12 @@ module.exports = app => {
                     ...testRoom,
                     playerId: user1Id
                 });
+                done();
             });
 
-            it('User 2 should join existing test room', async () => {
+            it('User 2 should join existing test room', function (done) {
                 ioClient2.on('player1Joined', (data) => {
-                    const { name, players } = data;
+                    const { name, players } = data.room;
                     expect(name).to.equal(testRoom.name);
                     expect(players).have.lengthOf(2);
                 });
@@ -100,9 +104,10 @@ module.exports = app => {
                     ...testRoom,
                     playerId: user2Id
                 });
+                done();
             });
 
-            it('User 2 should leave test room', async () => {
+            it('User 2 should leave test room', function (done) {
                 ioClient1.on('playerLeftRoom', (data) => {
                     const { name, players } = data;
                     expect(name).to.equal(testRoom.name);
@@ -110,17 +115,19 @@ module.exports = app => {
                 });
 
                 ioClient2.emit('leaveRoom', testRoom);
+                done();
             });
 
-            it('User 1 should leave test room', () => {
+            it('User 1 should leave test room', function (done) {
                 ioClient1.emit('leaveRoom', testRoom);
+                done();
             });
         });
 
         describe('Test "Tick tack toe" game events', () => {
             let gameClient1, gameClient2;
 
-            before(async () => {
+            before(function (done) {
                 const room = {
                     ...testRoom,
                     players: [
@@ -164,6 +171,7 @@ module.exports = app => {
                     ...testRoom,
                     playerId: user1Id
                 });
+                done();
             })
 
             it('User 2 made move', async () => {
@@ -171,7 +179,7 @@ module.exports = app => {
                 ioClient2.emit('playerMadeMove', gameClient2);
             });
 
-            it('User 1 made move and won', async () => {
+            it('User 1 made move and won', function (done) {
                 gameClient1.gameBoard.moves[0] = 'X';
                 gameClient1.gameBoard.moves[1] = 'X';
                 gameClient1.gameBoard.moves[2] = 'X';
@@ -182,6 +190,7 @@ module.exports = app => {
                 });
 
                 ioClient1.emit('playerMadeMove', gameClient1);
+                done();
             });
         });
     })

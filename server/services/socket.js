@@ -13,7 +13,6 @@ class SocketClient {
         this.io.sockets.on('connection', async (client) => {
        
             client.on('setUserId', async (data) => {
-                console.log('setUserId')
                 await redis.sockets.save(client.id, data.userId);
                 const ioDetails = await this.getConnectionDetails();
                 this.io.sockets.emit('userConnected', ioDetails);
