@@ -49,10 +49,6 @@ class Battleship extends Component {
                     e.preventDefault();
                 }
             });
-
-            window.addEventListener("popstate", e => {
-                this.leaveRoom();
-            });
         }
     }
 
@@ -69,13 +65,6 @@ class Battleship extends Component {
             $(`#${modals.playerLeftRoomModalId}`).modal('hide');
             $(`#${modals.gameIsOverModalId}`).modal('show');
         }
-    }
-
-    leaveRoom = () => {
-        $(`#${modals.waitForPlayerModalId}`).modal('hide');
-        $(`#${modals.playerLeftRoomModalId}`).modal('hide');
-        $(`#${modals.gameIsOverModalId}`).modal('hide');
-        this.props.leaveRoom(this.props.room.name);
     }
 
     closeRoom = () => {
@@ -162,6 +151,13 @@ class Battleship extends Component {
         return <GameIsOverModal message={message} leaveRoom={this.leaveRoom} />;
     };
 
+    leaveRoom = () => {
+        $(`#${modals.waitForPlayerModalId}`).modal('hide');
+        $(`#${modals.playerLeftRoomModalId}`).modal('hide');
+        $(`#${modals.gameIsOverModalId}`).modal('hide');
+        this.props.leaveRoom(this.props.room.name);
+    }
+    
     render() {
         let game = null;
 

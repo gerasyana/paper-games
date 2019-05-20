@@ -46,10 +46,6 @@ class TickTackToe extends Component {
                     e.preventDefault();
                 }
             });
-
-            window.addEventListener("popstate", e => {
-                this.leaveRoom();
-            });
         }
     }
 

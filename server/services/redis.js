@@ -86,7 +86,7 @@ const documents = {
 const gameRating = {
     get: async (gameId) => {
         const gameRating = await client.hget(GAMES_RATING_KEY, gameId);
-        
+
         if (gameRating) {
             return gameRating.split(';').map(item => JSON.parse(item));
         }

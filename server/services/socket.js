@@ -18,15 +18,14 @@ class SocketClient {
             });
 
             client.on('disconnecting', async () => {
-                redis.sockets.remove(client.id);
                 const rooms = Object.keys(client.rooms).filter(room => room !== client.id);
-
                 rooms.forEach(async (name) => {
                     await this.notifyRoomClientIds(client, name);
                 });
 
                 const ioDetails = await this.getConnectionDetails();
                 this.io.sockets.emit('userDisconnected', ioDetails);
+                redis.sockets.remove(client.id);
             });
 
             this.handleRoomEvents(client);
