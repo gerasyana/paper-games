@@ -1,5 +1,9 @@
-var colors = require('colors');
+const pino = require('pino');
+
+const logger = pino({
+  prettyPrint: { colorize: true }
+});
 
 module.exports.logError = (error) => {
-    global.console.log(colors.red(`----->>> ${new Date()} : ${error}`));
+    logger.error(error);
 }
