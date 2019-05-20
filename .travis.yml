@@ -25,8 +25,8 @@ install:
   - npm run build-client 
   
 before_deploy:
-  - git config --global user.password "19961996yankayanka"
-  - git config --global user.username "gerasyana"
+  - git config --global user.password "$github_password"
+  - git config --global user.username "$github_username"
   - mv herokuDeploy/.gitignore .gitignore
 
 deploy:
