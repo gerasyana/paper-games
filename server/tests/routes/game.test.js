@@ -1,11 +1,10 @@
 const chai = require('chai');
-const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
 const { USER_MODEL, GAME_HISTORY_MODEL } = require('../../constants/modelNames');
 const { TEST_USER_1, TEST_USER_2 } = require('../constants');
 
 const { expect } = chai;
-chai.use(chaiHttp);
+chai.use(require('chai-http'));
 
 module.exports = app => {
     describe('Game route', () => {

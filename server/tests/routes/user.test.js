@@ -1,12 +1,11 @@
 const chai = require('chai');
-const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
 const { AUTH_HEADER } = require('../../configs/keys');
 const { USER_MODEL } = require('../../constants/modelNames')
 const { TEST_USER_1 } = require('../constants');
 
 const { expect } = chai;
-chai.use(chaiHttp);
+chai.use(require('chai-http'));
 
 module.exports = app => {
     describe('User route', () => {

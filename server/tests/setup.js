@@ -14,6 +14,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 require('../init-scripts/mongoose');
 require('../init-scripts/routes')(app);
 
+const PORT = process.env.PORT || 5000;
+const socketIO = require('socket.io').listen(PORT);
+const ioServer = require('../services/socket')(socketIO);
+ioServer.initConnection();
+
 const getTestsToRun = (file) => {
     const testFileNames = [];
     let directoryPath = file ? path.join(__dirname, file) : __dirname;
