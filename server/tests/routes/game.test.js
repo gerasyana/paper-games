@@ -9,7 +9,6 @@ chai.use(chaiHttp);
 
 module.exports = app => {
     describe('Game route', () => {
-        
         before(async () => {
             const user1 = await mongoose.model(USER_MODEL).create(TEST_USER_1);
             const user2 = await mongoose.model(USER_MODEL).create(TEST_USER_2);
@@ -32,7 +31,6 @@ module.exports = app => {
         })
 
         describe('GET /api/game/rating', () => {
-
             it('It should return game rating', async () => {
                 const res = await chai.request(app)
                     .get('/api/game/rating')

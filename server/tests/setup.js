@@ -14,8 +14,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 require('../init-scripts/mongoose');
 require('../init-scripts/routes')(app);
 
-//require('./services/socket.test')();
-
 const getTestsToRun = (file) => {
     const testFileNames = [];
     let directoryPath = file ? path.join(__dirname, file) : __dirname;
@@ -34,4 +32,3 @@ const getTestsToRun = (file) => {
 }
 
 getTestsToRun().forEach(unitTest => require(unitTest)(app));
-

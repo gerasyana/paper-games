@@ -19,17 +19,12 @@ chai.use(chaiHttp);
 module.exports = app => {
     describe('Sockets', () => {
         let ioClient1, ioClient2,
-            user1, user2, user1Id, user2Id,
-            testRoom = {
-                name: 'test room',
-                gameId: 'tick-tack-toe'
-            }
+            user1, user2, user1Id, user2Id;
 
         before(async () => {
             const socketIO = require('socket.io').listen(PORT);
             const ioServer = require('../../services/socket')(socketIO);
             ioServer.initConnection();
-
             user1 = await mongoose.model(USER_MODEL).create(TEST_USER_1);
             user2 = await mongoose.model(USER_MODEL).create(TEST_USER_2);
             user1Id = user1._id.toString();
@@ -43,7 +38,7 @@ module.exports = app => {
             await ioClient2.disconnect();
         })
 
-        it('It should connect user 1 ', function (done) {
+        it('It should connect user 1 ', (done) => {
             ioClient1 = io.connect(socketURL, options);
 
             ioClient1.on('connect', data => {
@@ -60,7 +55,7 @@ module.exports = app => {
             });
         });
 
-        it('It should connect user 2 ', function (done) {
+        it('It should connect user 2 ', (done) => {
             ioClient2 = io.connect(socketURL, options);
 
             ioClient2.on('connect', data => {
@@ -78,11 +73,14 @@ module.exports = app => {
         });
 
         describe('Test room events', () => {
+            const testRoom = {
+                name: 'test room',
+                gameId: 'tick-tack-toe'
+            };
 
-            it('User 1 should create a new test room ', function (done) {
+            it('User 1 should create a new test room ', (done) => {
                 ioClient1.on('player1Joined', (data) => {
-                    const { name, players } = data.room;
-                    expect(name).to.equal(testRoom.name);
+                    const { players } = data.room;
                     expect(players).have.lengthOf(1);
                 });
 
@@ -93,10 +91,9 @@ module.exports = app => {
                 done();
             });
 
-            it('User 2 should join existing test room', function (done) {
+            it('User 2 should join existing test room', (done) => {
                 ioClient2.on('player1Joined', (data) => {
-                    const { name, players } = data.room;
-                    expect(name).to.equal(testRoom.name);
+                    const { players } = data.room;
                     expect(players).have.lengthOf(2);
                 });
 
@@ -107,7 +104,7 @@ module.exports = app => {
                 done();
             });
 
-            it('User 2 should leave test room', function (done) {
+            it('User 2 should leave test room', (done) => {
                 ioClient1.on('playerLeftRoom', (data) => {
                     const { name, players } = data;
                     expect(name).to.equal(testRoom.name);
@@ -118,16 +115,20 @@ module.exports = app => {
                 done();
             });
 
-            it('User 1 should leave test room', function (done) {
+            it('User 1 should leave test room', (done) => {
                 ioClient1.emit('leaveRoom', testRoom);
                 done();
             });
         });
 
         describe('Test "Tick tack toe" game events', () => {
+            const testRoom = {
+                name: 'test room',
+                gameId: 'tick-tack-toe'
+            };
             let gameClient1, gameClient2;
 
-            before(function (done) {
+            before((done) => {
                 const room = {
                     ...testRoom,
                     players: [
@@ -179,7 +180,7 @@ module.exports = app => {
                 ioClient2.emit('playerMadeMove', gameClient2);
             });
 
-            it('User 1 made move and won', function (done) {
+            it('User 1 made move and won', (done) => {
                 gameClient1.gameBoard.moves[0] = 'X';
                 gameClient1.gameBoard.moves[1] = 'X';
                 gameClient1.gameBoard.moves[2] = 'X';
@@ -190,6 +191,87 @@ module.exports = app => {
                 });
 
                 ioClient1.emit('playerMadeMove', gameClient1);
+                done();
+            });
+        });
+
+        describe('Test "Battleship" game events', () => {
+            const testRoom = {
+                name: 'test room 2',
+                gameId: 'battleship'
+            };
+            let game;
+
+            before((done) => {
+                const room = {
+                    ...testRoom,
+                    players: [
+                        { id: user1Id },
+                        { id: user2Id }
+                    ]
+                }
+
+                game = {
+                    room,
+                    gameBoard: {
+                        gameIsOver: false,
+                        youWon: false,
+                        yourTurn: false,
+                        fleets: [
+                            {
+                                playerId: user1Id,
+                                ships: [
+                                    {
+                                        columns: [1, 2, 3],
+                                        destroyed: false
+                                    }
+                                ],
+                                moves: []
+                            },
+                            {
+                                playerId: user2,
+                                ships: [
+                                    {
+                                        columns: [4, 5, 6],
+                                        destroyed: false
+                                    }
+                                ],
+                                moves: []
+                            },
+                        ]
+                    }
+                }
+
+                ioClient1.on('player1Joined', (data) => {
+                    ioClient2.emit('joinRoom', {
+                        ...testRoom,
+                        playerId: user2Id
+                    });
+                });
+
+                ioClient1.emit('createRoom', {
+                    ...testRoom,
+                    playerId: user1Id
+                });
+                done();
+            })
+
+            it('User 2 made move', async () => {
+                game.gameBoard.fleets[0].moves.push();
+                ioClient2.emit('playerMadeMove', game);
+            });
+
+            it('User 1 made move and won', (done) => {
+                game.gameBoard.fleets[1].moves.push(4);
+                game.gameBoard.fleets[1].moves.push(5);
+                game.gameBoard.fleets[1].moves.push(6);
+
+                ioClient1.on('gameIsOver', (data) => {
+                    const { gameBoard } = data;
+                    expect(gameBoard.youWon).to.true;
+                });
+
+                ioClient1.emit('playerMadeMove', game);
                 done();
             });
         });
