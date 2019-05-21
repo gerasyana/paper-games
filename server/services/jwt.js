@@ -9,16 +9,13 @@ class JWTService {
 
     generateAndSaveJWT(user) {
         try {
-            const today = new Date();
-            const expirationDate = new Date();
-            expirationDate.setHours(today.getHours() + 2);
-            const options = {
+            const expirationDate = new Date().setHours(new Date().getHours() + 2);
+            const token = jwt.sign({
                 email: user.email,
                 id: user._id,
                 expirationDate: expirationDate
-            };
-
-            const token = jwt.sign(options, keys.JWT_SECRET, { expiresIn: EXPIRES_IN });
+            }, keys.JWT_SECRET, { expiresIn: EXPIRES_IN });
+            
             tokens.addToWhitelist(token);
             return { token, expirationDate }
         } catch (error) {
@@ -29,9 +26,8 @@ class JWTService {
 
     async isValidJWT(token) {
         try {
-            const decoded = jwt.verify(token, keys.JWT_SECRET);
             const isValid = await tokens.isValid(token);
-            return decoded && !!isValid;
+            return jwt.verify(token, keys.JWT_SECRET) && !!isValid;
         } catch (error) {
             logError(error);
             return false;
