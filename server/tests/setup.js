@@ -1,7 +1,7 @@
 process.env.NOVE_ENV = 'test';
 
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
@@ -34,6 +34,6 @@ const getTestsToRun = (file) => {
         }
     });
     return testFileNames;
-}
+};
 
 getTestsToRun().forEach(unitTest => require(unitTest)(app));

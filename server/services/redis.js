@@ -1,4 +1,4 @@
-const asyncRedis = require("async-redis");
+const asyncRedis = require('async-redis');
 const client = asyncRedis.createClient(process.env.REDIS_URL);
 
 const USER_CONNECTIONS_KEY = 'userConnections';
@@ -24,7 +24,7 @@ const tokens = {
     removeFromWhitelist: async (token) => {
         await client.srem(TOKENS_WHITELIST_KEY, token);
     }
-}
+};
 
 const rooms = {
     save: async (room, data) => {
@@ -33,7 +33,7 @@ const rooms = {
     },
     get: async (name) => {
         const room = await client.hget(OPEN_ROOMS_KEY, name);
-        return room ? JSON.parse(room) : {}
+        return room ? JSON.parse(room) : {};
     },
     getAll: async () => {
         let rooms = await client.hgetall(OPEN_ROOMS_KEY);
@@ -46,7 +46,7 @@ const rooms = {
     remove: async (room) => {
         await client.hdel(OPEN_ROOMS_KEY, room);
     }
-}
+};
 
 const sockets = {
     getAll: async () => {
@@ -65,10 +65,10 @@ const sockets = {
     },
     getUsersOnlineCount: async () => {
         const connections = await client.hgetall(USER_CONNECTIONS_KEY);
-        const userIds = connections ? [...new Set(Object.values(connections))] : []
+        const userIds = connections ? [...new Set(Object.values(connections))] : [];
         return userIds.length;
     }
-}
+};
 
 const documents = {
     save: async (key, subkey, data) => {
@@ -81,7 +81,7 @@ const documents = {
     setExpire: async (key, expireIn) => {
         await client.expire(key, expireIn);
     }
-}
+};
 
 const gameRating = {
     get: async (gameId) => {
@@ -97,7 +97,7 @@ const gameRating = {
         await client.hset(GAMES_RATING_KEY, gameId, gameRating);
         await client.expire(GAMES_RATING_KEY, GAMES_RATING_EXPIRES_IN);
     }
-}
+};
 
 module.exports = {
     tokens,
@@ -105,4 +105,4 @@ module.exports = {
     sockets,
     documents,
     gameRating
-}
+};

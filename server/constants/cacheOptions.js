@@ -4,4 +4,4 @@ module.exports = {
         hashSubKey: '_id',
         expiresIn: 2 * 60 * 60
     }
-}
+};

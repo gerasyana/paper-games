@@ -1,7 +1,7 @@
 const chai = require('chai');
 const mongoose = require('mongoose');
 const { AUTH_HEADER } = require('../../configs/keys');
-const { USER_MODEL } = require('../../constants/modelNames')
+const { USER_MODEL } = require('../../constants/modelNames');
 const { TEST_USER_1 } = require('../constants');
 
 const { expect } = chai;
@@ -31,10 +31,10 @@ module.exports = app => {
                 const res = await chai.request(app)
                     .post('/api/user/signup')
                     .set('Content-type', 'application/json')
-                    .send(TEST_USER_1)
+                    .send(TEST_USER_1);
 
                 const { error } = res.body;
-                expect(error).to.equal("Account with the username already exists");
+                expect(error).to.equal('Account with the username already exists');
             });
         });
 
@@ -64,7 +64,7 @@ module.exports = app => {
 
                 expect(res.status).to.equal(200);
                 token = null;
-            })
+            });
         });
 
         describe('POST /api/user/login', () => {
@@ -78,7 +78,7 @@ module.exports = app => {
                     });
 
                 const { error } = res.body;
-                expect(error).to.equal("User not found");
+                expect(error).to.equal('User not found');
             });
 
             it('It shouldn\'t login user (Invalid password)', async () => {
@@ -91,7 +91,7 @@ module.exports = app => {
                     });
 
                 const { error } = res.body;
-                expect(error).to.equal("Invalid password");
+                expect(error).to.equal('Invalid password');
             });
 
             it('It should login user and return token and user details', async () => {
@@ -119,5 +119,5 @@ module.exports = app => {
                 expect(error).to.be.undefined;
             });
         });
-    })
-}
+    });
+};

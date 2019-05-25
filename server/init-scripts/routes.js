@@ -14,6 +14,6 @@ module.exports = app => {
     } else {
         app.get('/', (req, res) => {
             res.send({ status: 200 });
-        })
+        });
     }
-} 
+}; 

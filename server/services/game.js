@@ -46,12 +46,12 @@ class GameHistoryService {
         try {
             results = await GameHistory.aggregate([{
                 $match: {
-                    "room.gameId": gameId
+                    'room.gameId': gameId
                 }
             }]).group({
-                _id: "$winnerId",
+                _id: '$winnerId',
                 points: { $sum: '$points' }
-            }).sort({ points: "desc" });
+            }).sort({ points: 'desc' });
 
             const userIds = results.map(result => result._id);
             const users = await User.
@@ -59,7 +59,7 @@ class GameHistoryService {
                     _id: {
                         $in: userIds
                     }
-                }, "_id username").
+                }, '_id username').
                 toMap('_id');
                 
             results = results.map(result => ({
@@ -67,11 +67,10 @@ class GameHistoryService {
                 points: result.points
             }));
             await gameRating.save(gameId, results);
+            return results;
         } catch (error) {
             logError(error);
-        } finally {
-            return results;
-        }
+        } 
     }
 }
 

@@ -10,7 +10,7 @@ class RoomService {
             name,
             gameId,
             players: [player1]
-        }
+        };
         await rooms.save(name, room);
         return room;
     }
@@ -19,7 +19,7 @@ class RoomService {
         const room = await rooms.get(name);
         let roomUpdated = {
             ...room
-        }
+        };
 
         if (room.players) {
             const players = room.players .filter(player => player.id !== playerId);
@@ -36,7 +36,7 @@ class RoomService {
         const roomUpdated = {
             ...room,
             players: [...room.players, player2]
-        }
+        };
         await rooms.save(name, roomUpdated);
         return roomUpdated;
     }

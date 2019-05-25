@@ -7,4 +7,4 @@ module.exports = {
     [gameIds.BATTLESHIP_ID]: {
         points: 50
     }
-}
+};

@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const socketIO = require('socket.io');
 const http = require('http');
@@ -22,14 +22,14 @@ ioServer.initConnection();
 server.listen(PORT, () => console.log(`Server start running on ${PORT}`));
 
 const exiProcess = () => {
-    server.close(() => {
-        console.log('Http server closed');
-        mongoose.connection.close(false, () => {
-            console.log('Mongoose connection closed');
-            process.exit('0');
-        });
-    });
-}
+	server.close(() => {
+		console.log('Http server closed');
+		mongoose.connection.close(false, () => {
+			console.log('Mongoose connection closed');
+			process.exit('0');
+		});
+	});
+};
 process.on('SIGTERM', () => exiProcess());
 process.on('SIGINT', () => exiProcess());
 

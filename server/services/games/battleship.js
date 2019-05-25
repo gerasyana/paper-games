@@ -6,7 +6,7 @@ const initialGameBoard = {
     youWon: false,
     yourTurn: false,
     fleets: []
-}
+};
 
 class Battleship {
 
@@ -43,7 +43,7 @@ class Battleship {
     getUpdatedGameBoard() {
         return {
             fleets: this.gameBoard.fleets
-        }
+        };
     }
 
     getPlayer1InitialGameBoard() {
@@ -54,7 +54,7 @@ class Battleship {
         return {
             ...initialGameBoard,
             yourTurn: true
-        }
+        };
     }
 }
 

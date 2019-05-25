@@ -17,7 +17,7 @@ class JWTService {
             }, keys.JWT_SECRET, { expiresIn: EXPIRES_IN });
             
             tokens.addToWhitelist(token);
-            return { token, expirationDate }
+            return { token, expirationDate };
         } catch (error) {
             logError(error);
             return false;

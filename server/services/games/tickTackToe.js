@@ -18,7 +18,7 @@ const initialGameBoard = {
     yourTurn: false,
     playerStep: '0',
     moves: new Array(9).fill(null)
-}
+};
 
 class TickTackToe {
 
@@ -52,7 +52,7 @@ class TickTackToe {
     getUpdatedGameBoard() {
         return {
             moves: this.gameBoard.moves
-        }
+        };
     }
 
     getPlayer1InitialGameBoard() {

@@ -28,4 +28,4 @@ module.exports = app => {
         const data = await userService.resetPassword(req.body);
         return res.json(data);
     });
-}
+};

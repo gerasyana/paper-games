@@ -76,7 +76,7 @@ class SocketClient {
 
             await this.notifyRoomClientIds(client, name);
             await this.notifyRoomsUpdate();
-        })
+        });
     }
 
     handleGameEvents(client) {
@@ -111,7 +111,7 @@ class SocketClient {
         client.on('updateGameBoard', async (data) => {
             const { room, gameBoard } = data;
             this.io.sockets.to(room).emit('gameBoardUpdated', { gameBoard });
-        })
+        });
     }
 
     async updateGameRating(gameId) {
@@ -144,7 +144,7 @@ class SocketClient {
         return {
             usersOnline,
             rooms
-        }
+        };
     }
 
     getRoomClientIds(roomName) {

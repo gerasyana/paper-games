@@ -11,9 +11,9 @@ const socketURL = `http://localhost:${PORT}`;
 const options = {
     transports: ['websocket'],
     'force new connection': true
-}
+};
 
-module.exports = app => {
+module.exports = () => {
     describe('Socket connection', () => {
         let user1Id;
 
@@ -25,7 +25,7 @@ module.exports = app => {
         after(async () => {
             await mongoose.model(USER_MODEL).remove();
             await mongoose.model(GAME_HISTORY_MODEL).remove();
-        })
+        });
 
         it('It should connect a user', (done) => {
             const ioClient = io.connect(socketURL, options);
@@ -43,5 +43,5 @@ module.exports = app => {
 
             ioClient.emit('setUserId', { userId: user1Id });
         });
-    })
-}
+    });
+};

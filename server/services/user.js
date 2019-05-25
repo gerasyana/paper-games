@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const jwtService = require('./jwt');
 const { USER_MODEL } = require('../constants/modelNames');
 const { USERS_CACHE_OPTIONS } = require('../constants/cacheOptions');
-const { geUserTotalPoints } = require('./game')
+const { geUserTotalPoints } = require('./game');
 const { logError } = require('./logger');
 
 const User = mongoose.model(USER_MODEL);
@@ -34,7 +34,7 @@ class UserService {
             return {
                 id,
                 username: user.username
-            }
+            };
         } catch (err) {
             logError(err);
             return { error: 'User not found' };
@@ -57,12 +57,12 @@ class UserService {
             });
 
             if (!user) {
-                return { error: 'Error while signing up . Please try again' }
+                return { error: 'Error while signing up . Please try again' };
             }
             return await getUserDetails(user);
         } catch (err) {
             logError(err);
-            return { error: err.message }
+            return { error: err.message };
         }
     }
 
@@ -73,16 +73,16 @@ class UserService {
             const user = await User.findOne({ username });
 
             if (!user) {
-                return { error: `User not found` };
+                return { error: 'User not found' };
             } else if (!user.validPassword(password)) {
-                return { error: "Invalid password" };
+                return { error: 'Invalid password' };
             }
 
             user.cache();
             return await getUserDetails(user);
         } catch (err) {
             logError(err);
-            return { error: err.message }
+            return { error: err.message };
         }
     }
 
@@ -93,14 +93,14 @@ class UserService {
             const user = await User.findOneAndUpdate({ username }, { password: User.hashPassword(password) });
 
             if (!user) {
-                return { error: `User not found` };
+                return { error: 'User not found' };
             }
 
             user.cache(user);
             return await getUserDetails(user);
         } catch (err) {
             logError(err);
-            return { error: err.message }
+            return { error: err.message };
         }
     }
 }
@@ -111,8 +111,8 @@ const getUserDetails = async (user) => {
     return {
         tokenDetails,
         user: userWrapper
-    }
-}
+    };
+};
 
 const getUserWrapper = async (user) => {
     const totalPoints = await geUserTotalPoints(user._id);
@@ -121,7 +121,7 @@ const getUserWrapper = async (user) => {
         username: user.username,
         id: user._id,
         totalPoints
-    }
-}
+    };
+};
 
 module.exports = new UserService();

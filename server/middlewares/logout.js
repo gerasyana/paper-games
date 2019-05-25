@@ -5,4 +5,4 @@ module.exports.logout = (req, res, next) => {
     const token = req.headers[keys.AUTH_HEADER];
     tokens.removeFromWhitelist(token);
     next();
-}
+};

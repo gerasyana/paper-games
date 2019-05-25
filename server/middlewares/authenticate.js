@@ -16,4 +16,4 @@ module.exports.authenticate = async (req, res, next) => {
     } else {
         return res.sendStatus(401);
     }
-}
+};

@@ -10,9 +10,9 @@ const socketURL = `http://localhost:${PORT}`;
 const options = {
     transports: ['websocket'],
     'force new connection': true
-}
+};
 
-module.exports = app => {
+module.exports = () => {
     describe('Test "Battleship" game events', () => {
         let game, ioClient1, ioClient2;
         const testRoom = {
@@ -47,7 +47,7 @@ module.exports = app => {
                     { id: user1._id.toString() },
                     { id: user2._id.toString() }
                 ]
-            }
+            };
 
             game = {
                 room,
@@ -78,15 +78,15 @@ module.exports = app => {
                         },
                     ]
                 }
-            }
-        })
+            };
+        });
 
         after(async () => {
             await mongoose.model(USER_MODEL).remove();
             await mongoose.model(GAME_HISTORY_MODEL).remove();
             ioClient1.disconnect();
             ioClient2.disconnect();
-        })
+        });
 
         it('User 2 made move', async () => {
             game.gameBoard.fleets[0].moves.push();
@@ -107,4 +107,4 @@ module.exports = app => {
             ioClient1.emit('playerMadeMove', game);
         });
     });
-}
+};

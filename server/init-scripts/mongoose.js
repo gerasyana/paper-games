@@ -44,18 +44,18 @@ mongoose.Query.prototype.exec = async function () {
         }, {});
     }
     return data;
-}
+};
 
 mongoose.Query.prototype.toMap = function (fieldKey) {
     this.mapFieldKey = fieldKey;
     return this;
-}
+};
 
 mongoose.Query.prototype.cache = function (options) {
     this.cacheData = true;
     this.cacheOptions = options;
     return this;
-}
+};
 
 const fileNames = fs.readdirSync(path.resolve(__dirname, '../models'));
 fileNames.forEach(fileName => {

@@ -10,9 +10,9 @@ const socketURL = `http://localhost:${PORT}`;
 const options = {
     transports: ['websocket'],
     'force new connection': true
-}
+};
 
-module.exports = app => {
+module.exports = () => {
     describe('Socket rooms', () => {
         let ioClient1, ioClient2, user1Id, user2Id;
         const testRoom = {
@@ -30,14 +30,14 @@ module.exports = app => {
             ioClient2 = io.connect(socketURL, options);
             ioClient1.emit('setUserId', { userId: user1Id });
             ioClient2.emit('setUserId', { userId: user2Id });
-        })
+        });
 
         after(async () => {
             await mongoose.model(USER_MODEL).remove();
             await mongoose.model(GAME_HISTORY_MODEL).remove();
             ioClient1.disconnect();
             ioClient2.disconnect();
-        })
+        });
 
         it('User 1 should create a new test room ', (done) => {
             ioClient1.on('player1Joined', (data) => {
@@ -78,4 +78,4 @@ module.exports = app => {
             ioClient2.emit('leaveRoom', testRoom);
         });
     });
-}
+};

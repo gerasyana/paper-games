@@ -11,7 +11,7 @@ module.exports = app => {
         before(async () => {
             const user1 = await mongoose.model(USER_MODEL).create(TEST_USER_1);
             const user2 = await mongoose.model(USER_MODEL).create(TEST_USER_2);
-            const rating = {
+            await mongoose.model(GAME_HISTORY_MODEL).create({
                 room: {
                     name: 'test',
                     gameId: 'tick-tack-toe',
@@ -19,15 +19,13 @@ module.exports = app => {
                 },
                 winnerId: user1.id,
                 points: 10
-            }
-
-            await mongoose.model(GAME_HISTORY_MODEL).create(rating);
+            });
         });
 
         after(async () => {
             await mongoose.model(USER_MODEL).remove();
             await mongoose.model(GAME_HISTORY_MODEL).remove();
-        })
+        });
 
         describe('GET /api/game/rating', () => {
             it('It should return game rating', async () => {
@@ -35,7 +33,7 @@ module.exports = app => {
                     .get('/api/game/rating')
                     .query({ gameId: 'tick-tack-toe' });
                 expect(res.body).to.not.null;
-            })
-        })
+            });
+        });
     });
-}
+};

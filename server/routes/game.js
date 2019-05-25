@@ -6,4 +6,4 @@ module.exports = (app) => {
         const rating = await gameService.getGameRating(gameId);
         return res.json(rating);
     });
-}
+};

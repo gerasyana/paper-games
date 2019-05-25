@@ -10,9 +10,9 @@ const socketURL = `http://localhost:${PORT}`;
 const options = {
     transports: ['websocket'],
     'force new connection': true
-}
+};
 
-module.exports = app => {
+module.exports = () => {
     describe('Test "Tick tack toe" game events', () => {
         let ioClient1, ioClient2, gameBoard1, gameBoard2;
         const testRoom = {
@@ -47,7 +47,7 @@ module.exports = app => {
                     { id: user1._id.toString() },
                     { id:  user2._id.toString() }
                 ]
-            }
+            };
 
             const gameBoard = {
                 gameIsOver: false,
@@ -55,7 +55,7 @@ module.exports = app => {
                 yourTurn: true,
                 playerStep: 'O',
                 moves: new Array(9).fill(null)
-            }
+            };
 
             gameBoard1 = {
                 room,
@@ -63,7 +63,7 @@ module.exports = app => {
                     ...gameBoard,
                     playerStep: 'X'
                 }
-            }
+            };
 
             gameBoard2 = {
                 room,
@@ -71,15 +71,15 @@ module.exports = app => {
                     ...gameBoard,
                     playerStep: 'O'
                 }
-            }
-        })
+            };
+        });
 
         after(async () => {
             await mongoose.model(USER_MODEL).remove();
             await mongoose.model(GAME_HISTORY_MODEL).remove();
             ioClient1.disconnect();
             ioClient2.disconnect();
-        })
+        });
 
         it('User 2 made move', () => {
             gameBoard2.gameBoard.moves[0] = 'X';
@@ -100,4 +100,4 @@ module.exports = app => {
             ioClient1.emit('playerMadeMove', gameBoard1);
         });
     });
-}
+};
