@@ -22,13 +22,13 @@ ioServer.initConnection();
 server.listen(PORT, () => console.log(`Server start running on ${PORT}`));
 
 const exiProcess = () => {
-	server.close(() => {
-		console.log('Http server closed');
-		mongoose.connection.close(false, () => {
-			console.log('Mongoose connection closed');
-			process.exit('0');
-		});
-	});
+    server.close(() => {
+        console.log('Http server closed');
+        mongoose.connection.close(false, () => {
+            console.log('Mongoose connection closed');
+            process.exit('0');
+        });
+    });
 };
 process.on('SIGTERM', () => exiProcess());
 process.on('SIGINT', () => exiProcess());
