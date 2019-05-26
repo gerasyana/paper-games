@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         validate: {
-            validator: (value) => EMAIL_PATTERN.test(value),
+            validator: value => EMAIL_PATTERN.test(value),
             message: () => 'Email is invalid'
         },
         required: [true, 'Email is required']
@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     }
 });
 
-UserSchema.statics.hashPassword = (password) => {
+UserSchema.statics.hashPassword = password => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 };
 
@@ -50,11 +50,11 @@ UserSchema.pre('update',  function (next) {
     next();
 });
 
-UserSchema.post('save', async (user) => {
+UserSchema.post('save', async user => {
     await cache(user);
 });
 
-const cache = async (user) => {
+const cache = async user => {
     await documents.save(USERS_CACHE_OPTIONS.hashKey, user[USERS_CACHE_OPTIONS.hashSubKey], user);
     await documents.setExpire(USERS_CACHE_OPTIONS.hashKey, USERS_CACHE_OPTIONS.expiresIn);
 };

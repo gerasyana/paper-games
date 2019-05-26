@@ -58,7 +58,7 @@ mongoose.Query.prototype.cache = function (options) {
 };
 
 const fileNames = fs.readdirSync(path.resolve(__dirname, '../models'));
-fileNames.forEach((fileName) => {
+fileNames.forEach(fileName => {
     require(`../models/${fileName}`);
 });
 

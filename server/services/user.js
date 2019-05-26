@@ -105,7 +105,7 @@ class UserService {
     }
 }
 
-const getUserDetails = async (user) => {
+const getUserDetails = async user => {
     const tokenDetails = jwtService.generateAndSaveJWT(user);
     const userWrapper = await getUserWrapper(user);
     return {
@@ -114,7 +114,7 @@ const getUserDetails = async (user) => {
     };
 };
 
-const getUserWrapper = async (user) => {
+const getUserWrapper = async user => {
     const totalPoints = await geUserTotalPoints(user._id);
     return {
         email: user.email,

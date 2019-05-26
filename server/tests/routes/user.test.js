@@ -7,7 +7,7 @@ const { TEST_USER_1 } = require('../constants');
 const { expect } = chai;
 chai.use(require('chai-http'));
 
-module.exports = (app) => {
+module.exports = app => {
     describe('User route', () => {
         let token;
 

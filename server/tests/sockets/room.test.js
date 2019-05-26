@@ -39,8 +39,8 @@ module.exports = () => {
             ioClient2.disconnect();
         });
 
-        it('User 1 should create a new test room ', (done) => {
-            ioClient1.on('player1Joined', (data) => {
+        it('User 1 should create a new test room ', done => {
+            ioClient1.on('player1Joined', data => {
                 const { name, players } = data.room;
                 expect(name).to.equal(testRoom.name);
                 expect(players).have.lengthOf(1);
@@ -53,8 +53,8 @@ module.exports = () => {
             });
         });
 
-        it('User 2 should join existing test room', (done) => {
-            ioClient2.on('player1Joined', (data) => {
+        it('User 2 should join existing test room', done => {
+            ioClient2.on('player1Joined', data => {
                 const { name, players } = data.room;
                 expect(name).to.equal(testRoom.name);
                 expect(players).have.lengthOf(2);
@@ -67,8 +67,8 @@ module.exports = () => {
             });
         });
 
-        it('Users should leave test room', (done) => {
-            ioClient1.on('playerLeftRoom', (data) => {
+        it('Users should leave test room', done => {
+            ioClient1.on('playerLeftRoom', data => {
                 const { name, players } = data;
                 expect(name).to.equal(testRoom.name);
                 expect(players).have.lengthOf(1);

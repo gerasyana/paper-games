@@ -23,13 +23,13 @@ class Battleship {
     }
 
     async processPlayerMove() {
-        this.gameBoard.fleets.forEach((fleet) => {
+        this.gameBoard.fleets.forEach(fleet => {
             if (fleet.playerId !== this.playerId) {
-                fleet.ships.forEach((ship) => ship.destroyed = ship.columns.every((column) => fleet.moves.includes(column)));
+                fleet.ships.forEach(ship => ship.destroyed = ship.columns.every(column => fleet.moves.includes(column)));
             }
         });
 
-        this.playerWon = this.gameBoard.fleets.some((fleet) => fleet.ships.every((ship) => ship.destroyed));
+        this.playerWon = this.gameBoard.fleets.some(fleet => fleet.ships.every(ship => ship.destroyed));
 
         if (this.playerWon) {
             await saveGame({

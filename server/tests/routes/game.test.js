@@ -6,7 +6,7 @@ const { TEST_USER_1, TEST_USER_2 } = require('../constants');
 const { expect } = chai;
 chai.use(require('chai-http'));
 
-module.exports = (app) => {
+module.exports = app => {
     describe('Game route', () => {
         before(async () => {
             const user1 = await mongoose.model(USER_MODEL).create(TEST_USER_1);

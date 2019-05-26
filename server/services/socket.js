@@ -10,16 +10,16 @@ class SocketClient {
     }
 
     initConnection() {
-        this.io.sockets.on('connection', async (client) => {
-            client.on('setUserId', async (data) => {
+        this.io.sockets.on('connection', async client => {
+            client.on('setUserId', async data => {
                 await redis.sockets.save(client.id, data.userId);
                 const ioDetails = await this.getConnectionDetails();
                 this.io.sockets.emit('userConnected', ioDetails);
             });
 
             client.on('disconnecting', async () => {
-                const rooms = Object.keys(client.rooms).filter((room) => room !== client.id);
-                rooms.forEach(async (name) => {
+                const rooms = Object.keys(client.rooms).filter(room => room !== client.id);
+                rooms.forEach(async name => {
                     await this.notifyRoomClientIds(client, name);
                 });
 
@@ -34,7 +34,7 @@ class SocketClient {
     }
 
     handleRoomEvents(client) {
-        client.on('createRoom', async (data) => {
+        client.on('createRoom', async data => {
             const { name } = data;
             client.join(name);
 
@@ -47,7 +47,7 @@ class SocketClient {
             await this.notifyRoomsUpdate();
         });
 
-        client.on('joinRoom', async (data) => {
+        client.on('joinRoom', async data => {
             const { name } = data;
             const roomDetails = this.io.nsps['/'].adapter.rooms[name];
 
@@ -68,7 +68,7 @@ class SocketClient {
             }
         });
 
-        client.on('leaveRoom', async (data) => {
+        client.on('leaveRoom', async data => {
             const { name } = data;
 
             client.leave(name);
@@ -80,7 +80,7 @@ class SocketClient {
     }
 
     handleGameEvents(client) {
-        client.on('playerMadeMove', async (data) => {
+        client.on('playerMadeMove', async data => {
             const { room } = data;
             const playerId = await redis.sockets.getUserId(client.id);
 
@@ -108,7 +108,7 @@ class SocketClient {
             }
         });
 
-        client.on('updateGameBoard', async (data) => {
+        client.on('updateGameBoard', async data => {
             const { room, gameBoard } = data;
             this.io.sockets.to(room).emit('gameBoardUpdated', { gameBoard });
         });
@@ -120,14 +120,14 @@ class SocketClient {
     }
 
     async notifyRoomClientIds(client, name) {
-        const clientIds = this.getRoomClientIds(name).filter((clientId) => clientId !== client.id);
+        const clientIds = this.getRoomClientIds(name).filter(clientId => clientId !== client.id);
 
         if (clientIds.length === 0) {
             await redis.rooms.remove(name);
         } else {
             const playerId = await redis.sockets.getUserId(client.id);
             const room = await roomService.removePlayer(name, playerId);
-            clientIds.forEach((clientId) => {
+            clientIds.forEach(clientId => {
                 client.broadcast.to(clientId).emit('playerLeftRoom', room);
             });
         }
@@ -153,4 +153,4 @@ class SocketClient {
     }
 }
 
-module.exports = (io) => new SocketClient(io);
+module.exports = io => new SocketClient(io);

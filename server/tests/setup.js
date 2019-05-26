@@ -19,11 +19,11 @@ const socketIO = require('socket.io').listen(PORT);
 const ioServer = require('../services/socket')(socketIO);
 ioServer.initConnection();
 
-const getTestsToRun = (file) => {
+const getTestsToRun = file => {
     const testFileNames = [];
     let directoryPath = file ? path.join(__dirname, file) : __dirname;
 
-    fs.readdirSync(directoryPath).forEach((subfile) => {
+    fs.readdirSync(directoryPath).forEach(subfile => {
         const subfilePath = file ? `${file}/${subfile}` : `${subfile}`;
         const fileStat = fs.statSync(path.join(__dirname, subfilePath));
 
@@ -36,4 +36,4 @@ const getTestsToRun = (file) => {
     return testFileNames;
 };
 
-getTestsToRun().forEach((unitTest) => require(unitTest)(app));
+getTestsToRun().forEach(unitTest => require(unitTest)(app));

@@ -86,12 +86,12 @@ module.exports = () => {
             ioClient2.emit('playerMadeMove', gameBoard2);
         });
 
-        it('User 1 made move and won', (done) => {
+        it('User 1 made move and won', done => {
             gameBoard1.gameBoard.moves[0] = 'X';
             gameBoard1.gameBoard.moves[1] = 'X';
             gameBoard1.gameBoard.moves[2] = 'X';
 
-            ioClient1.on('gameIsOver', (data) => {
+            ioClient1.on('gameIsOver', data => {
                 const { gameBoard } = data;
                 expect(gameBoard.youWon).to.true;
                 done();

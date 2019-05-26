@@ -14,14 +14,14 @@ const GAMES_RATING_KEY = 'gamesRating';
 const GAMES_RATING_EXPIRES_IN = 2 * 60 * 60;
 
 const tokens = {
-    addToWhitelist: async (token) => {
+    addToWhitelist: async token => {
         await client.sadd(TOKENS_WHITELIST_KEY, token);
         await client.expire(TOKENS_WHITELIST_KEY, TOKENS_WHITELIST_EXPIRES_IN);
     },
-    isValid: async (token) => {
+    isValid: async token => {
         return await client.sismember(TOKENS_WHITELIST_KEY, token);
     },
-    removeFromWhitelist: async (token) => {
+    removeFromWhitelist: async token => {
         await client.srem(TOKENS_WHITELIST_KEY, token);
     }
 };
@@ -31,7 +31,7 @@ const rooms = {
         await client.hset(OPEN_ROOMS_KEY, room, JSON.stringify(data));
         await client.expire(OPEN_ROOMS_KEY, OPEN_ROOMS_EXPIRES_IN);
     },
-    get: async (name) => {
+    get: async name => {
         const room = await client.hget(OPEN_ROOMS_KEY, name);
         return room ? JSON.parse(room) : {};
     },
@@ -43,7 +43,7 @@ const rooms = {
         }
         return rooms;
     },
-    remove: async (room) => {
+    remove: async room => {
         await client.hdel(OPEN_ROOMS_KEY, room);
     }
 };
@@ -52,14 +52,14 @@ const sockets = {
     getAll: async () => {
         return await client.hgetall(USER_CONNECTIONS_KEY);
     },
-    getUserId: async (clientId) => {
+    getUserId: async clientId => {
         return await client.hget(USER_CONNECTIONS_KEY, clientId);
     },
     save: async (clientId, userId) => {
         await client.hset(USER_CONNECTIONS_KEY, clientId, userId);
         await client.expire(USER_CONNECTIONS_KEY, USER_CONNECTIONS_EXPIRES_IN);
     },
-    remove: async (clientId) => {
+    remove: async clientId => {
         await client.hdel(USER_CONNECTIONS_KEY, clientId);
         await client.expire(USER_CONNECTIONS_KEY, USER_CONNECTIONS_EXPIRES_IN);
     },
@@ -84,16 +84,16 @@ const documents = {
 };
 
 const gameRating = {
-    get: async (gameId) => {
+    get: async gameId => {
         const gameRating = await client.hget(GAMES_RATING_KEY, gameId);
 
         if (gameRating) {
-            return gameRating.split(';').map((item) => JSON.parse(item));
+            return gameRating.split(';').map(item => JSON.parse(item));
         }
         return [];
     },
     save: async (gameId, rating) => {
-        const gameRating = rating.map((item) => JSON.stringify(item)).join(';');
+        const gameRating = rating.map(item => JSON.stringify(item)).join(';');
         await client.hset(GAMES_RATING_KEY, gameId, gameRating);
         await client.expire(GAMES_RATING_KEY, GAMES_RATING_EXPIRES_IN);
     }

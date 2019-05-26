@@ -22,7 +22,7 @@ class RoomService {
         };
 
         if (room.players) {
-            const players = room.players .filter((player) => player.id !== playerId);
+            const players = room.players .filter(player => player.id !== playerId);
             roomUpdated.players = players;
         }
         await rooms.save(name, roomUpdated);
@@ -48,7 +48,7 @@ class RoomService {
             return [];
         }
 
-        return Object.values(data).map((room) => JSON.parse(room));
+        return Object.values(data).map(room => JSON.parse(room));
     }
 }
 

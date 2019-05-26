@@ -2,9 +2,9 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 
-module.exports = (app) => {
+module.exports = app => {
     const fileNames = fs.readdirSync(path.resolve(__dirname, '../routes'));
-    fileNames.forEach((fileName) => require(`../routes/${fileName}`)(app));
+    fileNames.forEach(fileName => require(`../routes/${fileName}`)(app));
 
     if (process.env.NODE_ENV === 'production') {
         app.use(express.static(path.join(__dirname, '../../client/build')));

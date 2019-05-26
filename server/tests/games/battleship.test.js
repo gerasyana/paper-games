@@ -93,12 +93,12 @@ module.exports = () => {
             ioClient2.emit('playerMadeMove', game);
         });
 
-        it('User 1 made move and won', (done) => {
+        it('User 1 made move and won', done => {
             game.gameBoard.fleets[1].moves.push(4);
             game.gameBoard.fleets[1].moves.push(5);
             game.gameBoard.fleets[1].moves.push(6);
 
-            ioClient1.on('gameIsOver', (data) => {
+            ioClient1.on('gameIsOver', data => {
                 const { gameBoard } = data;
                 expect(gameBoard.youWon).to.true;
                 done();

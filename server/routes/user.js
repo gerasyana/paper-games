@@ -3,7 +3,7 @@ const { logout } = require('../middlewares/logout');
 const { getDecodedJWT } = require('../services/jwt');
 const userService = require('../services/user');
 
-module.exports = (app) => {
+module.exports = app => {
     app.get('/api/user', authenticate, async (req, res) => {
         const tokenParsed = getDecodedJWT(req.token);
         const data = await userService.getUserById(tokenParsed.id);

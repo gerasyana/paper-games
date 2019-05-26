@@ -27,10 +27,10 @@ module.exports = () => {
             await mongoose.model(GAME_HISTORY_MODEL).remove();
         });
 
-        it('It should connect a user', (done) => {
+        it('It should connect a user', done => {
             const ioClient = io.connect(socketURL, options);
 
-            ioClient.on('userConnected', async (data) => {
+            ioClient.on('userConnected', async data => {
                 const result = await sockets.getUserId(ioClient.id);
                 expect(result).to.not.null;
                 expect(result).to.equal(user1Id);
