@@ -53,7 +53,7 @@ class GameHistoryService {
                 points: { $sum: '$points' }
             }).sort({ points: 'desc' });
 
-            const userIds = results.map(result => result._id);
+            const userIds = results.map((result) => result._id);
             const users = await User.
                 find({
                     _id: {
@@ -62,7 +62,7 @@ class GameHistoryService {
                 }, '_id username').
                 toMap('_id');
                 
-            results = results.map(result => ({
+            results = results.map((result) => ({
                 username: users[result._id].username,
                 points: result.points
             }));

@@ -88,12 +88,12 @@ const gameRating = {
         const gameRating = await client.hget(GAMES_RATING_KEY, gameId);
 
         if (gameRating) {
-            return gameRating.split(';').map(item => JSON.parse(item));
+            return gameRating.split(';').map((item) => JSON.parse(item));
         }
         return [];
     },
     save: async (gameId, rating) => {
-        const gameRating = rating.map(item => JSON.stringify(item)).join(';');
+        const gameRating = rating.map((item) => JSON.stringify(item)).join(';');
         await client.hset(GAMES_RATING_KEY, gameId, gameRating);
         await client.expire(GAMES_RATING_KEY, GAMES_RATING_EXPIRES_IN);
     }
