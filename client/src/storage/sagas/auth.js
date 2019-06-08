@@ -16,7 +16,7 @@ export function* checkAuthentication(action) {
   const token = yield localStorage.getItem(keys.TOKEN_KEY);
 
   if (token) {
-    const expirationDate = yield new Date(localStorage.getItem(keys.EXPIRATION_DATE_KEY));
+    const expirationDate = new Date(localStorage.getItem(keys.EXPIRATION_DATE_KEY));
 
     if (expirationDate <= new Date()) {
       yield put(actions.logout());
@@ -64,7 +64,7 @@ export function* signUp(action) {
 export function* resetPassword(action) {
   yield put(actions.resetPasswordStart());
   const response = yield userRouters.resetPassword(action.data);
-  
+
   if (response.data.error || response.status !== 200) {
     yield put(actions.resetPasswordFailed(response.data.error));
   } else {

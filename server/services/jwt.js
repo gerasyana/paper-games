@@ -9,13 +9,15 @@ class JWTService {
 
     generateAndSaveJWT(user) {
         try {
-            const expirationDate = new Date().setHours(new Date().getHours() + 2);
+            const expirationDate = new Date();
+            expirationDate.setHours(new Date().getHours() + 2);
+
             const token = jwt.sign({
                 email: user.email,
                 id: user._id,
                 expirationDate: expirationDate
             }, keys.JWT_SECRET, { expiresIn: EXPIRES_IN });
-            
+
             tokens.addToWhitelist(token);
             return { token, expirationDate };
         } catch (error) {
