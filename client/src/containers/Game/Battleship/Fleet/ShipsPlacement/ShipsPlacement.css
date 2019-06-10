@@ -14,7 +14,7 @@
 
 .ship:hover > div {
     cursor: pointer;
-    background-color: #78c2ad
+    background-color: #3e4f4a
 }
 
 .shipSelected > div{
@@ -36,6 +36,17 @@
 }
 
 .shipsPanel {
+    width: 400px;
+    height: 350px;
+    margin: 0 auto;
+}
+
+.row {
+    width: 100%;
+    margin: 0px;
+}
+
+.leaveRoom {
     width: 400px;
     margin: 0 auto;
 }

@@ -5,6 +5,7 @@ import * as classes from './ShipsPlacement.css';
 import * as actions from '../../../../../storage/actions/actions';
 import FleetGrid from '../../../../../components/Battleship/FleetGrid/FleetGrid';
 import Aux from '../../../../../hoc/Aux/Aux';
+import Button from '../../../../../UI/Button/Button';
 
 const ships = {
     'carrier': {
@@ -171,6 +172,10 @@ class ShipsPlacement extends Component {
         this.setState({ horizontalShip })
     }
 
+    leaveRoom = () => {
+        this.props.leaveRoom(this.props.room.name);
+    }
+
     render() {
         const ships = Object.values(this.state.ships).map(ship => {
             const shipCells = [], shipClasses = [classes.ship];
@@ -194,7 +199,6 @@ class ShipsPlacement extends Component {
 
         const shipsPanel = (
             <Aux>
-                <h4>Place your ships:</h4>
                 <div className={classes.orientation} >
                     <span
                         className={this.state.horizontalShip ? classes.orientationSelected : null}
@@ -214,21 +218,27 @@ class ShipsPlacement extends Component {
         );
 
         return (
-            <div className='row justify-content-center'>
-                <div className='col-md-12'>
-                    {<h4 className='text-center m-3'>Your fleet</h4>}
-                </div>
-                <div className='col-md-3 m-3'>
-                    <div className={classes.shipsPanel}>
-                        {shipsPanel}
-                    </div>
-                </div>
-                <div className='col-md-5 m-3'>
+            <div className={'row justify-content-center ' + classes.row}>
+                <div className='col-lg-5 m-4'>
                     <FleetGrid
                         gridColumns={this.state.gridColumns}
                         onClick={this.placeShip}
                         shipSelected={this.state.selectedShip}
                         onMouseOver={this.gridColumnHovered} />
+                </div>
+                <div className='col-lg-3 m-4'>
+                    <div className={classes.shipsPanel}>
+                        {shipsPanel}
+                    </div>
+                    <div className={classes.leaveRoom}>
+                        <Button
+                            id="closeBtn"
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={this.leaveRoom}>
+                            Leave Game
+                        </Button>
+                    </div>
                 </div>
             </div>
         )
@@ -246,6 +256,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToState = (dispatch) => {
     return {
         updateGameBoard: (data) => dispatch(actions.updateGameBoard(data)),
+        leaveRoom: (room) => dispatch(actions.leaveRoom(room))
     }
 }
 
