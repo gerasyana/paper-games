@@ -8,7 +8,6 @@ import * as actions from '../../../storage/actions/actions';
 import games, { battleship } from '../../../constants/games';
 import Fleet from './Fleet/Fleet';
 import ShipsPlacement from './Fleet/ShipsPlacement/ShipsPlacement';
-import Aux from '../../../hoc/Aux/Aux';
 import Spinner from '../../../UI/Spinner/Spinner';
 import Button from '../../../UI/Button/Button';
 
