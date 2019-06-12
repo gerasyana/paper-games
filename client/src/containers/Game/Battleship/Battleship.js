@@ -8,7 +8,6 @@ import * as actions from '../../../storage/actions/actions';
 import games, { battleship } from '../../../constants/games';
 import Fleet from './Fleet/Fleet';
 import ShipsPlacement from './Fleet/ShipsPlacement/ShipsPlacement';
-import Aux from '../../../hoc/Aux/Aux';
 import Spinner from '../../../UI/Spinner/Spinner';
 import Button from '../../../UI/Button/Button';
 
@@ -84,8 +83,13 @@ class Battleship extends Component {
         const userId = this.props.user.id;
         const modal = this.props.gameBoard.gameIsOver ? this.getGameIsOverModal() : null;
         const waitForPlayer = fleets.length === 1 && fleets[0].playerId === userId;
-        let content = <ShipsPlacement />;
-       
+        let content = (
+            <div className={classes.gamePnl}>
+                <h4 className='text-center m-4'>Your fleet</h4>
+                <ShipsPlacement />
+            </div>
+        );
+
         if (waitForPlayer) {
             content = (
                 <div className='col-md-8 m-3'>
@@ -95,7 +99,7 @@ class Battleship extends Component {
             );
         } else if (fleets.length === 2 && fleets.every(fleet => fleet.shipsAreSet)) {
             content = (
-                <Aux>
+                <div className={'row justify-content-center align-items-center ' + classes.gamePnl}>
                     <div className='col-lg-5 mt-5'>
                         <Fleet
                             fleet={fleets.find(fleet => fleet.playerId === userId)}
@@ -119,9 +123,9 @@ class Battleship extends Component {
                             className="btn btn-secondary"
                             onClick={this.leaveRoom}>
                             Leave Game
-                       </Button>
+                                </Button>
                     </div>
-                </Aux>
+                </div>
             );
         }
 
@@ -157,7 +161,7 @@ class Battleship extends Component {
         $(`#${modals.gameIsOverModalId}`).modal('hide');
         this.props.leaveRoom(this.props.room.name);
     }
-    
+
     render() {
         let game = null;
 
