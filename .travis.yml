@@ -1,0 +1,41 @@
+language: node_js
+
+node_js:
+  - "10"
+
+branches:
+  only:
+    - development
+   
+addons:
+  hosts:
+
+services : 
+  - mongodb
+  - redis-server
+  
+cache:
+  directories:
+    - server/node_modules
+    - client/node_modules
+  
+install:
+  - npm run install-server
+  - npm test
+  - npm run build-client 
+  
+before_deploy:
+  - git config --global user.password "$github_password"
+  - git config --global user.username "$github_username"
+  - mv herokuDeploy/.gitignore .gitignore
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $github_token
+  target_branch : heroku
+  on:
+    branch : development
+  
+  
+

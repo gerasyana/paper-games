@@ -1,0 +1,7 @@
+/client/*
+!/client/build/
+/server/node_modules
+/server/dump.rdb
+/server/.env
+/server/tests/
+/herokuDeploy
