@@ -27,7 +27,6 @@ class App extends Component {
             <Route path='/signup' exact render={() => <SignUp {...this.props} />} />
             <Route path="/logout" exact render={() => <Logout {...this.props} />} />
             <Route path="/resetpassword" exact render={() => <ResetPassword {...this.props} />} />
-
             <Route path='/' component={Home} />
             <Redirect to='/' />
           </Switch>
